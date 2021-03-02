@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/logged_in_nav_graph"
+    app:startDestination="@id/chooseRecipientFragment">
+
+    <fragment
+        android:id="@+id/chooseRecipientFragment"
+        android:name="com.sinch.rtc.voicevideo.features.calls.new.NewCallFragment"
+        android:label="@string/new_call"
+        tools:layout="@layout/fragment_new_call">
+        <action
+            android:id="@+id/action_newCallFragment_to_outgoingCallFragment"
+            app:destination="@id/outgoingCallFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/incomingCallFragment"
+        android:name="com.sinch.rtc.voicevideo.features.calls.incoming.IncomingCallFragment"
+        android:label="@string/incoming_call_label"
+        tools:layout="@layout/fragment_incoming_call">
+        <action
+            android:id="@+id/action_incomingCallFragment_to_establishedCallFragment"
+            app:destination="@id/establishedCallFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/outgoingCallFragment"
+        android:name="com.sinch.rtc.voicevideo.features.calls.outgoing.OutgoingCallFragment"
+        android:label="@string/outgoing_call_label"
+        tools:layout="@layout/fragment_outgoing_call">
+        <action
+            android:id="@+id/action_outgoingCallFragment_to_establishedCallFragment"
+            app:destination="@id/establishedCallFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.sinch.rtc.voicevideo.features.settings.SettingsFragment"
+        android:label="@string/settings_label"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_loggedOutActivity"
+            app:destination="@id/loggedOutActivity" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/establishedCallFragment"
+        android:name="com.sinch.rtc.voicevideo.features.calls.established.EstablishedCallFragment"
+        android:label="@string/established_call_label"
+        tools:layout="@layout/fragment_established_call" />
+
+    <fragment
+        android:id="@+id/contactsFragment"
+        android:name="com.sinch.rtc.voicevideo.features.contacts.ContactsFragment"
+        android:label="@string/contacts_label"
+        tools:layout="@layout/fragment_contacts" />
+
+    <fragment
+        android:id="@+id/callHistoryFragment"
+        android:name="com.sinch.rtc.voicevideo.features.calls.history.CallHistoryFragment"
+        android:label="@string/history_label"
+        tools:layout="@layout/fragment_history" />
+
+    <activity
+        android:id="@+id/loggedOutActivity"
+        android:name="com.sinch.rtc.voicevideo.navigation.LoggedOutActivity"
+        android:label="activity_logged_out"
+        tools:layout="@layout/activity_logged_out" />
+
+</navigation>

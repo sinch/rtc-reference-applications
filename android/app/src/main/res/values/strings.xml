@@ -1,9 +1,18 @@
 <resources>
     <string name="app_name">RTCVoiceVideoSample</string>
-    <string name="action_settings">Settings</string>
+
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <string name="dashboard_label">Dashboard</string>
+    <string name="new_call">New call</string>
+    <string name="incoming_call_label">Incoming call</string>
+    <string name="outgoing_call_label">Outgoing call</string>
+    <string name="established_call_label">Established call</string>
+    <string name="login_label">Login</string>
+    <string name="settings_label">Settings</string>
+    <string name="history_label">History</string>
+    <string name="contacts_label">Contacts</string>
+
+    <string name="logout">Logout</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 </resources>
