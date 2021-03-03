@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/logged_in_nav_graph"
-    app:startDestination="@id/chooseRecipientFragment">
+    app:startDestination="@id/newCallFragment">
 
     <fragment
-        android:id="@+id/chooseRecipientFragment"
-        android:name="com.sinch.rtc.voicevideo.features.calls.new.NewCallFragment"
+        android:id="@+id/newCallFragment"
+        android:name="com.sinch.rtc.voicevideo.features.calls.newcall.NewCallFragment"
         android:label="@string/new_call"
         tools:layout="@layout/fragment_new_call">
         <action
