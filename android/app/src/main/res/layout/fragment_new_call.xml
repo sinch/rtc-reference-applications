@@ -4,23 +4,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/typeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/new_call"
+        android:text="@string/choose_type"
+        app:layout_constraintBottom_toTopOf="@id/callTypeSpinner"
+        app:layout_constraintStart_toStartOf="@id/callTypeSpinner" />
+
+    <Spinner
+        android:id="@+id/callTypeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/basic_margin"
+        android:hint="@string/call_type_hint"
+        app:layout_constraintBottom_toTopOf="@id/calleeInputLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/calleeInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/basic_margin"
+        android:hint="@string/callee_hint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/calleeInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textNoSuggestions" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/nextButton"
+        android:id="@+id/callButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/basic_margin"
         android:layout_marginBottom="@dimen/fab_margin"
-        android:text="@string/next"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/call_button_label"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/calleeInputLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,13 +13,13 @@ import kotlinx.android.synthetic.main.activity_logged_in.*
 class LoggedInActivity : AppCompatActivity() {
 
     private val topDestinations = listOf(
-        R.id.chooseRecipientFragment,
+        R.id.newCallFragment,
         R.id.callHistoryFragment,
         R.id.contactsFragment
     )
 
     private val tabPositionToDestinationMap = mapOf(
-        0 to R.id.chooseRecipientFragment,
+        0 to R.id.newCallFragment,
         1 to R.id.callHistoryFragment,
         2 to R.id.contactsFragment
     )

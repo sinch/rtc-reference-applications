@@ -12,6 +12,16 @@
     <string name="history_label">History</string>
     <string name="contacts_label">Contacts</string>
 
+    <!-- New Call screen -->
+    <string name="callee_hint">Callee</string>
+    <string name="call_button_label">Call</string>
+    <string name="call_type_hint">Choose type</string>
+    <string name="call_pstn">Call to PSTN</string>
+    <string name="call_app">Call to App</string>
+    <string name="call_video">Video Call</string>
+    <string name="call_sip">Call to SIP</string>
+    <string name="choose_type">Choose type</string>
+
     <string name="logout">Logout</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>

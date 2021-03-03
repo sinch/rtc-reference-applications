@@ -21,7 +21,7 @@ class OutgoingCallFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        nextButton.setOnClickListener {
+        callButton.setOnClickListener {
             findNavController().navigate(R.id.action_outgoingCallFragment_to_establishedCallFragment)
         }
     }
