@@ -18,4 +18,5 @@ fun CallType.newCallLabel(context: Context): String {
         CallType.SIP -> R.string.call_sip
     }
     return context.getString(resource)
+
 }

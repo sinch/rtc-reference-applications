@@ -61,7 +61,14 @@
         android:id="@+id/callHistoryFragment"
         android:name="com.sinch.rtc.voicevideo.features.calls.history.CallHistoryFragment"
         android:label="@string/history_label"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/action_callHistoryFragment_to_outgoingCallFragment"
+            app:destination="@id/outgoingCallFragment" />
+        <action
+            android:id="@+id/action_callHistoryFragment_to_chooseRecipientFragment"
+            app:destination="@id/newCallFragment" />
+    </fragment>
 
     <activity
         android:id="@+id/loggedOutActivity"
