@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/newCallFragment"
-        android:name="com.sinch.rtc.voicevideo.features.calls.newcall.NewCallFragment"
+        android:name="com.sinch.rtc.vvc.reference.app.features.calls.newcall.NewCallFragment"
         android:label="@string/new_call"
         tools:layout="@layout/fragment_new_call">
         <action
@@ -17,14 +17,14 @@
         <argument
             android:name="initialCallItem"
             android:defaultValue="@null"
-            app:argType="com.sinch.rtc.voicevideo.domain.calls.CallItem"
+            app:argType="com.sinch.rtc.vvc.reference.app.domain.calls.CallItem"
             app:nullable="true" />
 
     </fragment>
 
     <fragment
         android:id="@+id/incomingCallFragment"
-        android:name="com.sinch.rtc.voicevideo.features.calls.incoming.IncomingCallFragment"
+        android:name="com.sinch.rtc.vvc.reference.app.features.calls.incoming.IncomingCallFragment"
         android:label="@string/incoming_call_label"
         tools:layout="@layout/fragment_incoming_call">
         <action
@@ -34,7 +34,7 @@
 
     <fragment
         android:id="@+id/outgoingCallFragment"
-        android:name="com.sinch.rtc.voicevideo.features.calls.outgoing.OutgoingCallFragment"
+        android:name="com.sinch.rtc.vvc.reference.app.features.calls.outgoing.OutgoingCallFragment"
         android:label="@string/outgoing_call_label"
         tools:layout="@layout/fragment_outgoing_call">
         <action
@@ -44,7 +44,7 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.sinch.rtc.voicevideo.features.settings.SettingsFragment"
+        android:name="com.sinch.rtc.vvc.reference.app.features.settings.SettingsFragment"
         android:label="@string/settings_label"
         tools:layout="@layout/fragment_settings">
         <action
@@ -54,19 +54,19 @@
 
     <fragment
         android:id="@+id/establishedCallFragment"
-        android:name="com.sinch.rtc.voicevideo.features.calls.established.EstablishedCallFragment"
+        android:name="com.sinch.rtc.vvc.reference.app.features.calls.established.EstablishedCallFragment"
         android:label="@string/established_call_label"
         tools:layout="@layout/fragment_established_call" />
 
     <fragment
         android:id="@+id/contactsFragment"
-        android:name="com.sinch.rtc.voicevideo.features.contacts.ContactsFragment"
+        android:name="com.sinch.rtc.vvc.reference.app.features.contacts.ContactsFragment"
         android:label="@string/contacts_label"
         tools:layout="@layout/fragment_contacts" />
 
     <fragment
         android:id="@+id/callHistoryFragment"
-        android:name="com.sinch.rtc.voicevideo.features.calls.history.CallHistoryFragment"
+        android:name="com.sinch.rtc.vvc.reference.app.features.calls.history.CallHistoryFragment"
         android:label="@string/history_label"
         tools:layout="@layout/fragment_history">
         <action
@@ -81,7 +81,7 @@
 
     <activity
         android:id="@+id/loggedOutActivity"
-        android:name="com.sinch.rtc.voicevideo.navigation.LoggedOutActivity"
+        android:name="com.sinch.rtc.vvc.reference.app.navigation.LoggedOutActivity"
         android:label="activity_logged_out"
         tools:layout="@layout/activity_logged_out" />
 

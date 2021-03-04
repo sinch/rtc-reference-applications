@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RTCVoiceVideoSample</string>
+    <string name="app_name">Sinch Voice &amp; Video Reference App</string>
 
     <!-- Strings used for fragments for navigation -->
     <string name="dashboard_label">Dashboard</string>
@@ -13,13 +13,13 @@
     <string name="contacts_label">Contacts</string>
 
     <!-- New Call screen -->
-    <string name="callee_hint">Callee</string>
+    <string name="destination_hint">Destination</string>
     <string name="call_button_label">Call</string>
     <string name="call_type_hint">Choose type</string>
-    <string name="call_pstn">Call to PSTN</string>
-    <string name="call_app">Call to App</string>
-    <string name="call_video">Video Call</string>
-    <string name="call_sip">Call to SIP</string>
+    <string name="call_app_to_phone">App-to-Phone</string>
+    <string name="call_app_to_app_audio">App-to-App Audio</string>
+    <string name="call_app_to_app_video">App-to-App Video</string>
+    <string name="call_app_to_sip">App-to-Sip</string>
     <string name="choose_type">Choose type</string>
 
     <string name="logout">Logout</string>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:paddingHorizontal="16dp">
 
     <LinearLayout
         android:id="@+id/iconsLayout"
@@ -33,19 +33,23 @@
         android:id="@+id/seperator"
         android:layout_width="1dp"
         android:layout_height="0dp"
+        android:layout_marginVertical="@dimen/margin_small"
         android:layout_marginStart="@dimen/margin_small"
         android:background="@color/black"
-        app:layout_constraintBottom_toBottomOf="@id/calleeNameTextView"
-        app:layout_constraintEnd_toStartOf="@id/calleeNameTextView"
+        app:layout_constraintBottom_toBottomOf="@id/destinationNameTextView"
+        app:layout_constraintEnd_toStartOf="@id/destinationNameTextView"
         app:layout_constraintStart_toEndOf="@id/iconsLayout"
-        app:layout_constraintTop_toTopOf="@id/calleeNameTextView" />
+        app:layout_constraintTop_toTopOf="@id/destinationNameTextView" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/calleeNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/destinationNameTextView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_marginStart="@dimen/margin_small"
+        android:background="?android:attr/selectableItemBackground"
+        android:paddingVertical="@dimen/basic_margin"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/callTimeTextView"
         app:layout_constraintStart_toEndOf="@id/seperator"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_goneMarginStart="@dimen/margin_small"

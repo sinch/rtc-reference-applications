@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.sinch.rtc.voicevideo.features.login.LoginFragment"
+        android:name="com.sinch.rtc.vvc.reference.app.features.login.LoginFragment"
         android:label="LoginFragment"
         tools:layout="@layout/fragment_login">
         <action
@@ -20,13 +20,13 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.sinch.rtc.voicevideo.features.settings.SettingsFragment"
+        android:name="com.sinch.rtc.vvc.reference.app.features.settings.SettingsFragment"
         android:label="SettingsFragment"
         tools:layout="@layout/fragment_settings" />
 
     <activity
         android:id="@+id/loggedInActivity"
-        android:name="com.sinch.rtc.voicevideo.navigation.LoggedInActivity"
+        android:name="com.sinch.rtc.vvc.reference.app.navigation.LoggedInActivity"
         android:label="activity_logged_in"
         tools:layout="@layout/activity_logged_in" />
 
