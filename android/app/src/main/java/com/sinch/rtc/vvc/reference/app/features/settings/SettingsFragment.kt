@@ -1,25 +1,18 @@
 package com.sinch.rtc.vvc.reference.app.features.settings
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.sinch.rtc.vvc.reference.app.R
+import com.sinch.rtc.vvc.reference.app.databinding.FragmentSettingsBinding
 import com.sinch.rtc.vvc.reference.app.navigation.LoggedInActivity
-import kotlinx.android.synthetic.main.fragment_settings.*
+import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingFragment
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.fragment_settings) {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        LayoutInflater.from(requireContext())
-            .inflate(R.layout.fragment_settings, container, false)
+    override fun setupBinding(root: View): FragmentSettingsBinding =
+        FragmentSettingsBinding.bind(root)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -28,10 +21,12 @@ class SettingsFragment : Fragment() {
 
     private fun setupLogoutButton() {
         //Simply for demo purposes
-        logoutButton.isVisible = activity is LoggedInActivity
-        logoutButton.setOnClickListener {
-            activity?.finish()
-            findNavController().navigate(R.id.action_settingsFragment_to_loggedOutActivity)
+        binding.apply {
+            logoutButton.isVisible = activity is LoggedInActivity
+            logoutButton.setOnClickListener {
+                activity?.finish()
+                findNavController().navigate(R.id.action_settingsFragment_to_loggedOutActivity)
+            }
         }
     }
 

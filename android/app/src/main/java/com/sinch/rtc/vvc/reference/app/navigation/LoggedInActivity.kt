@@ -1,17 +1,18 @@
 package com.sinch.rtc.vvc.reference.app.navigation
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.tabs.TabLayout
 import com.sinch.rtc.vvc.reference.app.R
-import kotlinx.android.synthetic.main.activity_logged_in.*
+import com.sinch.rtc.vvc.reference.app.databinding.ActivityLoggedInBinding
+import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingActivity
 
-class LoggedInActivity : AppCompatActivity() {
+class LoggedInActivity : ViewBindingActivity<ActivityLoggedInBinding>() {
 
     private val topDestinations = listOf(
         R.id.newCallFragment,
@@ -29,9 +30,11 @@ class LoggedInActivity : AppCompatActivity() {
         get() =
             supportFragmentManager.findFragmentById(R.id.loggedInNavigationHostFragment) as NavHostFragment
 
+    override fun setupBinding(inflater: LayoutInflater): ActivityLoggedInBinding =
+        ActivityLoggedInBinding.inflate(inflater)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_logged_in)
         setupNavigation()
     }
 
@@ -56,7 +59,7 @@ class LoggedInActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation() {
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 navigateToTab(tab)
             }
@@ -68,9 +71,9 @@ class LoggedInActivity : AppCompatActivity() {
         })
 
         navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
-            tabLayout.isVisible = topDestinations.contains(destination.id)
+            binding.tabLayout.isVisible = topDestinations.contains(destination.id)
             if (topDestinations.indexOf(destination.id) >= 0) {
-                tabLayout.setScrollPosition(
+                binding.tabLayout.setScrollPosition(
                     topDestinations.indexOf(destination.id),
                     0f,
                     true

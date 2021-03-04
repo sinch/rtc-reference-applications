@@ -1,27 +1,21 @@
 package com.sinch.rtc.vvc.reference.app.features.calls.outgoing
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.sinch.rtc.vvc.reference.app.R
-import kotlinx.android.synthetic.main.fragment_new_call.*
+import com.sinch.rtc.vvc.reference.app.databinding.FragmentOutgoingCallBinding
+import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingFragment
 
-class OutgoingCallFragment : Fragment() {
+class OutgoingCallFragment :
+    ViewBindingFragment<FragmentOutgoingCallBinding>(R.layout.fragment_outgoing_call) {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        LayoutInflater.from(requireContext())
-            .inflate(R.layout.fragment_outgoing_call, container, false)
+    override fun setupBinding(root: View): FragmentOutgoingCallBinding =
+        FragmentOutgoingCallBinding.bind(root)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        callButton.setOnClickListener {
+        binding.callButton.setOnClickListener {
             findNavController().navigate(R.id.action_outgoingCallFragment_to_establishedCallFragment)
         }
     }

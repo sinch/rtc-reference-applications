@@ -1,30 +1,27 @@
 package com.sinch.rtc.vvc.reference.app.features.login
 
 import android.os.Bundle
-import android.view.*
-import androidx.fragment.app.Fragment
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.sinch.rtc.vvc.reference.app.R
-import kotlinx.android.synthetic.main.fragment_login.*
+import com.sinch.rtc.vvc.reference.app.databinding.FragmentLoginBinding
+import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingFragment
 
-class LoginFragment : Fragment() {
+class LoginFragment : ViewBindingFragment<FragmentLoginBinding>(R.layout.fragment_login) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        LayoutInflater.from(requireContext())
-            .inflate(R.layout.fragment_login, container, false)
+    override fun setupBinding(root: View): FragmentLoginBinding = FragmentLoginBinding.bind(root)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loginButton.setOnClickListener {
+        binding.loginButton.setOnClickListener {
             activity?.finish()
             findNavController().navigate(R.id.action_loginFragment_to_loggedInActivity)
         }
