@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sinch.rtc.voicevideo.R
-import com.sinch.rtc.voicevideo.domain.calls.CallHistoryItem
+import com.sinch.rtc.voicevideo.domain.calls.CallItem
 import com.sinch.rtc.voicevideo.domain.calls.CallType
 import com.sinch.rtc.voicevideo.features.calls.history.list.CallHistoryAdapter
 import com.sinch.rtc.voicevideo.features.calls.history.list.CallHistoryEntryItem
@@ -22,15 +22,15 @@ class CallHistoryFragment : Fragment(), CallHistoryEntryItem.HistoryItemClicksLi
 
     private val fakeData = Random().let {
         listOf(
-            CallHistoryItem(CallType.Video, "aleks1", Date(1614849567000)),
-            CallHistoryItem(CallType.PSTN, "+48123456789", Date(1614845967000)),
-            CallHistoryItem(CallType.Video, "aleks1", Date(1614824427000)),
-            CallHistoryItem(CallType.Audio, "aleks1", Date(1612441227000)),
-            CallHistoryItem(CallType.Video, "aleks2", Date(1614849567000)),
-            CallHistoryItem(CallType.PSTN, "+481234569", Date(1614845967000)),
-            CallHistoryItem(CallType.Video, "aleks3", Date(161482127000)),
-            CallHistoryItem(CallType.Audio, "aleks4", Date(1612441527000)),
-            CallHistoryItem(CallType.SIP, "alek@sinch.com", Date(1609762827000))
+            CallItem(CallType.Video, "aleks1", Date(1614849567000)),
+            CallItem(CallType.PSTN, "+48123456789", Date(1614845967000)),
+            CallItem(CallType.Video, "aleks1", Date(1614824427000)),
+            CallItem(CallType.Audio, "aleks1", Date(1612441227000)),
+            CallItem(CallType.Video, "aleks2", Date(1614849567000)),
+            CallItem(CallType.PSTN, "+481234569", Date(1614845967000)),
+            CallItem(CallType.Video, "aleks3", Date(161482127000)),
+            CallItem(CallType.Audio, "aleks4", Date(1612441527000)),
+            CallItem(CallType.SIP, "alek@sinch.com", Date(1609762827000))
         )
     }
 
@@ -52,27 +52,31 @@ class CallHistoryFragment : Fragment(), CallHistoryEntryItem.HistoryItemClicksLi
         adapter.submitList(generateHeaderedCallItemsList(fakeData))
     }
 
-    override fun onVideoClicked(item: CallHistoryItem) {
+    override fun onVideoClicked(item: CallItem) {
         navigateToOutgoingCall(item)
     }
 
-    override fun onAudioClicked(item: CallHistoryItem) {
+    override fun onAudioClicked(item: CallItem) {
         navigateToOutgoingCall(item)
     }
 
-    override fun onCalleeNameClicked(item: CallHistoryItem) {
+    override fun onCalleeNameClicked(item: CallItem) {
         navigateToNewCall(item)
     }
 
-    private fun navigateToOutgoingCall(item: CallHistoryItem) {
+    private fun navigateToOutgoingCall(item: CallItem) {
         findNavController().navigate(R.id.action_callHistoryFragment_to_outgoingCallFragment)
     }
 
-    private fun navigateToNewCall(item: CallHistoryItem) {
-        findNavController().navigate(R.id.action_callHistoryFragment_to_chooseRecipientFragment)
+    private fun navigateToNewCall(item: CallItem) {
+        findNavController().navigate(
+            CallHistoryFragmentDirections.actionCallHistoryFragmentToNewCallFragment(
+                item
+            )
+        )
     }
 
-    private fun generateHeaderedCallItemsList(items: List<CallHistoryItem>): List<BaseItem<*>> {
+    private fun generateHeaderedCallItemsList(items: List<CallItem>): List<BaseItem<*>> {
         val sortedByDateHistoryItems = items.sortedByDescending {
             it.startDate
         }

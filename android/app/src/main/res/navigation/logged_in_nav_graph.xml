@@ -13,6 +13,13 @@
         <action
             android:id="@+id/action_newCallFragment_to_outgoingCallFragment"
             app:destination="@id/outgoingCallFragment" />
+
+        <argument
+            android:name="initialCallItem"
+            android:defaultValue="@null"
+            app:argType="com.sinch.rtc.voicevideo.domain.calls.CallItem"
+            app:nullable="true" />
+
     </fragment>
 
     <fragment
@@ -66,8 +73,10 @@
             android:id="@+id/action_callHistoryFragment_to_outgoingCallFragment"
             app:destination="@id/outgoingCallFragment" />
         <action
-            android:id="@+id/action_callHistoryFragment_to_chooseRecipientFragment"
-            app:destination="@id/newCallFragment" />
+            android:id="@+id/action_callHistoryFragment_to_newCallFragment"
+            app:destination="@id/newCallFragment"
+            app:popUpTo="@id/newCallFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <activity

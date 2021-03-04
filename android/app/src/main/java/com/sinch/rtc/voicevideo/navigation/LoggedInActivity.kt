@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.tabs.TabLayout
 import com.sinch.rtc.voicevideo.R
@@ -59,21 +60,33 @@ class LoggedInActivity : AppCompatActivity() {
     private fun setupNavigation() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                tabPositionToDestinationMap[tab?.position]?.let {
-                    navHostFragment.navController.apply {
-                        popBackStack()
-                        navigate(it)
-                    }
-                }
+                navigateToTab(tab)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                navigateToTab(tab)
+            }
         })
 
         navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
             tabLayout.isVisible = topDestinations.contains(destination.id)
+            if (topDestinations.indexOf(destination.id) >= 0) {
+                tabLayout.setScrollPosition(
+                    topDestinations.indexOf(destination.id),
+                    0f,
+                    true
+                )
+            }
             invalidateOptionsMenu()
+        }
+    }
+
+    private fun navigateToTab(tab: TabLayout.Tab?) {
+        tabPositionToDestinationMap[tab?.position]?.let {
+            navHostFragment.navController.apply {
+                navigate(it, null, NavOptions.Builder().setPopUpTo(it, true).build())
+            }
         }
     }
 

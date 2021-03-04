@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.sinch.rtc.voicevideo.R
 import com.sinch.rtc.voicevideo.domain.calls.CallType
 import com.sinch.rtc.voicevideo.domain.calls.newCallLabel
@@ -26,6 +27,8 @@ class NewCallFragment : Fragment() {
     }
 
     private val callTypes = listOf(CallType.PSTN, CallType.Audio, CallType.Video, CallType.SIP)
+    private val args: NewCallFragmentArgs by navArgs()
+
     private var calleeValidator: CalleeValidator? = null
 
     override fun onCreateView(
@@ -45,6 +48,7 @@ class NewCallFragment : Fragment() {
         calleeInputEditText.addTextChangedListener {
             updateCallButtonState()
         }
+        populateWithInitialData()
     }
 
     private fun setupCallTypeAdapter() {
@@ -87,6 +91,13 @@ class NewCallFragment : Fragment() {
     private fun updateCallButtonState() {
         callButton.isEnabled =
             calleeValidator?.isCalleeValid(calleeInputEditText.text.toString()) ?: true
+    }
+
+    private fun populateWithInitialData() {
+        args.initialCallItem?.type?.let {
+            callTypeSpinner.setSelection(callTypes.indexOf(it))
+        }
+        calleeInputEditText.setText(args.initialCallItem?.callee.orEmpty())
     }
 
 }
