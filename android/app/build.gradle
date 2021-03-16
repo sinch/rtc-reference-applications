@@ -8,7 +8,7 @@ android {
     buildToolsVersion "30.0.1"
 
     defaultConfig {
-        applicationId "com.sinch.rtc.voicevideo"
+        applicationId "com.sinch.rtc.vvc.reference.app"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
@@ -39,6 +39,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation fileTree(dir: "libs", include: ["*.aar"])
 
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -51,8 +52,13 @@ dependencies {
     // Material Design
     implementation "com.google.android.material:material:$material_design_version"
 
+    // Messaging
+    implementation "com.google.firebase:firebase-messaging:$firebase_messaging_version"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
 }
+
+apply plugin: 'com.google.gms.google-services'  // Google Services plugin

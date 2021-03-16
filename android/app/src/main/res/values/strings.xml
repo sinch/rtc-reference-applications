@@ -22,6 +22,11 @@
     <string name="call_app_to_sip">App-to-Sip</string>
     <string name="choose_type">Choose type</string>
 
+    <!-- Login screen -->
+    <string name="username_hint">Username</string>
+    <string name="play_services_not_available_error_message">Play services not available</string>
+    <string name="logging_timeout_error_message">Timeout error while logging in</string>
+
     <string name="logout">Logout</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>

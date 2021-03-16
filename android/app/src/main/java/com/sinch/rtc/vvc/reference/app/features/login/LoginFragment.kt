@@ -5,12 +5,19 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentLoginBinding
 import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingFragment
 
 class LoginFragment : ViewBindingFragment<FragmentLoginBinding>(R.layout.fragment_login) {
+
+    private val viewModel: LoginViewModel by viewModels {
+        LoginViewModelProviderFactory(requireActivity().application)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,8 +29,16 @@ class LoginFragment : ViewBindingFragment<FragmentLoginBinding>(R.layout.fragmen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.loginButton.setOnClickListener {
-            activity?.finish()
-            findNavController().navigate(R.id.action_loginFragment_to_loggedInActivity)
+            viewModel.onLoginClicked(binding.loginInputEditText.text.toString())
+        }
+        viewModel.isLoginButtonEnabled.observe(viewLifecycleOwner) {
+            binding.loginButton.isEnabled = it
+        }
+        viewModel.errorMessages.observe(viewLifecycleOwner) {
+            showError(it)
+        }
+        viewModel.navigationEvents.observe(viewLifecycleOwner) {
+            handleNavigationEvent(it)
         }
     }
 
@@ -39,5 +54,22 @@ class LoginFragment : ViewBindingFragment<FragmentLoginBinding>(R.layout.fragmen
             }
             else -> super.onOptionsItemSelected(item)
         }
+
+    private fun handleNavigationEvent(navigationEvent: LoginNavigationEvent) {
+        when (navigationEvent) {
+            Dashboard -> {
+                activity?.finish()
+                findNavController().navigate(R.id.action_loginFragment_to_loggedInActivity)
+            }
+        }
+    }
+
+    private fun showError(message: String) {
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG)
+            .apply {
+                view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)?.maxLines =
+                    10
+            }.show()
+    }
 
 }

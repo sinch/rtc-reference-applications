@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sinch.rtc.vvc.reference.app">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name="com.sinch.rtc.vvc.reference.app.application.RTCVoiceVideoReferenceApp"
         android:allowBackup="true"
