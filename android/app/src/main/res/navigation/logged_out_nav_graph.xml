@@ -26,7 +26,7 @@
 
     <activity
         android:id="@+id/loggedInActivity"
-        android:name="com.sinch.rtc.vvc.reference.app.navigation.LoggedInActivity"
+        android:name="com.sinch.rtc.vvc.reference.app.navigation.loggedin.LoggedInActivity"
         android:label="activity_logged_in"
         tools:layout="@layout/activity_logged_in" />
 

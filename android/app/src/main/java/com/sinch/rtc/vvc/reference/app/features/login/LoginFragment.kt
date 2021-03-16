@@ -10,13 +10,14 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sinch.rtc.vvc.reference.app.R
+import com.sinch.rtc.vvc.reference.app.application.RTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentLoginBinding
 import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingFragment
 
 class LoginFragment : ViewBindingFragment<FragmentLoginBinding>(R.layout.fragment_login) {
 
     private val viewModel: LoginViewModel by viewModels {
-        LoginViewModelProviderFactory(requireActivity().application)
+        RTCVoiceVideoRefAppAndroidViewModelFactory(requireActivity().application)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

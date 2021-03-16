@@ -1,6 +1,5 @@
 package com.sinch.rtc.vvc.reference.app.features.login
 
-import SingleLiveEvent
 import android.app.Application
 import android.os.Handler
 import android.util.Log
@@ -11,11 +10,18 @@ import androidx.lifecycle.Transformations
 import com.sinch.android.rtc.*
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.Constants
+import com.sinch.rtc.vvc.reference.app.domain.user.User
+import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
 import com.sinch.rtc.vvc.reference.app.utils.jwt.JWTFetcher
 import com.sinch.rtc.vvc.reference.app.utils.jwt.getString
+import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 import java.util.*
 
-class LoginViewModel(application: Application, private val jwtFetcher: JWTFetcher) :
+class LoginViewModel(
+    application: Application,
+    private val jwtFetcher: JWTFetcher,
+    private val userDao: UserDao
+) :
     AndroidViewModel(application), UserRegistrationCallback, PushTokenRegistrationCallback {
 
     private val viewModelState: MutableLiveData<LoginViewState> = MutableLiveData(Idle)
@@ -114,6 +120,7 @@ class LoginViewModel(application: Application, private val jwtFetcher: JWTFetche
         if (state.isLoggingComplete) {
             cancelLoggingTimeoutTimer()
             viewModelState.value = Idle
+            userDao.insert(User(state.username))
             navigationEvents.postValue(Dashboard)
         }
     }

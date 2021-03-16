@@ -1,18 +1,24 @@
-package com.sinch.rtc.vvc.reference.app.navigation
+package com.sinch.rtc.vvc.reference.app.navigation.loggedin
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.tabs.TabLayout
 import com.sinch.rtc.vvc.reference.app.R
+import com.sinch.rtc.vvc.reference.app.application.RTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.ActivityLoggedInBinding
 import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingActivity
 
 class LoggedInActivity : ViewBindingActivity<ActivityLoggedInBinding>() {
+
+    private val viewModel: LoggedInViewModel by viewModels {
+        RTCVoiceVideoRefAppAndroidViewModelFactory(application)
+    }
 
     private val topDestinations = listOf(
         R.id.newCallFragment,
@@ -36,6 +42,8 @@ class LoggedInActivity : ViewBindingActivity<ActivityLoggedInBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupNavigation()
+        observeNavigationEvents()
+        viewModel.onViewCreated()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -80,6 +88,13 @@ class LoggedInActivity : ViewBindingActivity<ActivityLoggedInBinding>() {
                 )
             }
             invalidateOptionsMenu()
+        }
+    }
+
+    private fun observeNavigationEvents() {
+        viewModel.navigationEvents.observe(this) {
+            finish()
+            navHostFragment.navController.navigate(R.id.to_logged_out_flow)
         }
     }
 

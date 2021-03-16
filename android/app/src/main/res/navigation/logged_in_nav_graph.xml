@@ -79,6 +79,10 @@
             app:popUpToInclusive="true" />
     </fragment>
 
+    <action
+        android:id="@+id/to_logged_out_flow"
+        app:destination="@id/loggedOutActivity" />
+
     <activity
         android:id="@+id/loggedOutActivity"
         android:name="com.sinch.rtc.vvc.reference.app.navigation.LoggedOutActivity"

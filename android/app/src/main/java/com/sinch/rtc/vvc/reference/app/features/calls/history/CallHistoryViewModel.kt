@@ -1,6 +1,5 @@
 package com.sinch.rtc.vvc.reference.app.features.calls.history
 
-import SingleLiveEvent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +8,7 @@ import com.sinch.rtc.vvc.reference.app.domain.calls.CallType
 import com.sinch.rtc.vvc.reference.app.features.calls.history.list.CallHistoryEntryItem
 import com.sinch.rtc.vvc.reference.app.features.calls.history.list.DateHeaderItem
 import com.sinch.rtc.vvc.reference.app.utils.date.DateFormats
+import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 import com.sinch.rtc.vvc.reference.app.utils.sectionedrecycler.BaseItem
 import java.util.*
 

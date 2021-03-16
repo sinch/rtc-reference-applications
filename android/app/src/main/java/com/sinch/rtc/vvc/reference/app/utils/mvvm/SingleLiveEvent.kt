@@ -1,3 +1,4 @@
+package com.sinch.rtc.vvc.reference.app.utils.mvvm
 /*
  *  Copyright 2017 Google Inc.
  *

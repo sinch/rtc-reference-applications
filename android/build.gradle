@@ -5,6 +5,7 @@ buildscript {
     ext.nav_component_version = "2.3.3"
     ext.google_services_version = "4.3.5"
     ext.firebase_messaging_version = "21.0.1"
+    ext.room_version = "2.2.6"
 
     repositories {
         google()
