@@ -27,7 +27,9 @@
     <string name="play_services_not_available_error_message">Play services not available</string>
     <string name="logging_timeout_error_message">Timeout error while logging in</string>
 
+    <!-- Settings screen -->
     <string name="logout">Logout</string>
+    <string name="clear_data">Clear user data</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 </resources>

@@ -10,6 +10,9 @@ import androidx.lifecycle.Transformations
 import com.sinch.android.rtc.*
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.Constants
+import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
+import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
+import com.sinch.rtc.vvc.reference.app.domain.calls.CallType
 import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
 import com.sinch.rtc.vvc.reference.app.utils.jwt.JWTFetcher
@@ -20,7 +23,8 @@ import java.util.*
 class LoginViewModel(
     application: Application,
     private val jwtFetcher: JWTFetcher,
-    private val userDao: UserDao
+    private val userDao: UserDao,
+    private val callDao: CallDao
 ) :
     AndroidViewModel(application), UserRegistrationCallback, PushTokenRegistrationCallback {
 
@@ -120,7 +124,8 @@ class LoginViewModel(
         if (state.isLoggingComplete) {
             cancelLoggingTimeoutTimer()
             viewModelState.value = Idle
-            userDao.insert(User(state.username))
+            userDao.insert(User(state.username, isLoggedIn = true))
+            insertFakeCallHistoryIfNeeded(state.username)
             navigationEvents.postValue(Dashboard)
         }
     }
@@ -142,6 +147,24 @@ class LoginViewModel(
     private fun cancelLoggingTimeoutTimer() {
         loggingTimeoutHandler?.removeCallbacksAndMessages(null)
         loggingTimeoutHandler = null
+    }
+
+    private fun insertFakeCallHistoryIfNeeded(userId: String) {
+        val fakeData = listOf(
+            CallItem(CallType.AppToAppVideo, "aleks1", Date(1614849567000), userId = userId),
+            CallItem(CallType.AppToPhone, "+48123456789", Date(1614845967000), userId = userId),
+            CallItem(CallType.AppToAppVideo, "aleks1", Date(1614824427000), userId = userId),
+            CallItem(CallType.AppToAppAudio, "aleks1", Date(1612441227000), userId = userId),
+            CallItem(CallType.AppToAppVideo, "aleks2", Date(1614849567000), userId = userId),
+            CallItem(CallType.AppToPhone, "+481234569", Date(1614845967000), userId = userId),
+            CallItem(CallType.AppToAppVideo, "aleks3", Date(161482127000), userId = userId),
+            CallItem(CallType.AppToAppAudio, "aleks4", Date(1612441527000), userId = userId),
+            CallItem(CallType.AppToSip, "alek@sinch.com", Date(1609762827000), userId = userId)
+        )
+
+        if (callDao.loadCallHistoryOfUser(userId).isEmpty()) {
+            callDao.insert(fakeData)
+        }
     }
 
 }

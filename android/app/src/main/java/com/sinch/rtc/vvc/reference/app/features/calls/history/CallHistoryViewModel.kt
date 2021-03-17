@@ -1,10 +1,12 @@
 package com.sinch.rtc.vvc.reference.app.features.calls.history
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.Transformations
+import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
-import com.sinch.rtc.vvc.reference.app.domain.calls.CallType
+import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.features.calls.history.list.CallHistoryEntryItem
 import com.sinch.rtc.vvc.reference.app.features.calls.history.list.DateHeaderItem
 import com.sinch.rtc.vvc.reference.app.utils.date.DateFormats
@@ -12,34 +14,33 @@ import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 import com.sinch.rtc.vvc.reference.app.utils.sectionedrecycler.BaseItem
 import java.util.*
 
-class CallHistoryViewModel : ViewModel(), CallHistoryEntryItem.HistoryItemClicksListener {
+class CallHistoryViewModel(
+    val app: Application,
+    private val loggedInUser: User,
+    private val callDao: CallDao
+) : AndroidViewModel(app), CallHistoryEntryItem.HistoryItemClicksListener {
 
-    private val fakeData = listOf(
-        CallItem(CallType.AppToAppVideo, "aleks1", Date(1614849567000)),
-        CallItem(CallType.AppToPhone, "+48123456789", Date(1614845967000)),
-        CallItem(CallType.AppToAppVideo, "aleks1", Date(1614824427000)),
-        CallItem(CallType.AppToAppAudio, "aleks1", Date(1612441227000)),
-        CallItem(CallType.AppToAppVideo, "aleks2", Date(1614849567000)),
-        CallItem(CallType.AppToPhone, "+481234569", Date(1614845967000)),
-        CallItem(CallType.AppToAppVideo, "aleks3", Date(161482127000)),
-        CallItem(CallType.AppToAppAudio, "aleks4", Date(1612441527000)),
-        CallItem(CallType.AppToSip, "alek@sinch.com", Date(1609762827000))
-    )
+    private val callItemsHistory: LiveData<List<CallItem>> by lazy {
+        callDao.getLiveDataOfUserCallHistory(loggedInUser.id)
+    }
 
     private val navigationEventsMutable: SingleLiveEvent<CallHistoryNavigationEvent> =
         SingleLiveEvent()
 
-    private val historyDataMutable: MutableLiveData<List<BaseItem<*>>> =
-        MutableLiveData(generateHeaderedCallItemsList(fakeData))
+    val historyData: LiveData<List<BaseItem<*>>>
+        get() = Transformations.map(callItemsHistory) {
+            generateHeaderedCallItemsList(it)
+        }
 
-    val historyData: LiveData<List<BaseItem<*>>> get() = historyDataMutable
     val navigationEvents: SingleLiveEvent<CallHistoryNavigationEvent> get() = navigationEventsMutable
 
     override fun onVideoClicked(item: CallItem) {
+        saveNewCallHistoryItem(item)
         navigationEventsMutable.postValue(OutGoingCall(item))
     }
 
     override fun onAudioClicked(item: CallItem) {
+        saveNewCallHistoryItem(item)
         navigationEventsMutable.postValue(OutGoingCall(item))
     }
 
@@ -63,6 +64,10 @@ class CallHistoryViewModel : ViewModel(), CallHistoryEntryItem.HistoryItemClicks
             historyItemsWithHeaders.add(CallHistoryEntryItem(callHistoryItem, this))
         }
         return historyItemsWithHeaders
+    }
+
+    private fun saveNewCallHistoryItem(baseItem: CallItem) {
+        callDao.insert(baseItem.copy(itemId = 0, startDate = Date()))
     }
 
 }

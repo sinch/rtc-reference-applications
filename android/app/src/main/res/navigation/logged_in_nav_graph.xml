@@ -40,6 +40,12 @@
         <action
             android:id="@+id/action_outgoingCallFragment_to_establishedCallFragment"
             app:destination="@id/establishedCallFragment" />
+
+        <argument
+            android:name="callItemData"
+            app:argType="com.sinch.rtc.vvc.reference.app.domain.calls.CallItem"
+            app:nullable="false" />
+
     </fragment>
 
     <fragment

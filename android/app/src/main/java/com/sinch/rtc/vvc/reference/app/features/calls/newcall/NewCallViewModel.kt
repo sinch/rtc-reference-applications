@@ -1,23 +1,41 @@
 package com.sinch.rtc.vvc.reference.app.features.calls.newcall
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallType
+import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.AppDestinationValidator
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.DestinationValidator
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.PSTNDestinationValidator
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.SipDestinationValidator
+import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 import java.util.*
 
-class NewCallViewModel(initialCallItem: CallItem?) : ViewModel() {
+class NewCallViewModel(
+    initialCallItem: CallItem?,
+    loggedInUser: User?,
+    app: Application,
+    private val callDao: CallDao
+) : AndroidViewModel(app) {
 
     private var destinationValidator: DestinationValidator? = null
 
     private val callItemMutable: MutableLiveData<CallItem> =
-        MutableLiveData(initialCallItem ?: CallItem(CallType.AppToPhone, "", Date()))
+        MutableLiveData(
+            initialCallItem ?: CallItem(
+                CallType.AppToPhone,
+                "",
+                Date(),
+                userId = loggedInUser?.id.orEmpty()
+            )
+        )
+
+    val navigationEvents: SingleLiveEvent<NewCallNavigationEvent> = SingleLiveEvent()
 
     val callItem: LiveData<CallItem> get() = callItemMutable
 
@@ -39,6 +57,12 @@ class NewCallViewModel(initialCallItem: CallItem?) : ViewModel() {
         if (newDestination != callItem.value?.destination) {
             callItemMutable.value = callItem.value?.copy(destination = newDestination)
         }
+    }
+
+    fun onCallButtonClicked() {
+        val newCallItem = callItem.value?.copy(startDate = Date(), itemId = 0) ?: return
+        callDao.insert(newCallItem)
+        navigationEvents.postValue(OutgoingCall(newCallItem))
     }
 
 }

@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
@@ -16,7 +17,8 @@ import com.sinch.rtc.vvc.reference.app.storage.converters.DateConverter
 @TypeConverters(CallTypeConverter::class, DateConverter::class)
 abstract class RTCVoiceVideoAppDatabase : RoomDatabase() {
 
-    abstract fun wordDao(): UserDao
+    abstract fun userDao(): UserDao
+    abstract fun callDao(): CallDao
 
     companion object {
 

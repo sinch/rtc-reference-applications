@@ -10,8 +10,10 @@ class LoggedInViewModel(app: Application, private val userDao: UserDao) : Androi
     val navigationEvents: SingleLiveEvent<LoggedInNavigationEvent> = SingleLiveEvent()
 
     fun onViewCreated() {
-        if (userDao.loadAllUsers().isEmpty()) {
+        if (userDao.loadLoggedInUser() == null) {
             navigationEvents.postValue(Login)
+        } else {
+            navigationEvents.postValue(Dashboard)
         }
     }
 

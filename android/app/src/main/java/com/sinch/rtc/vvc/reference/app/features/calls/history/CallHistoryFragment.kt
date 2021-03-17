@@ -6,6 +6,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sinch.rtc.vvc.reference.app.R
+import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentHistoryBinding
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.features.calls.history.list.CallHistoryAdapter
@@ -13,7 +14,9 @@ import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingFragment
 
 class CallHistoryFragment : ViewBindingFragment<FragmentHistoryBinding>(R.layout.fragment_history) {
 
-    private val viewModel: CallHistoryViewModel by viewModels()
+    private val viewModel: CallHistoryViewModel by viewModels {
+        NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory(requireActivity().application)
+    }
 
     private val adapter = CallHistoryAdapter()
 
@@ -38,7 +41,9 @@ class CallHistoryFragment : ViewBindingFragment<FragmentHistoryBinding>(R.layout
     }
 
     private fun navigateToOutgoingCall(item: CallItem) {
-        findNavController().navigate(R.id.action_callHistoryFragment_to_outgoingCallFragment)
+        findNavController().navigate(
+            CallHistoryFragmentDirections.actionCallHistoryFragmentToOutgoingCallFragment(item)
+        )
     }
 
     private fun navigateToNewCall(item: CallItem) {

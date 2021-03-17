@@ -10,14 +10,14 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.tabs.TabLayout
 import com.sinch.rtc.vvc.reference.app.R
-import com.sinch.rtc.vvc.reference.app.application.RTCVoiceVideoRefAppAndroidViewModelFactory
+import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.ActivityLoggedInBinding
 import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingActivity
 
 class LoggedInActivity : ViewBindingActivity<ActivityLoggedInBinding>() {
 
     private val viewModel: LoggedInViewModel by viewModels {
-        RTCVoiceVideoRefAppAndroidViewModelFactory(application)
+        NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory(application)
     }
 
     private val topDestinations = listOf(
@@ -41,7 +41,6 @@ class LoggedInActivity : ViewBindingActivity<ActivityLoggedInBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupNavigation()
         observeNavigationEvents()
         viewModel.onViewCreated()
     }
@@ -93,8 +92,15 @@ class LoggedInActivity : ViewBindingActivity<ActivityLoggedInBinding>() {
 
     private fun observeNavigationEvents() {
         viewModel.navigationEvents.observe(this) {
-            finish()
-            navHostFragment.navController.navigate(R.id.to_logged_out_flow)
+            when (it) {
+                Login -> {
+                    finish()
+                    navHostFragment.navController.navigate(R.id.to_logged_out_flow)
+                }
+                Dashboard -> {
+                    setupNavigation()
+                }
+            }
         }
     }
 

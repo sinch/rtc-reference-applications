@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.sinch.rtc.vvc.reference.app.R
-import com.sinch.rtc.vvc.reference.app.application.SafeArgsViewModelFactory
+import com.sinch.rtc.vvc.reference.app.application.RTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentNewCallBinding
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallType
 import com.sinch.rtc.vvc.reference.app.domain.calls.newCallLabel
@@ -29,7 +29,8 @@ class NewCallFragment : ViewBindingFragment<FragmentNewCallBinding>(R.layout.fra
     )
     private val args: NewCallFragmentArgs by navArgs()
     private val viewModel: NewCallViewModel by viewModels {
-        SafeArgsViewModelFactory(
+        RTCVoiceVideoRefAppAndroidViewModelFactory(
+            requireActivity().application,
             args
         )
     }
@@ -41,7 +42,7 @@ class NewCallFragment : ViewBindingFragment<FragmentNewCallBinding>(R.layout.fra
         super.onViewCreated(view, savedInstanceState)
         setupCallTypeAdapter()
         binding.callButton.setOnClickListener {
-            findNavController().navigate(R.id.action_newCallFragment_to_outgoingCallFragment)
+            viewModel.onCallButtonClicked()
         }
         binding.destinationInputEditText.addTextChangedListener {
             viewModel.onNewDestination(it.toString())
@@ -54,6 +55,10 @@ class NewCallFragment : ViewBindingFragment<FragmentNewCallBinding>(R.layout.fra
 
         viewModel.isProceedEnabled.observe(viewLifecycleOwner) {
             binding.callButton.isEnabled = it
+        }
+
+        viewModel.navigationEvents.observe(viewLifecycleOwner) {
+            handleNavigationEvent(it)
         }
     }
 
@@ -83,6 +88,18 @@ class NewCallFragment : ViewBindingFragment<FragmentNewCallBinding>(R.layout.fra
 
     private fun onTypeChanged(callType: CallType) {
         viewModel.onCallTypeSelected(callType)
+    }
+
+    private fun handleNavigationEvent(navigationEvent: NewCallNavigationEvent) {
+        when (navigationEvent) {
+            is OutgoingCall -> {
+                findNavController().navigate(
+                    NewCallFragmentDirections.actionNewCallFragmentToOutgoingCallFragment(
+                        navigationEvent.call
+                    )
+                )
+            }
+        }
     }
 
 }
