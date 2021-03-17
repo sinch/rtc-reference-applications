@@ -8,7 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentSettingsBinding
-import com.sinch.rtc.vvc.reference.app.navigation.loggedin.LoggedInActivity
+import com.sinch.rtc.vvc.reference.app.navigation.main.MainActivity
 import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingFragment
 
 class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.fragment_settings) {
@@ -31,7 +31,7 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
     private fun setupButtons() {
         binding.apply {
             listOf(logoutButton, clearDataButton).forEach {
-                it.isVisible = activity is LoggedInActivity
+                it.isVisible = activity is MainActivity
             }
             logoutButton.setOnClickListener {
                 viewModel.onLogoutClicked()
@@ -46,7 +46,7 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
         when (event) {
             Login -> {
                 activity?.finish()
-                findNavController().navigate(R.id.action_settingsFragment_to_loggedOutActivity)
+                findNavController().navigate(R.id.action_settingsFragment_to_loginActivity)
             }
         }
     }

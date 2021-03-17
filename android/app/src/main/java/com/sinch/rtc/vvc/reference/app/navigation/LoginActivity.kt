@@ -4,11 +4,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.sinch.rtc.vvc.reference.app.R
 
-class LoggedOutActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_logged_out)
+        setContentView(R.layout.activity_login)
     }
 
 }

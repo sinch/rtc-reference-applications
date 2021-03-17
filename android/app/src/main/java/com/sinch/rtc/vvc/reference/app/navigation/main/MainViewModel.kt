@@ -1,13 +1,13 @@
-package com.sinch.rtc.vvc.reference.app.navigation.loggedin
+package com.sinch.rtc.vvc.reference.app.navigation.main
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 
-class LoggedInViewModel(app: Application, private val userDao: UserDao) : AndroidViewModel(app) {
+class MainViewModel(app: Application, private val userDao: UserDao) : AndroidViewModel(app) {
 
-    val navigationEvents: SingleLiveEvent<LoggedInNavigationEvent> = SingleLiveEvent()
+    val navigationEvents: SingleLiveEvent<MainNavigationEvent> = SingleLiveEvent()
 
     fun onViewCreated() {
         if (userDao.loadLoggedInUser() == null) {

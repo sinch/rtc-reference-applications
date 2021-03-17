@@ -60,7 +60,7 @@ class LoginFragment : ViewBindingFragment<FragmentLoginBinding>(R.layout.fragmen
         when (navigationEvent) {
             Dashboard -> {
                 activity?.finish()
-                findNavController().navigate(R.id.action_loginFragment_to_loggedInActivity)
+                findNavController().navigate(R.id.action_loginFragment_to_mainActivity)
             }
         }
     }

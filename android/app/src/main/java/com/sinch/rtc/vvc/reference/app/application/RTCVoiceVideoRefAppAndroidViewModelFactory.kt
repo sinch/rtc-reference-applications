@@ -11,7 +11,7 @@ import com.sinch.rtc.vvc.reference.app.features.calls.outgoing.OutgoingCallFragm
 import com.sinch.rtc.vvc.reference.app.features.calls.outgoing.OutgoingCallViewModel
 import com.sinch.rtc.vvc.reference.app.features.login.LoginViewModel
 import com.sinch.rtc.vvc.reference.app.features.settings.SettingsViewModel
-import com.sinch.rtc.vvc.reference.app.navigation.loggedin.LoggedInViewModel
+import com.sinch.rtc.vvc.reference.app.navigation.main.MainViewModel
 import com.sinch.rtc.vvc.reference.app.storage.RTCVoiceVideoAppDatabase
 import com.sinch.rtc.vvc.reference.app.utils.jwt.FakeJWTFetcher
 
@@ -35,8 +35,8 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                     roomDatabase.callDao()
                 ) as T
             }
-            LoggedInViewModel::class.java -> {
-                LoggedInViewModel(
+            MainViewModel::class.java -> {
+                MainViewModel(
                     application,
                     roomDatabase.userDao()
                 ) as T

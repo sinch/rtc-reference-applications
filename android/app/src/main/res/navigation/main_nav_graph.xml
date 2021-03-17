@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/logged_in_nav_graph"
+    android:id="@+id/main_nav_graph"
     app:startDestination="@id/newCallFragment">
 
     <fragment
@@ -54,8 +54,8 @@
         android:label="@string/settings_label"
         tools:layout="@layout/fragment_settings">
         <action
-            android:id="@+id/action_settingsFragment_to_loggedOutActivity"
-            app:destination="@id/loggedOutActivity" />
+            android:id="@+id/action_settingsFragment_to_loginActivity"
+            app:destination="@id/loginActivity" />
     </fragment>
 
     <fragment
@@ -87,12 +87,12 @@
 
     <action
         android:id="@+id/to_logged_out_flow"
-        app:destination="@id/loggedOutActivity" />
+        app:destination="@id/loginActivity" />
 
     <activity
-        android:id="@+id/loggedOutActivity"
-        android:name="com.sinch.rtc.vvc.reference.app.navigation.LoggedOutActivity"
-        android:label="activity_logged_out"
-        tools:layout="@layout/activity_logged_out" />
+        android:id="@+id/loginActivity"
+        android:name="com.sinch.rtc.vvc.reference.app.navigation.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
 
 </navigation>

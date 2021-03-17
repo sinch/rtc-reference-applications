@@ -1,4 +1,4 @@
-package com.sinch.rtc.vvc.reference.app.navigation.loggedin
+package com.sinch.rtc.vvc.reference.app.navigation.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,12 +11,12 @@ import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.tabs.TabLayout
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
-import com.sinch.rtc.vvc.reference.app.databinding.ActivityLoggedInBinding
+import com.sinch.rtc.vvc.reference.app.databinding.ActivityMainBinding
 import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingActivity
 
-class LoggedInActivity : ViewBindingActivity<ActivityLoggedInBinding>() {
+class MainActivity : ViewBindingActivity<ActivityMainBinding>() {
 
-    private val viewModel: LoggedInViewModel by viewModels {
+    private val viewModel: MainViewModel by viewModels {
         NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory(application)
     }
 
@@ -34,10 +34,10 @@ class LoggedInActivity : ViewBindingActivity<ActivityLoggedInBinding>() {
     //https://stackoverflow.com/questions/50502269/illegalstateexception-link-does-not-have-a-navcontroller-set
     private val navHostFragment
         get() =
-            supportFragmentManager.findFragmentById(R.id.loggedInNavigationHostFragment) as NavHostFragment
+            supportFragmentManager.findFragmentById(R.id.mainNavigationHostFragment) as NavHostFragment
 
-    override fun setupBinding(inflater: LayoutInflater): ActivityLoggedInBinding =
-        ActivityLoggedInBinding.inflate(inflater)
+    override fun setupBinding(inflater: LayoutInflater): ActivityMainBinding =
+        ActivityMainBinding.inflate(inflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,7 @@ class LoggedInActivity : ViewBindingActivity<ActivityLoggedInBinding>() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_logged_in, menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 

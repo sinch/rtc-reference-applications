@@ -1,6 +1,7 @@
 package com.sinch.rtc.vvc.reference.app.features.calls.newcall
 
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -51,6 +52,7 @@ class NewCallFragment : ViewBindingFragment<FragmentNewCallBinding>(R.layout.fra
         viewModel.callItem.observe(viewLifecycleOwner) {
             binding.callTypeSpinner.setSelection(callTypes.indexOf(it.type))
             binding.destinationInputEditText.setTextKeepState(it.destination)
+            setupKeyboardType(it.type)
         }
 
         viewModel.isProceedEnabled.observe(viewLifecycleOwner) {
@@ -88,6 +90,13 @@ class NewCallFragment : ViewBindingFragment<FragmentNewCallBinding>(R.layout.fra
 
     private fun onTypeChanged(callType: CallType) {
         viewModel.onCallTypeSelected(callType)
+    }
+
+    private fun setupKeyboardType(callType: CallType) {
+        binding.destinationInputEditText.inputType = when (callType) {
+            CallType.AppToPhone -> InputType.TYPE_CLASS_PHONE
+            else -> InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+        }
     }
 
     private fun handleNavigationEvent(navigationEvent: NewCallNavigationEvent) {

@@ -14,8 +14,8 @@
             android:id="@+id/action_loginFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
         <action
-            android:id="@+id/action_loginFragment_to_loggedInActivity"
-            app:destination="@id/loggedInActivity" />
+            android:id="@+id/action_loginFragment_to_mainActivity"
+            app:destination="@id/mainActivity" />
     </fragment>
 
     <fragment
@@ -25,9 +25,9 @@
         tools:layout="@layout/fragment_settings" />
 
     <activity
-        android:id="@+id/loggedInActivity"
-        android:name="com.sinch.rtc.vvc.reference.app.navigation.loggedin.LoggedInActivity"
-        android:label="activity_logged_in"
-        tools:layout="@layout/activity_logged_in" />
+        android:id="@+id/mainActivity"
+        android:name="com.sinch.rtc.vvc.reference.app.navigation.main.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" />
 
 </navigation>

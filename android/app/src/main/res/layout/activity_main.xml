@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".navigation.loggedin.LoggedInActivity">
+    tools:context=".navigation.main.MainActivity">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -28,7 +28,7 @@
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/loggedInNavigationHostFragment"
+        android:id="@+id/mainNavigationHostFragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -37,6 +37,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tabLayout"
-        app:navGraph="@navigation/logged_in_nav_graph" />
+        app:navGraph="@navigation/main_nav_graph" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

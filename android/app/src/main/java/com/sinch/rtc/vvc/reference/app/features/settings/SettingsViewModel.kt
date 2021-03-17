@@ -24,10 +24,7 @@ class SettingsViewModel(
 
     fun onClearDataClicked() {
         userDao.loadLoggedInUser()?.let {
-            val loggedInUserCallHistory = callDao.getLiveDataOfUserCallHistory(it.id).value
-            if (loggedInUserCallHistory != null) {
-                callDao.delete(loggedInUserCallHistory)
-            }
+            callDao.delete(callDao.loadCallHistoryOfUser(it.id))
         }
     }
 }
