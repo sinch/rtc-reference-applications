@@ -1,5 +1,6 @@
 package com.sinch.rtc.vvc.reference.app.domain.calls
 
+import android.Manifest
 import android.content.Context
 import com.sinch.rtc.vvc.reference.app.R
 
@@ -20,3 +21,9 @@ fun CallType.newCallLabel(context: Context): String {
     return context.getString(resource)
 
 }
+
+val CallType.requiredPermissions: List<String>
+    get() = when (this) {
+        CallType.AppToPhone -> listOf(Manifest.permission.RECORD_AUDIO)
+        else -> emptyList()
+    }

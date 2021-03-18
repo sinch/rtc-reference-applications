@@ -12,7 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentLoginBinding
-import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingFragment
+import com.sinch.rtc.vvc.reference.app.utils.base.fragment.ViewBindingFragment
 
 class LoginFragment : ViewBindingFragment<FragmentLoginBinding>(R.layout.fragment_login) {
 

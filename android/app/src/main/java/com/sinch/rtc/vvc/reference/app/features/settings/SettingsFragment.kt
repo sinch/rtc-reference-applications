@@ -9,7 +9,7 @@ import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentSettingsBinding
 import com.sinch.rtc.vvc.reference.app.navigation.main.MainActivity
-import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingFragment
+import com.sinch.rtc.vvc.reference.app.utils.base.fragment.ViewBindingFragment
 
 class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.fragment_settings) {
 

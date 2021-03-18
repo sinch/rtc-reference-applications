@@ -12,7 +12,7 @@ import com.google.android.material.tabs.TabLayout
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.ActivityMainBinding
-import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingActivity
+import com.sinch.rtc.vvc.reference.app.utils.base.activity.ViewBindingActivity
 
 class MainActivity : ViewBindingActivity<ActivityMainBinding>() {
 

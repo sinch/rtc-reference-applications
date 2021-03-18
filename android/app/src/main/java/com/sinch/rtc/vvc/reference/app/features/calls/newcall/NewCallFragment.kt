@@ -14,9 +14,9 @@ import com.sinch.rtc.vvc.reference.app.application.RTCVoiceVideoRefAppAndroidVie
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentNewCallBinding
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallType
 import com.sinch.rtc.vvc.reference.app.domain.calls.newCallLabel
-import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingFragment
+import com.sinch.rtc.vvc.reference.app.utils.base.fragment.MainActivityFragment
 
-class NewCallFragment : ViewBindingFragment<FragmentNewCallBinding>(R.layout.fragment_new_call) {
+class NewCallFragment : MainActivityFragment<FragmentNewCallBinding>(R.layout.fragment_new_call) {
 
     companion object {
         const val TAG = "NewCallFragment"
@@ -32,7 +32,8 @@ class NewCallFragment : ViewBindingFragment<FragmentNewCallBinding>(R.layout.fra
     private val viewModel: NewCallViewModel by viewModels {
         RTCVoiceVideoRefAppAndroidViewModelFactory(
             requireActivity().application,
-            args
+            args,
+            sinchClient = mainActivityViewModel.sinchClient
         )
     }
 

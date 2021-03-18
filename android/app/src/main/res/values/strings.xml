@@ -32,4 +32,10 @@
     <string name="clear_data">Clear user data</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+
+    <!-- Outgoing call screen -->
+    <string name="cancel">Cancel</string>
+
+    <!-- Established call screen -->
+    <string name="hang_up">Hang up</string>
 </resources>

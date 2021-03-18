@@ -10,7 +10,7 @@ import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndr
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentHistoryBinding
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.features.calls.history.list.CallHistoryAdapter
-import com.sinch.rtc.vvc.reference.app.utils.bindings.ViewBindingFragment
+import com.sinch.rtc.vvc.reference.app.utils.base.fragment.ViewBindingFragment
 
 class CallHistoryFragment : ViewBindingFragment<FragmentHistoryBinding>(R.layout.fragment_history) {
 

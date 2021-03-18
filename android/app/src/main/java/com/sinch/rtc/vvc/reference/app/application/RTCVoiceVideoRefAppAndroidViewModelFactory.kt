@@ -4,6 +4,9 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavArgs
+import com.sinch.android.rtc.SinchClient
+import com.sinch.rtc.vvc.reference.app.features.calls.established.EstablishedCallFragmentArgs
+import com.sinch.rtc.vvc.reference.app.features.calls.established.EstablishedCallViewModel
 import com.sinch.rtc.vvc.reference.app.features.calls.history.CallHistoryViewModel
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.NewCallFragmentArgs
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.NewCallViewModel
@@ -19,7 +22,8 @@ typealias NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory = RTCVoiceVideoRefApp
 
 class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
     private val application: Application,
-    private val args: Args? = null
+    private val args: Args? = null,
+    private val sinchClient: SinchClient? = null,
 ) :
     ViewModelProvider.AndroidViewModelFactory(application) {
 
@@ -64,8 +68,19 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                 ) as T
             }
             OutgoingCallViewModel::class.java -> {
+                val arguments = (args as OutgoingCallFragmentArgs)
                 OutgoingCallViewModel(
-                    (args as OutgoingCallFragmentArgs).callItemData,
+                    sinchClient?.callClient!!,
+                    arguments.callItemData,
+                    application
+                ) as T
+            }
+            EstablishedCallViewModel::class.java -> {
+                val arguments = (args as EstablishedCallFragmentArgs)
+                EstablishedCallViewModel(
+                    sinchClient?.callClient!!,
+                    arguments.callItemData,
+                    arguments.sinchCallId,
                     application
                 ) as T
             }

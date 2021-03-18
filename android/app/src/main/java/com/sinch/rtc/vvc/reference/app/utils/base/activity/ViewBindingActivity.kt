@@ -1,4 +1,4 @@
-package com.sinch.rtc.vvc.reference.app.utils.bindings
+package com.sinch.rtc.vvc.reference.app.utils.base.activity
 
 import android.os.Bundle
 import android.view.LayoutInflater
