@@ -22,6 +22,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleTextView" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/basic_margin"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/isMutedCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/is_muted" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/isSpeakerOnCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/speaker_on" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/isAutomaticRoutingEnabledCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/automatic_routing" />
+
+    </LinearLayout>
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/hangUpButton"
         android:layout_width="wrap_content"

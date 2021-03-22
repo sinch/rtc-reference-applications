@@ -6,9 +6,14 @@ import androidx.lifecycle.AndroidViewModel
 import com.sinch.android.rtc.*
 import com.sinch.rtc.vvc.reference.app.application.Constants
 import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
+import com.sinch.rtc.vvc.reference.app.utils.jwt.JWTFetcher
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 
-class MainViewModel(private val app: Application, private val userDao: UserDao) :
+class MainViewModel(
+    private val app: Application,
+    private val jwtFetcher: JWTFetcher,
+    private val userDao: UserDao
+) :
     AndroidViewModel(app),
     SinchClientListener {
 
@@ -43,12 +48,19 @@ class MainViewModel(private val app: Application, private val userDao: UserDao) 
             .build()
             .apply {
                 addSinchClientListener(this@MainViewModel)
+                setSupportManagedPush(true)
                 start()
             }
     }
 
-    override fun onCredentialsRequired(p0: ClientRegistration?) {
-        Log.d(TAG, "onCredentialsRequired $p0")
+    override fun onCredentialsRequired(clientRegistration: ClientRegistration?) {
+        Log.d(TAG, "onCredentialsRequired $clientRegistration")
+        val loggedInUser = userDao.loadLoggedInUser();
+        if (loggedInUser != null) {
+            jwtFetcher.acquireJWT(Constants.APP_KEY, loggedInUser.id) { jwt ->
+                clientRegistration?.register(jwt)
+            }
+        }
     }
 
     override fun onUserRegistered() {

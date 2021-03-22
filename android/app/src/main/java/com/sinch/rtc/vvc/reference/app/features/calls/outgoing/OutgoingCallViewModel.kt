@@ -11,6 +11,8 @@ import com.sinch.android.rtc.calling.CallClient
 import com.sinch.android.rtc.calling.CallListener
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.requiredPermissions
+import com.sinch.rtc.vvc.reference.app.utils.extensions.PermissionRequestResult
+import com.sinch.rtc.vvc.reference.app.utils.extensions.areAllPermissionsGranted
 import com.sinch.rtc.vvc.reference.app.utils.extensions.createSinchCall
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 
@@ -34,8 +36,21 @@ class OutgoingCallViewModel(
         const val TAG = "OutgoingCallViewModel"
     }
 
-    init {
-        initializeCall()
+    fun onViewCreated() {
+        if (sinchCall == null) {
+            permissionsRequiredEvent.postValue(callItem.type.requiredPermissions)
+        }
+    }
+
+    fun onPermissionsResult(permissionRequestResult: PermissionRequestResult) {
+        if (sinchCall != null) {
+            return
+        }
+        if (permissionRequestResult.areAllPermissionsGranted) {
+            initializeCall()
+        } else {
+            navigationEvents.postValue(Back)
+        }
     }
 
     fun onBackPressed() {
@@ -72,6 +87,7 @@ class OutgoingCallViewModel(
     override fun onCallEnded(call: Call?) {
         Log.d(TAG, "onCallEnded for $call")
         finishCurrentCall()
+        navigationEvents.postValue(Back)
     }
 
     override fun onCleared() {

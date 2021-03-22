@@ -1,8 +1,12 @@
 package com.sinch.rtc.vvc.reference.app.features.calls.outgoing
 
+import android.content.Context
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -13,6 +17,10 @@ import com.sinch.rtc.vvc.reference.app.utils.base.fragment.MainActivityFragment
 
 class OutgoingCallFragment :
     MainActivityFragment<FragmentOutgoingCallBinding>(R.layout.fragment_outgoing_call) {
+
+    companion object {
+        const val TAG = "OutgoingCallFragment"
+    }
 
     private val args: OutgoingCallFragmentArgs by navArgs()
     private val viewModel: OutgoingCallViewModel by viewModels {
@@ -48,6 +56,7 @@ class OutgoingCallFragment :
                 progressingCallTonePlayer.stop()
             }
         }
+        viewModel.onViewCreated()
     }
 
     override fun onBackPressed() {
@@ -70,7 +79,9 @@ class OutgoingCallFragment :
     }
 
     private fun handlePermissionsRequired(permissions: List<String>) {
-        //TODO Example of permissions handling
+        requestPermissions(permissions) {
+            viewModel.onPermissionsResult(it)
+        }
     }
 
 }

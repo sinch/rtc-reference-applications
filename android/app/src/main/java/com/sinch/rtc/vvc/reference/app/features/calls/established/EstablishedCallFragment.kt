@@ -1,5 +1,6 @@
 package com.sinch.rtc.vvc.reference.app.features.calls.established
 
+import android.Manifest
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -34,8 +35,33 @@ class EstablishedCallFragment :
         viewModel.callDurationFormatted.observe(viewLifecycleOwner) {
             binding.durationText.text = it
         }
+        viewModel.audioRoutingPermissionRequiredEvent.observe(viewLifecycleOwner) {
+            requestPermissions(listOf(Manifest.permission.BLUETOOTH)) {
+                viewModel.onAudioRoutingPermissionsResult(it)
+            }
+        }
+        viewModel.audioCallProperties.observe(viewLifecycleOwner) {
+            binding.isSpeakerOnCheckbox.isChecked = it.isSpeakerOn
+            binding.isMutedCheckbox.isChecked = it.isMuted
+            binding.isAutomaticRoutingEnabledCheckbox.isChecked = it.isAudioRoutingEnabled
+        }
 
         binding.hangUpButton.setOnClickListener { viewModel.onHangUpClicked() }
+        binding.isAutomaticRoutingEnabledCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onAudioRoutingCheckboxStateChanged(
+                isChecked
+            )
+        }
+        binding.isMutedCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onMuteCheckboxChanged(
+                isChecked
+            )
+        }
+        binding.isSpeakerOnCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onEnableSpeakerCheckboxChanged(
+                isChecked
+            )
+        }
     }
 
     override fun onBackPressed() {

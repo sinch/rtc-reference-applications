@@ -38,4 +38,8 @@
 
     <!-- Established call screen -->
     <string name="hang_up">Hang up</string>
+    <string name="speaker_on">Use speaker</string>
+    <string name="is_muted">Is muted</string>
+    <string name="automatic_routing">Automatic routing</string>
+
 </resources>

@@ -1,6 +1,6 @@
 .PHONY: sync clean build
 .DEFAULT_GOAL := build
-SDK_VERSION=4.0.5
+SDK_VERSION=4.0.6
 
 SINCH_SDK_DIR = ./app/libs
 SINCH_SDK_BINARY = ${SINCH_SDK_DIR}/sinch-android-rtc-${SDK_VERSION}.zip

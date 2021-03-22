@@ -9,14 +9,16 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.sinch.android.rtc.SinchClient
 import com.sinch.android.rtc.calling.Call
-import com.sinch.android.rtc.calling.CallClient
 import com.sinch.android.rtc.calling.CallListener
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
+import com.sinch.rtc.vvc.reference.app.features.calls.established.properties.AudioCallProperties
+import com.sinch.rtc.vvc.reference.app.utils.extensions.*
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 
 class EstablishedCallViewModel(
-    private val callClient: CallClient,
+    private val sinchClient: SinchClient,
     private val callItem: CallItem,
     private val sinchCallId: String,
     application: Application
@@ -31,6 +33,7 @@ class EstablishedCallViewModel(
     private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     private var sinchCall: Call? = null //We have to store it as user can cancel the call first
+    private val audioCallPropertiesMutable: MutableLiveData<AudioCallProperties>
 
     val callDurationFormatted: LiveData<String> = Transformations.map(callDurationMutable) {
         DateUtils.formatElapsedTime(it.toLong())
@@ -38,10 +41,16 @@ class EstablishedCallViewModel(
 
     val navigationEvents: SingleLiveEvent<EstablishedCallNavigationEvent> =
         SingleLiveEvent()
+    val audioRoutingPermissionRequiredEvent = SingleLiveEvent<Unit>()
+    val audioCallProperties: LiveData<AudioCallProperties>
 
     init {
         sinchCall =
-            callClient.getCall(sinchCallId).apply { addCallListener(this@EstablishedCallViewModel) }
+            sinchClient.callClient.getCall(sinchCallId)
+                .apply { addCallListener(this@EstablishedCallViewModel) }
+        audioCallPropertiesMutable =
+            MutableLiveData(AudioCallProperties(sinchClient.audioController))
+        audioCallProperties = audioCallPropertiesMutable
         initiateCallTimeCheck()
     }
 
@@ -52,6 +61,32 @@ class EstablishedCallViewModel(
 
     fun onBackPressed() {
         sinchCall?.hangup()
+    }
+
+    fun onAudioRoutingCheckboxStateChanged(isOn: Boolean) {
+        if (isOn) {
+            audioRoutingPermissionRequiredEvent.call()
+        } else {
+            sinchClient.audioController.setAutomaticRoutingEnabled(false)
+            updateAudioProperties()
+        }
+    }
+
+    fun onAudioRoutingPermissionsResult(result: PermissionRequestResult) {
+        if (result.areAllPermissionsGranted) {
+            sinchClient.audioController.setAutomaticRoutingEnabled(true)
+        }
+        updateAudioProperties()
+    }
+
+    fun onEnableSpeakerCheckboxChanged(isOn: Boolean) {
+        sinchClient.audioController.setSpeakerEnabled(isOn)
+        updateAudioProperties()
+    }
+
+    fun onMuteCheckboxChanged(isOn: Boolean) {
+        sinchClient.audioController.setMuted(isOn)
+        updateAudioProperties()
     }
 
     override fun onCallProgressing(call: Call?) {
@@ -88,6 +123,10 @@ class EstablishedCallViewModel(
         Log.d(TAG, "Current call time is ${sinchCall?.details?.duration}")
         val durationInS = sinchCall?.details?.duration ?: return
         callDurationMutable.value = durationInS
+    }
+
+    private fun updateAudioProperties() {
+        audioCallPropertiesMutable.value = AudioCallProperties(sinchClient.audioController)
     }
 
 }

@@ -25,5 +25,6 @@ fun CallType.newCallLabel(context: Context): String {
 val CallType.requiredPermissions: List<String>
     get() = when (this) {
         CallType.AppToPhone -> listOf(Manifest.permission.RECORD_AUDIO)
+        CallType.AppToAppVideo -> listOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA)
         else -> emptyList()
     }
