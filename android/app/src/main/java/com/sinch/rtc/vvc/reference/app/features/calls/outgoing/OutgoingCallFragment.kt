@@ -1,12 +1,8 @@
 package com.sinch.rtc.vvc.reference.app.features.calls.outgoing
 
-import android.content.Context
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs

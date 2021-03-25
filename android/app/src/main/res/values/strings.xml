@@ -32,6 +32,11 @@
     <string name="clear_data">Clear user data</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="local_scale_type">Local video scaling</string>
+    <string name="remote_video_scale_type">Remote video scaling</string>
+    <string name="aspect_fit">Aspect Fit</string>
+    <string name="aspect_fill">Aspect Fill</string>
+    <string name="aspect_balanced">Aspect Balanced</string>
 
     <!-- Outgoing call screen -->
     <string name="cancel">Cancel</string>
@@ -40,6 +45,9 @@
     <string name="hang_up">Hang up</string>
     <string name="speaker_on">Use speaker</string>
     <string name="is_muted">Is muted</string>
+    <string name="is_front_camera_used">Is front camera used</string>
     <string name="automatic_routing">Automatic routing</string>
+    <string name="torch">Is torch on</string>
+    <string name="is_paused">Is paused</string>
 
 </resources>

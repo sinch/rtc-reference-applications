@@ -22,25 +22,44 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleTextView" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <FrameLayout
+        android:id="@+id/bigVideoFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/smallVideoFrame"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline20" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline80"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/basic_margin"
+        android:background="#50FFFFFF"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/isMutedCheckbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/is_muted" />
-
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/isSpeakerOnCheckbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/speaker_on" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/isAutomaticRoutingEnabledCheckbox"
@@ -55,9 +74,69 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/fab_margin"
-        android:text="@string/hang_up"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        android:minWidth="0dp"
+        app:backgroundTint="@color/red"
+        app:icon="@drawable/ic_baseline_call_end_24"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:layout_constraintBottom_toTopOf="@id/callSettingsLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/callSettingsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blackSemiTransparent"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/basic_margin"
+        android:paddingBottom="@dimen/basic_margin"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.sinch.rtc.vvc.reference.app.utils.views.RTCToggleButton
+            android:id="@+id/isMutedToggleButton"
+            android:layout_width="@dimen/toggle_button_size"
+            android:layout_height="@dimen/toggle_button_size"
+            android:background="@drawable/ic_baseline_mic_off_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/isSpeakerOnToggleButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.sinch.rtc.vvc.reference.app.utils.views.RTCToggleButton
+            android:id="@+id/isSpeakerOnToggleButton"
+            android:layout_width="@dimen/toggle_button_size"
+            android:layout_height="@dimen/toggle_button_size"
+            android:background="@drawable/ic_baseline_speaker_phone_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/isMutedToggleButton"
+            app:layout_constraintRight_toLeftOf="@id/isVideoPausedToggleButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.sinch.rtc.vvc.reference.app.utils.views.RTCToggleButton
+            android:id="@+id/isVideoPausedToggleButton"
+            android:layout_width="@dimen/toggle_button_size"
+            android:layout_height="@dimen/toggle_button_size"
+            android:background="@drawable/ic_baseline_videocam_off_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/isSpeakerOnToggleButton"
+            app:layout_constraintRight_toLeftOf="@id/isTorchOnToggleButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.sinch.rtc.vvc.reference.app.utils.views.RTCToggleButton
+            android:id="@+id/isTorchOnToggleButton"
+            android:layout_width="@dimen/toggle_button_size"
+            android:layout_height="@dimen/toggle_button_size"
+            android:background="@drawable/ic_baseline_flash_on_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/isVideoPausedToggleButton"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

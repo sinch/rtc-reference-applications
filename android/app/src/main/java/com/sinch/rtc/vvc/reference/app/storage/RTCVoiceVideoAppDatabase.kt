@@ -11,10 +11,11 @@ import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
 import com.sinch.rtc.vvc.reference.app.storage.converters.CallTypeConverter
 import com.sinch.rtc.vvc.reference.app.storage.converters.DateConverter
+import com.sinch.rtc.vvc.reference.app.storage.converters.VideoScalingTypeConverter
 
 
 @Database(entities = [User::class, CallItem::class], version = 1, exportSchema = false)
-@TypeConverters(CallTypeConverter::class, DateConverter::class)
+@TypeConverters(CallTypeConverter::class, DateConverter::class, VideoScalingTypeConverter::class)
 abstract class RTCVoiceVideoAppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao

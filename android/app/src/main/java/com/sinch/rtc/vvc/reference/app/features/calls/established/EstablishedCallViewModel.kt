@@ -12,14 +12,15 @@ import androidx.lifecycle.Transformations
 import com.sinch.android.rtc.SinchClient
 import com.sinch.android.rtc.calling.Call
 import com.sinch.android.rtc.calling.CallListener
-import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
+import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.features.calls.established.properties.AudioCallProperties
+import com.sinch.rtc.vvc.reference.app.features.calls.established.properties.VideoCallProperties
 import com.sinch.rtc.vvc.reference.app.utils.extensions.*
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 
 class EstablishedCallViewModel(
     private val sinchClient: SinchClient,
-    private val callItem: CallItem,
+    private val loggedInUser: User,
     private val sinchCallId: String,
     application: Application
 ) :
@@ -33,7 +34,12 @@ class EstablishedCallViewModel(
     private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     private var sinchCall: Call? = null //We have to store it as user can cancel the call first
-    private val audioCallPropertiesMutable: MutableLiveData<AudioCallProperties>
+    private val audioCallPropertiesMutable: MutableLiveData<AudioCallProperties> = MutableLiveData()
+    private val videoCallPropertiesMutable: MutableLiveData<VideoCallProperties?> =
+        MutableLiveData()
+    private var isLocalVideoOnTop = true
+    private var isVideoPaused = false
+    private var isTorchOn = false
 
     val callDurationFormatted: LiveData<String> = Transformations.map(callDurationMutable) {
         DateUtils.formatElapsedTime(it.toLong())
@@ -42,15 +48,18 @@ class EstablishedCallViewModel(
     val navigationEvents: SingleLiveEvent<EstablishedCallNavigationEvent> =
         SingleLiveEvent()
     val audioRoutingPermissionRequiredEvent = SingleLiveEvent<Unit>()
-    val audioCallProperties: LiveData<AudioCallProperties>
+    val audioCallProperties: LiveData<AudioCallProperties> = audioCallPropertiesMutable
+    val videoCallProperties: LiveData<VideoCallProperties?> = videoCallPropertiesMutable
 
     init {
         sinchCall =
             sinchClient.callClient.getCall(sinchCallId)
-                .apply { addCallListener(this@EstablishedCallViewModel) }
-        audioCallPropertiesMutable =
-            MutableLiveData(AudioCallProperties(sinchClient.audioController))
-        audioCallProperties = audioCallPropertiesMutable
+                .apply {
+                    addCallListener(this@EstablishedCallViewModel)
+                }
+        sinchClient.videoController.setResizeBehaviour(loggedInUser.remoteScalingType)
+        updateAudioProperties()
+        updateVideoProperties()
         initiateCallTimeCheck()
     }
 
@@ -89,6 +98,32 @@ class EstablishedCallViewModel(
         updateAudioProperties()
     }
 
+    fun toggleFrontCamera() {
+        sinchClient.videoController.toggleCaptureDevicePosition()
+    }
+
+    fun onTorchStateChanged(isOn: Boolean) {
+        isTorchOn = isOn && !sinchClient.videoController.isFrontCameraUsedForCapture
+        sinchClient.videoController.setTorchMode(isTorchOn)
+        updateVideoProperties()
+    }
+
+    fun setIsPaused(isPaused: Boolean) {
+        this.isVideoPaused = isPaused
+        if (isPaused) {
+            sinchCall?.pauseVideo()
+        } else {
+            sinchCall?.resumeVideo()
+        }
+        updateVideoProperties()
+    }
+
+    fun onVideoPositionToggled() {
+        this.isLocalVideoOnTop = !isLocalVideoOnTop
+        sinchClient.videoController.setLocalVideoZOrder(isLocalVideoOnTop)
+        updateVideoProperties()
+    }
+
     override fun onCallProgressing(call: Call?) {
         Log.d(TAG, "onCallProgressing $call")
     }
@@ -120,13 +155,26 @@ class EstablishedCallViewModel(
     }
 
     private fun checkCallTime() {
-        Log.d(TAG, "Current call time is ${sinchCall?.details?.duration}")
         val durationInS = sinchCall?.details?.duration ?: return
         callDurationMutable.value = durationInS
     }
 
     private fun updateAudioProperties() {
         audioCallPropertiesMutable.value = AudioCallProperties(sinchClient.audioController)
+    }
+
+    private fun updateVideoProperties() {
+        if (sinchCall?.details?.isVideoOffered == false) {
+            videoCallPropertiesMutable.value = null
+        } else {
+            videoCallPropertiesMutable.value =
+                VideoCallProperties(
+                    sinchClient.videoController,
+                    isLocalVideoOnTop,
+                    isVideoPaused,
+                    isTorchOn
+                )
+        }
     }
 
 }

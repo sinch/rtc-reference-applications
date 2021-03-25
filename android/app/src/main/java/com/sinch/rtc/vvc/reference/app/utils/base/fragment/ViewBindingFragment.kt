@@ -49,7 +49,10 @@ abstract class ViewBindingFragment<Binding : ViewBinding>(@LayoutRes val content
 
     abstract fun setupBinding(root: View): Binding
 
-    fun requestPermissions(permissions: List<String>, resultCallback: (PermissionRequestResult) -> Unit) {
+    fun requestPermissions(
+        permissions: List<String>,
+        resultCallback: (PermissionRequestResult) -> Unit
+    ) {
         this.permissionsResultCallback = resultCallback
         permissionsLauncher.launch(permissions.toTypedArray())
     }

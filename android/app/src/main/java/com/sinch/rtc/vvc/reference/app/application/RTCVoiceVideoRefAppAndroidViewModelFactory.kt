@@ -80,7 +80,7 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                 val arguments = (args as EstablishedCallFragmentArgs)
                 EstablishedCallViewModel(
                     sinchClient!!,
-                    arguments.callItemData,
+                    roomDatabase.userDao().loadLoggedInUser()!!,
                     arguments.sinchCallId,
                     application
                 ) as T
