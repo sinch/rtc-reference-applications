@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -13,6 +12,7 @@ import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentLoginBinding
 import com.sinch.rtc.vvc.reference.app.utils.base.fragment.ViewBindingFragment
+import com.sinch.rtc.vvc.reference.app.utils.extensions.makeMultiline
 
 class LoginFragment : ViewBindingFragment<FragmentLoginBinding>(R.layout.fragment_login) {
 
@@ -67,10 +67,7 @@ class LoginFragment : ViewBindingFragment<FragmentLoginBinding>(R.layout.fragmen
 
     private fun showError(message: String) {
         Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG)
-            .apply {
-                view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)?.maxLines =
-                    10
-            }.show()
+            .makeMultiline().show()
     }
 
 }

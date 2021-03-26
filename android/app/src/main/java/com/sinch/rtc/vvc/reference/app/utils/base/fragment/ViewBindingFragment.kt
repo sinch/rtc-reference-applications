@@ -7,6 +7,8 @@ import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.LayoutRes
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.sinch.rtc.vvc.reference.app.utils.extensions.PermissionRequestResult
@@ -25,6 +27,8 @@ abstract class ViewBindingFragment<Binding : ViewBinding>(@LayoutRes val content
     private var permissionsResultCallback: (result: PermissionRequestResult) -> Unit = { _ -> }
 
     val binding: Binding get() = sBinding!!
+
+    val actionBar: ActionBar? get() = (activity as? AppCompatActivity)?.supportActionBar
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

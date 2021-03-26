@@ -2,25 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/established_call_label"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/durationText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleTextView" />
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline20"
@@ -43,7 +26,7 @@
         android:layout_width="150dp"
         android:layout_height="200dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline20" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline80"
@@ -51,23 +34,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.8" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/basic_margin"
-        android:background="#50FFFFFF"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/isAutomaticRoutingEnabledCheckbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/automatic_routing" />
-
-    </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/hangUpButton"
@@ -87,6 +53,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/calleNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corner_callee_bg"
+        android:textColor="@color/white"
+        tools:text="sasasasa"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/durationText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corner_callee_bg"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/calleNameText" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/callSettingsLayout"
         android:layout_width="match_parent"
@@ -104,14 +92,13 @@
             android:background="@drawable/ic_baseline_mic_off_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/isSpeakerOnToggleButton"
+            app:layout_constraintRight_toLeftOf="@id/audioStateButton"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.sinch.rtc.vvc.reference.app.utils.views.RTCToggleButton
-            android:id="@+id/isSpeakerOnToggleButton"
+        <com.sinch.rtc.vvc.reference.app.utils.views.AudioToggleButton
+            android:id="@+id/audioStateButton"
             android:layout_width="@dimen/toggle_button_size"
             android:layout_height="@dimen/toggle_button_size"
-            android:background="@drawable/ic_baseline_speaker_phone_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/isMutedToggleButton"
             app:layout_constraintRight_toLeftOf="@id/isVideoPausedToggleButton"
@@ -123,12 +110,12 @@
             android:layout_height="@dimen/toggle_button_size"
             android:background="@drawable/ic_baseline_videocam_off_24"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/isSpeakerOnToggleButton"
-            app:layout_constraintRight_toLeftOf="@id/isTorchOnToggleButton"
+            app:layout_constraintLeft_toRightOf="@id/audioStateButton"
+            app:layout_constraintRight_toLeftOf="@id/isTorchToggleButton"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.sinch.rtc.vvc.reference.app.utils.views.RTCToggleButton
-            android:id="@+id/isTorchOnToggleButton"
+            android:id="@+id/isTorchToggleButton"
             android:layout_width="@dimen/toggle_button_size"
             android:layout_height="@dimen/toggle_button_size"
             android:background="@drawable/ic_baseline_flash_on_24"

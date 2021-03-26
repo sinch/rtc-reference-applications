@@ -26,7 +26,9 @@ abstract class MainActivityFragment<Binding : ViewBinding>(@LayoutRes contentLay
     }
 
     open fun onBackPressed() {
-        findNavController().popBackStack()
+        if (!findNavController().popBackStack()) {
+            requireActivity().finish()
+        }
     }
 
 }

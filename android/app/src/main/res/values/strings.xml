@@ -49,5 +49,6 @@
     <string name="automatic_routing">Automatic routing</string>
     <string name="torch">Is torch on</string>
     <string name="is_paused">Is paused</string>
+    <string name="only_rear_camera_torch">Setting torch is only possible for rear camera</string>
 
 </resources>

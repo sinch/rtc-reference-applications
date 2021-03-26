@@ -3,16 +3,19 @@ package com.sinch.rtc.vvc.reference.app.features.calls.established
 import android.Manifest
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.snackbar.Snackbar
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.RTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentEstablishedCallBinding
 import com.sinch.rtc.vvc.reference.app.features.calls.established.properties.VideoCallProperties
 import com.sinch.rtc.vvc.reference.app.utils.base.fragment.MainActivityFragment
 import com.sinch.rtc.vvc.reference.app.utils.extensions.addVideoViewChild
+import com.sinch.rtc.vvc.reference.app.utils.extensions.makeMultiline
 
 class EstablishedCallFragment :
     MainActivityFragment<FragmentEstablishedCallBinding>(R.layout.fragment_established_call) {
@@ -34,6 +37,12 @@ class EstablishedCallFragment :
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
         attachBindings()
+        setFullScreenMode(true)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        setFullScreenMode(false)
     }
 
     override fun onBackPressed() {
@@ -50,23 +59,17 @@ class EstablishedCallFragment :
     private fun attachBindings() {
         binding.hangUpButton.setOnClickListener { viewModel.onHangUpClicked() }
 
-        binding.isAutomaticRoutingEnabledCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.onAudioRoutingCheckboxStateChanged(
-                isChecked
-            )
+        binding.audioStateButton.onAudioStateChanged = { newState ->
+            viewModel.onAudioStateChanged(newState)
         }
+
         binding.isMutedToggleButton.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onMuteCheckboxChanged(
                 isChecked
             )
         }
-        binding.isTorchOnToggleButton.setOnCheckedChangeListener { _, isChecked ->
+        binding.isTorchToggleButton.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onTorchStateChanged(isChecked)
-        }
-        binding.isSpeakerOnToggleButton.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.onEnableSpeakerCheckboxChanged(
-                isChecked
-            )
         }
 
         listOf(binding.smallVideoFrame, binding.bigVideoFrame).forEach {
@@ -84,8 +87,10 @@ class EstablishedCallFragment :
     }
 
     private fun observeViewModel() {
-        viewModel.navigationEvents.observe(viewLifecycleOwner) {
-            handleNavigation(it)
+        viewModel.messageEvents.observe(viewLifecycleOwner, this::showError)
+        viewModel.navigationEvents.observe(viewLifecycleOwner, this::handleNavigation)
+        viewModel.callProperties.observe(viewLifecycleOwner) {
+            binding.calleNameText.text = it.calleeName
         }
         viewModel.callDurationFormatted.observe(viewLifecycleOwner) {
             binding.durationText.text = it
@@ -96,16 +101,15 @@ class EstablishedCallFragment :
             }
         }
         viewModel.audioCallProperties.observe(viewLifecycleOwner) {
-            binding.isSpeakerOnToggleButton.isChecked = it.isSpeakerOn
-            binding.isMutedToggleButton.isChecked = it.isMuted
-            binding.isAutomaticRoutingEnabledCheckbox.isChecked = it.isAudioRoutingEnabled
+            binding.audioStateButton.audioState = it.audioState
+            binding.isMutedToggleButton.setCheckedOmitListeners(it.isMuted)
         }
         viewModel.videoCallProperties.observe(viewLifecycleOwner) { videoCallProperties ->
             listOf(
                 binding.smallVideoFrame,
                 binding.bigVideoFrame,
                 binding.isVideoPausedToggleButton,
-                binding.isTorchOnToggleButton
+                binding.isTorchToggleButton
             ).forEach {
                 it.isVisible = (videoCallProperties != null)
             }
@@ -115,9 +119,19 @@ class EstablishedCallFragment :
         }
     }
 
+    private fun setFullScreenMode(isEnabled: Boolean) {
+        if (isEnabled) {
+            requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+            actionBar?.hide()
+        } else {
+            requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+            actionBar?.show()
+        }
+    }
+
     private fun adjustVideoOnlyUI(videoCallProperties: VideoCallProperties) {
-        binding.isVideoPausedToggleButton.isChecked = videoCallProperties.isVideoPaused
-        binding.isTorchOnToggleButton.isChecked = false
+        binding.isVideoPausedToggleButton.setCheckedOmitListeners(videoCallProperties.isVideoPaused)
+        binding.isTorchToggleButton.setCheckedOmitListeners(videoCallProperties.isTorchOn)
         if (videoCallProperties.isLocalOnTop) {
             binding.bigVideoFrame.addVideoViewChild(videoCallProperties.remoteView)
             binding.smallVideoFrame.addVideoViewChild(videoCallProperties.localView)
@@ -125,6 +139,11 @@ class EstablishedCallFragment :
             binding.bigVideoFrame.addVideoViewChild(videoCallProperties.localView)
             binding.smallVideoFrame.addVideoViewChild(videoCallProperties.remoteView)
         }
+    }
+
+    private fun showError(message: String) {
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG)
+            .makeMultiline().show()
     }
 
 }
