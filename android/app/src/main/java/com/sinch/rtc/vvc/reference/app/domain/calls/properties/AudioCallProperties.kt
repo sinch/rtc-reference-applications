@@ -1,4 +1,4 @@
-package com.sinch.rtc.vvc.reference.app.features.calls.established.properties
+package com.sinch.rtc.vvc.reference.app.domain.calls.properties
 
 import com.sinch.android.rtc.AudioController
 import com.sinch.rtc.vvc.reference.app.domain.calls.AudioState

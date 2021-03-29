@@ -29,7 +29,12 @@
         tools:layout="@layout/fragment_incoming_call">
         <action
             android:id="@+id/action_incomingCallFragment_to_establishedCallFragment"
-            app:destination="@id/establishedCallFragment" />
+            app:destination="@id/establishedCallFragment"
+            app:popUpTo="@id/incomingCallFragment"
+            app:popUpToInclusive="true"/>
+        <argument
+            android:name="callId"
+            app:argType="string" />
     </fragment>
 
     <fragment
@@ -103,6 +108,10 @@
     <action
         android:id="@+id/to_logged_out_flow"
         app:destination="@id/loginActivity" />
+
+    <action
+        android:id="@+id/to_incoming_call"
+        app:destination="@id/incomingCallFragment" />
 
     <activity
         android:id="@+id/loginActivity"

@@ -1,4 +1,4 @@
-package com.sinch.rtc.vvc.reference.app.features.calls.established.properties
+package com.sinch.rtc.vvc.reference.app.domain.calls.properties
 
 import android.view.View
 import com.sinch.android.rtc.video.VideoController

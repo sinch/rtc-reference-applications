@@ -41,6 +41,9 @@
     <!-- Outgoing call screen -->
     <string name="cancel">Cancel</string>
 
+    <!-- Incoming call screen -->
+    <string name="calling">calling</string>
+
     <!-- Established call screen -->
     <string name="hang_up">Hang up</string>
     <string name="speaker_on">Use speaker</string>

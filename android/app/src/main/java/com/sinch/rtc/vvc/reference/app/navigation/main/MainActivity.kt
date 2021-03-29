@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.tabs.TabLayout
+import com.sinch.rtc.vvc.reference.app.MainNavGraphDirections
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.ActivityMainBinding
@@ -99,6 +100,9 @@ class MainActivity : ViewBindingActivity<ActivityMainBinding>() {
                 }
                 Dashboard -> {
                     setupNavigation()
+                }
+                is IncomingCall -> {
+                    navHostFragment.navController.navigate(MainNavGraphDirections.toIncomingCall(it.callId))
                 }
             }
         }

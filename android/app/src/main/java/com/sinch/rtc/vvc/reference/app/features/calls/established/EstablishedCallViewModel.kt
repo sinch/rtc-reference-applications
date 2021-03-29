@@ -14,10 +14,10 @@ import com.sinch.android.rtc.calling.Call
 import com.sinch.android.rtc.calling.CallListener
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.domain.calls.AudioState
+import com.sinch.rtc.vvc.reference.app.domain.calls.properties.AudioCallProperties
+import com.sinch.rtc.vvc.reference.app.domain.calls.properties.CallProperties
+import com.sinch.rtc.vvc.reference.app.domain.calls.properties.VideoCallProperties
 import com.sinch.rtc.vvc.reference.app.domain.user.User
-import com.sinch.rtc.vvc.reference.app.features.calls.established.properties.AudioCallProperties
-import com.sinch.rtc.vvc.reference.app.features.calls.established.properties.CallProperties
-import com.sinch.rtc.vvc.reference.app.features.calls.established.properties.VideoCallProperties
 import com.sinch.rtc.vvc.reference.app.utils.extensions.*
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 
@@ -187,7 +187,12 @@ class EstablishedCallViewModel(
     }
 
     private fun updateAudioProperties() {
-        audioCallPropertiesMutable.postValue(AudioCallProperties(sinchClient.audioController, currentAudioState))
+        audioCallPropertiesMutable.postValue(
+            AudioCallProperties(
+                sinchClient.audioController,
+                currentAudioState
+            )
+        )
     }
 
     private fun updateVideoProperties() {

@@ -61,4 +61,18 @@ abstract class ViewBindingFragment<Binding : ViewBinding>(@LayoutRes val content
         permissionsLauncher.launch(permissions.toTypedArray())
     }
 
+    fun setFullScreenMode(isEnabled: Boolean) {
+        if (isEnabled) {
+            requireActivity().window.decorView.systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_FULLSCREEN)
+            actionBar?.hide()
+        } else {
+            requireActivity().window.decorView.systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+            actionBar?.show()
+        }
+    }
+
 }

@@ -4,3 +4,4 @@ sealed class MainNavigationEvent
 
 object Login : MainNavigationEvent()
 object Dashboard : MainNavigationEvent()
+data class IncomingCall(val callId: String) : MainNavigationEvent()

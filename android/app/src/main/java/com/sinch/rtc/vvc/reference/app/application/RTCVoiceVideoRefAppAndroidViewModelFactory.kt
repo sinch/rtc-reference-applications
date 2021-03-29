@@ -8,6 +8,8 @@ import com.sinch.android.rtc.SinchClient
 import com.sinch.rtc.vvc.reference.app.features.calls.established.EstablishedCallFragmentArgs
 import com.sinch.rtc.vvc.reference.app.features.calls.established.EstablishedCallViewModel
 import com.sinch.rtc.vvc.reference.app.features.calls.history.CallHistoryViewModel
+import com.sinch.rtc.vvc.reference.app.features.calls.incoming.IncomingCallFragmentArgs
+import com.sinch.rtc.vvc.reference.app.features.calls.incoming.IncomingCallViewModel
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.NewCallFragmentArgs
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.NewCallViewModel
 import com.sinch.rtc.vvc.reference.app.features.calls.outgoing.OutgoingCallFragmentArgs
@@ -83,6 +85,16 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                     roomDatabase.userDao().loadLoggedInUser()!!,
                     arguments.sinchCallId,
                     application
+                ) as T
+            }
+            IncomingCallViewModel::class.java -> {
+                val arguments = (args) as IncomingCallFragmentArgs
+                IncomingCallViewModel(
+                    sinchClient!!,
+                    arguments.callId,
+                    application,
+                    roomDatabase.callDao(),
+                    roomDatabase.userDao().loadLoggedInUser()
                 ) as T
             }
             else -> super.create(modelClass)

@@ -4,6 +4,10 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.sinch.android.rtc.*
+import com.sinch.android.rtc.calling.Call
+import com.sinch.android.rtc.calling.CallClient
+import com.sinch.android.rtc.calling.CallClientListener
+import com.sinch.android.rtc.internal.client.DefaultSinchClient
 import com.sinch.rtc.vvc.reference.app.application.Constants
 import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
 import com.sinch.rtc.vvc.reference.app.utils.jwt.JWTFetcher
@@ -15,7 +19,7 @@ class MainViewModel(
     private val userDao: UserDao
 ) :
     AndroidViewModel(app),
-    SinchClientListener {
+    SinchClientListener, CallClientListener {
 
     companion object {
         const val TAG = "MainViewModel"
@@ -48,6 +52,10 @@ class MainViewModel(
             .build()
             .apply {
                 addSinchClientListener(this@MainViewModel)
+                (this as DefaultSinchClient).setSupportActiveConnection(true)
+                this.startListeningOnActiveConnection()
+                callClient.addCallClientListener(this@MainViewModel)
+                callClient.setRespectNativeCalls(false)
                 setSupportManagedPush(true)
                 start()
             }
@@ -89,6 +97,13 @@ class MainViewModel(
 
     override fun onLogMessage(p0: Int, p1: String?, p2: String?) {
         Log.d(TAG, "onLogMessage $p1 $p2")
+    }
+
+    override fun onIncomingCall(p0: CallClient?, call: Call?) {
+        Log.d(TAG, "onIncomingCall $call")
+        call?.let {
+            navigationEvents.postValue(IncomingCall(it.callId))
+        }
     }
 
 }

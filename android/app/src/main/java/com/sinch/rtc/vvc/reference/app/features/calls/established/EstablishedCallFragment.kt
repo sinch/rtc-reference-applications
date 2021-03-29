@@ -3,7 +3,6 @@ package com.sinch.rtc.vvc.reference.app.features.calls.established
 import android.Manifest
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -12,7 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.RTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentEstablishedCallBinding
-import com.sinch.rtc.vvc.reference.app.features.calls.established.properties.VideoCallProperties
+import com.sinch.rtc.vvc.reference.app.domain.calls.properties.VideoCallProperties
 import com.sinch.rtc.vvc.reference.app.utils.base.fragment.MainActivityFragment
 import com.sinch.rtc.vvc.reference.app.utils.extensions.addVideoViewChild
 import com.sinch.rtc.vvc.reference.app.utils.extensions.makeMultiline
@@ -37,6 +36,10 @@ class EstablishedCallFragment :
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
         attachBindings()
+    }
+
+    override fun onResume() {
+        super.onResume()
         setFullScreenMode(true)
     }
 
@@ -116,16 +119,6 @@ class EstablishedCallFragment :
             if (videoCallProperties != null) {
                 adjustVideoOnlyUI(videoCallProperties)
             }
-        }
-    }
-
-    private fun setFullScreenMode(isEnabled: Boolean) {
-        if (isEnabled) {
-            requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-            actionBar?.hide()
-        } else {
-            requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-            actionBar?.show()
         }
     }
 
