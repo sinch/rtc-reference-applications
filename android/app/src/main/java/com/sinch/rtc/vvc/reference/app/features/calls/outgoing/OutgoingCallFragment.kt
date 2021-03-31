@@ -52,7 +52,20 @@ class OutgoingCallFragment :
                 progressingCallTonePlayer.stop()
             }
         }
+        viewModel.callItemLiveData.observe(viewLifecycleOwner) {
+            binding.calleNameText.text = it.destination
+        }
         viewModel.onViewCreated()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setFullScreenMode(true)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        setFullScreenMode(false)
     }
 
     override fun onDestroyView() {

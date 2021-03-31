@@ -12,7 +12,10 @@ import com.sinch.android.rtc.calling.CallListener
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.properties.CallProperties
+import com.sinch.rtc.vvc.reference.app.domain.calls.requiredPermissions
 import com.sinch.rtc.vvc.reference.app.domain.user.User
+import com.sinch.rtc.vvc.reference.app.utils.extensions.PermissionRequestResult
+import com.sinch.rtc.vvc.reference.app.utils.extensions.areAllPermissionsGranted
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 
 class IncomingCallViewModel(
@@ -29,10 +32,12 @@ class IncomingCallViewModel(
 
     private val isCallProgressingMutable: MutableLiveData<Boolean> = MutableLiveData(false)
     private val callPropertiesMutable: MutableLiveData<CallProperties> = MutableLiveData()
+    private val permissionsRequiredEvents: SingleLiveEvent<List<String>> = SingleLiveEvent()
 
     val navigationEvents: SingleLiveEvent<IncomingCallNavigationEvent> = SingleLiveEvent()
     val callProperties: LiveData<CallProperties> = callPropertiesMutable
     val isCallProgressing: LiveData<Boolean> get() = isCallProgressingMutable
+    val permissionsEvents: LiveData<List<String>> get() = permissionsRequiredEvents
 
     companion object {
         const val TAG = "IncomingCallViewModel"
@@ -61,6 +66,18 @@ class IncomingCallViewModel(
         declineCall()
     }
 
+    fun onPermissionsResult(permissionRequestResult: PermissionRequestResult) {
+        if (permissionRequestResult.areAllPermissionsGranted) {
+            call.answer()
+            callItem?.let {
+                navigationEvents.value = EstablishedCall(it, callId)
+            }
+        } else {
+            declineCall()
+            navigationEvents.value = Back
+        }
+    }
+
     override fun onCallProgressing(call: Call?) {
         Log.d(TAG, "onCallProgressing for $call")
     }
@@ -82,10 +99,9 @@ class IncomingCallViewModel(
     }
 
     private fun acceptCall() {
-        call.answer()
         isCallProgressingMutable.postValue(false)
-        callItem?.let {
-            navigationEvents.value = EstablishedCall(it, callId)
+        callItem?.type?.requiredPermissions.let {
+            permissionsRequiredEvents.value = it
         }
     }
 

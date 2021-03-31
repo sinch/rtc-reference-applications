@@ -29,6 +29,7 @@ class OutgoingCallViewModel(
     val permissionsRequiredEvent: SingleLiveEvent<List<String>> = SingleLiveEvent()
 
     val isCallProgressing: LiveData<Boolean> get() = isCallProgressingMutable
+    val callItemLiveData: LiveData<CallItem> get() = MutableLiveData(callItem)
 
     private var sinchCall: Call? = null //We have to store it as user can cancel the call first
 

@@ -63,6 +63,11 @@ class IncomingCallFragment :
         setFullScreenMode(false)
     }
 
+    override fun onBackPressed() {
+        viewModel.onBackPressed()
+        super.onBackPressed()
+    }
+
     private fun attachListeners() {
         binding.apply {
             acceptButton.setOnClickListener { viewModel.onCallAccepted() }
@@ -84,6 +89,7 @@ class IncomingCallFragment :
             }
         }
         viewModel.navigationEvents.observe(viewLifecycleOwner, this::handleNavigation)
+        viewModel.permissionsEvents.observe(viewLifecycleOwner, this::handlePermissionsRequired)
     }
 
     private fun handleNavigation(navigationEvent: IncomingCallNavigationEvent) {
@@ -98,9 +104,10 @@ class IncomingCallFragment :
         }
     }
 
-    override fun onBackPressed() {
-        viewModel.onBackPressed()
-        super.onBackPressed()
+    private fun handlePermissionsRequired(permissions: List<String>) {
+        requestPermissions(permissions) {
+            viewModel.onPermissionsResult(it)
+        }
     }
 
 }
