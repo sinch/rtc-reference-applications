@@ -21,6 +21,7 @@
     <string name="call_app_to_app_video">App-to-App Video</string>
     <string name="call_app_to_sip">App-to-Sip</string>
     <string name="choose_type">Choose type</string>
+    <string name="logged_in_template">Logged in as %s</string>
 
     <!-- Login screen -->
     <string name="username_hint">Username</string>
@@ -43,6 +44,13 @@
 
     <!-- Incoming call screen -->
     <string name="calling">calling</string>
+
+    <!-- Notificaitons -->
+    <string name="notification_chanel_name">Sinch</string>
+    <string name="notification_chanel_description">Incoming Sinch Push Notifications</string>
+    <string name="incoming_call_notification_title">Incoming call</string>
+    <string name="action_accept">Answer</string>
+    <string name="action_decline">Decline</string>
 
     <!-- Established call screen -->
     <string name="hang_up">Hang up</string>

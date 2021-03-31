@@ -80,11 +80,6 @@ class EstablishedCallViewModel(
         initiateCallTimeCheck()
     }
 
-    fun onHangUpClicked() {
-        sinchCall?.hangup()
-        navigationEvents.postValue(Back)
-    }
-
     fun onBackPressed() {
         sinchCall?.hangup()
     }

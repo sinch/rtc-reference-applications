@@ -55,6 +55,13 @@ class OutgoingCallFragment :
         viewModel.onViewCreated()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (progressingCallTonePlayer.isPlaying) {
+            progressingCallTonePlayer.pause()
+        }
+    }
+
     override fun onBackPressed() {
         super.onBackPressed()
         viewModel.onBackPressed()

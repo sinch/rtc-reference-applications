@@ -9,6 +9,7 @@ import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallType
 import com.sinch.rtc.vvc.reference.app.domain.user.User
+import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.AppDestinationValidator
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.DestinationValidator
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.PSTNDestinationValidator
@@ -18,8 +19,8 @@ import java.util.*
 
 class NewCallViewModel(
     initialCallItem: CallItem?,
-    loggedInUser: User?,
     app: Application,
+    private val userDao: UserDao,
     private val callDao: CallDao
 ) : AndroidViewModel(app) {
 
@@ -35,6 +36,8 @@ class NewCallViewModel(
             )
         )
 
+    private val loggedInUser: User? get() = userDao.loadLoggedInUser()
+
     val navigationEvents: SingleLiveEvent<NewCallNavigationEvent> = SingleLiveEvent()
 
     val callItem: LiveData<CallItem> get() = callItemMutable
@@ -43,6 +46,8 @@ class NewCallViewModel(
         Transformations.map(callItem) {
             destinationValidator?.isCalleeValid(it.destination) ?: true
         }
+
+    val loggedInUserLiveData get() = userDao.getLoggedInUserLiveData()
 
     fun onCallTypeSelected(newType: CallType) {
         destinationValidator = when (newType) {

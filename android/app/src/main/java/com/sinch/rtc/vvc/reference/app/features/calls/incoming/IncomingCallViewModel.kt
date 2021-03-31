@@ -7,17 +7,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sinch.android.rtc.SinchClient
 import com.sinch.android.rtc.calling.Call
+import com.sinch.android.rtc.calling.CallEndCause
 import com.sinch.android.rtc.calling.CallListener
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.properties.CallProperties
 import com.sinch.rtc.vvc.reference.app.domain.user.User
-import com.sinch.rtc.vvc.reference.app.features.calls.outgoing.OutgoingCallNavigationEvent
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 
 class IncomingCallViewModel(
     private val sinchClient: SinchClient,
-    val callId: String,
+    private val initialAction: IncomingCallInitialAction,
+    private val callId: String,
     private val app: Application,
     private val callDao: CallDao,
     private val user: User?
@@ -49,19 +50,15 @@ class IncomingCallViewModel(
             callDao.insert(generatedCallItem)
             callItem = generatedCallItem
         }
+        handleImmediateResponse()
     }
 
     fun onCallAccepted() {
-        call.answer()
-        isCallProgressingMutable.postValue(false)
-        callItem?.let {
-            navigationEvents.postValue(EstablishedCall(it, callId))
-        }
+        acceptCall()
     }
 
     fun onBackPressed() {
-        isCallProgressingMutable.postValue(false)
-        call.hangup()
+        declineCall()
     }
 
     override fun onCallProgressing(call: Call?) {
@@ -72,8 +69,11 @@ class IncomingCallViewModel(
         Log.d(TAG, "onCallProgressing for $call")
     }
 
-    override fun onCallEnded(p0: Call?) {
-        navigationEvents.postValue(Back)
+    override fun onCallEnded(call: Call?) {
+        Log.d(TAG, "Call ended with end cause ${call?.details?.endCause}")
+        if (call?.details?.endCause != CallEndCause.DENIED) { //Not initiated by the user
+            navigationEvents.postValue(Back)
+        }
     }
 
     override fun onCleared() {
@@ -81,4 +81,24 @@ class IncomingCallViewModel(
         call.removeCallListener(this)
     }
 
+    private fun acceptCall() {
+        call.answer()
+        isCallProgressingMutable.postValue(false)
+        callItem?.let {
+            navigationEvents.value = EstablishedCall(it, callId)
+        }
+    }
+
+    private fun declineCall() {
+        call.hangup()
+        isCallProgressingMutable.postValue(false)
+    }
+
+    private fun handleImmediateResponse() {
+        when (initialAction) {
+            IncomingCallInitialAction.ANSWER -> acceptCall()
+            IncomingCallInitialAction.DECLINE -> navigationEvents.value = Back
+            IncomingCallInitialAction.NONE -> return
+        }
+    }
 }

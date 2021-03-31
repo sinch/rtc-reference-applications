@@ -60,7 +60,7 @@ class EstablishedCallFragment :
     }
 
     private fun attachBindings() {
-        binding.hangUpButton.setOnClickListener { viewModel.onHangUpClicked() }
+        binding.hangUpButton.setOnClickListener { onBackPressed() }
 
         binding.audioStateButton.onAudioStateChanged = { newState ->
             viewModel.onAudioStateChanged(newState)

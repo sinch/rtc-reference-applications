@@ -1,109 +1,87 @@
 package com.sinch.rtc.vvc.reference.app.navigation.main
 
 import android.app.Application
-import android.util.Log
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
 import androidx.lifecycle.AndroidViewModel
-import com.sinch.android.rtc.*
-import com.sinch.android.rtc.calling.Call
-import com.sinch.android.rtc.calling.CallClient
-import com.sinch.android.rtc.calling.CallClientListener
-import com.sinch.android.rtc.internal.client.DefaultSinchClient
-import com.sinch.rtc.vvc.reference.app.application.Constants
+import com.sinch.android.rtc.SinchClient
+import com.sinch.rtc.vvc.reference.app.application.service.SinchClientService
 import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
-import com.sinch.rtc.vvc.reference.app.utils.jwt.JWTFetcher
+import com.sinch.rtc.vvc.reference.app.features.calls.incoming.IncomingCallInitialData
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 
 class MainViewModel(
     private val app: Application,
-    private val jwtFetcher: JWTFetcher,
     private val userDao: UserDao
 ) :
-    AndroidViewModel(app),
-    SinchClientListener, CallClientListener {
+    AndroidViewModel(app), ServiceConnection {
 
     companion object {
         const val TAG = "MainViewModel"
     }
 
-    val navigationEvents: SingleLiveEvent<MainNavigationEvent> = SingleLiveEvent()
+    init {
+        app.bindService(Intent(app, SinchClientService::class.java), this, Context.BIND_AUTO_CREATE)
+    }
 
+    private var initialCallIncomingCallInitialData: IncomingCallInitialData? = null
+
+    val navigationEvents: SingleLiveEvent<MainNavigationEvent> = SingleLiveEvent()
     var sinchClient: SinchClient? = null
         private set
 
-    fun onViewCreated() {
+
+    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+        if (service is SinchClientService.SinchClientServiceBinder) {
+            this.sinchClient = service.sinchClient
+            routeToDestination()
+        }
+    }
+
+    override fun onServiceDisconnected(name: ComponentName?) {}
+
+    private fun routeToDestination() {
         val loggedInUser = userDao.loadLoggedInUser()
-        if (loggedInUser == null) {
-            navigationEvents.postValue(Login)
-        } else {
-            registerSinchClient(userId = loggedInUser.id)
-            navigationEvents.postValue(Dashboard)
-        }
-    }
-
-    private fun registerSinchClient(userId: String) {
-        if (sinchClient != null && sinchClient?.isStarted == true) {
-            return
-        }
-        sinchClient = Sinch.getSinchClientBuilder()
-            .context(app)
-            .environmentHost(Constants.ENVIRONMENT)
-            .userId(userId)
-            .applicationKey(Constants.APP_KEY)
-            .build()
-            .apply {
-                addSinchClientListener(this@MainViewModel)
-                (this as DefaultSinchClient).setSupportActiveConnection(true)
-                this.startListeningOnActiveConnection()
-                callClient.addCallClientListener(this@MainViewModel)
-                callClient.setRespectNativeCalls(false)
-                setSupportManagedPush(true)
-                start()
+        when {
+            loggedInUser == null -> {
+                navigationEvents.postValue(Login)
             }
-    }
-
-    override fun onCredentialsRequired(clientRegistration: ClientRegistration?) {
-        Log.d(TAG, "onCredentialsRequired $clientRegistration")
-        val loggedInUser = userDao.loadLoggedInUser();
-        if (loggedInUser != null) {
-            jwtFetcher.acquireJWT(Constants.APP_KEY, loggedInUser.id) { jwt ->
-                clientRegistration?.register(jwt)
+            initialCallIncomingCallInitialData != null -> {
+                routeToIncomingCall()
+            }
+            else -> {
+                navigationEvents.postValue(Dashboard)
             }
         }
     }
 
-    override fun onUserRegistered() {
-        Log.d(TAG, "onUserRegistered called")
+    override fun onCleared() {
+        super.onCleared()
+        app.unbindService(this)
     }
 
-    override fun onUserRegistrationFailed(p0: SinchError?) {
-        Log.d(TAG, "onUserRegistrationFailed $p0")
-    }
-
-    override fun onPushTokenRegistered() {
-        Log.d(TAG, "onPushTokenRegistered")
-    }
-
-    override fun onPushTokenRegistrationFailed(p0: SinchError?) {
-        Log.d(TAG, "onPushTokenRegistrationFailed $p0")
-    }
-
-    override fun onClientStarted(p0: SinchClient?) {
-        Log.d(TAG, "onClientStarted")
-    }
-
-    override fun onClientFailed(p0: SinchClient?, p1: SinchError?) {
-        Log.d(TAG, "onClientFailed $p1")
-    }
-
-    override fun onLogMessage(p0: Int, p1: String?, p2: String?) {
-        Log.d(TAG, "onLogMessage $p1 $p2")
-    }
-
-    override fun onIncomingCall(p0: CallClient?, call: Call?) {
-        Log.d(TAG, "onIncomingCall $call")
-        call?.let {
-            navigationEvents.postValue(IncomingCall(it.callId))
+    fun onIncomingCallRequested(data: IncomingCallInitialData) {
+        initialCallIncomingCallInitialData = data
+        if (sinchClient != null) {
+            routeToIncomingCall()
         }
+
+    }
+
+    private fun routeToIncomingCall() {
+        initialCallIncomingCallInitialData?.let {
+            navigationEvents.postValue(
+                IncomingCall(
+                    it.callId,
+                    it.initialAction,
+                    !it.initiatedWhileInForeground
+                )
+            )
+        }
+        initialCallIncomingCallInitialData = null
     }
 
 }

@@ -44,7 +44,6 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
             MainViewModel::class.java -> {
                 MainViewModel(
                     application,
-                    FakeJWTFetcher(),
                     roomDatabase.userDao()
                 ) as T
             }
@@ -59,14 +58,15 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                 SettingsViewModel(
                     application,
                     roomDatabase.userDao(),
-                    roomDatabase.callDao()
+                    roomDatabase.callDao(),
+                    sinchClient
                 ) as T
             }
             NewCallViewModel::class.java -> {
                 NewCallViewModel(
                     (args as NewCallFragmentArgs).initialCallItem,
-                    roomDatabase.userDao().loadLoggedInUser(),
                     application,
+                    roomDatabase.userDao(),
                     roomDatabase.callDao()
                 ) as T
             }
@@ -91,6 +91,7 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                 val arguments = (args) as IncomingCallFragmentArgs
                 IncomingCallViewModel(
                     sinchClient!!,
+                    arguments.initialAction,
                     arguments.callId,
                     application,
                     roomDatabase.callDao(),

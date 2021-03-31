@@ -63,6 +63,11 @@ class NewCallFragment : MainActivityFragment<FragmentNewCallBinding>(R.layout.fr
         viewModel.navigationEvents.observe(viewLifecycleOwner) {
             handleNavigationEvent(it)
         }
+
+        viewModel.loggedInUserLiveData.observe(viewLifecycleOwner) {
+            binding.loggedInUsernameText.text =
+                String.format(getString(R.string.logged_in_template), it?.id.orEmpty())
+        }
     }
 
     private fun setupCallTypeAdapter() {

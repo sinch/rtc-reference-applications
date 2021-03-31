@@ -46,6 +46,13 @@ class IncomingCallFragment :
         observeViewModel()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (progressingCallTonePlayer.isPlaying) {
+            progressingCallTonePlayer.pause()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         setFullScreenMode(true)
