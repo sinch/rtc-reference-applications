@@ -48,7 +48,9 @@
     <!-- Notificaitons -->
     <string name="notification_chanel_name">Sinch</string>
     <string name="notification_chanel_description">Incoming Sinch Push Notifications</string>
+    <string name="notification_chanel_description_screenshots">Screenshot notifications</string>
     <string name="incoming_call_notification_title">Incoming call</string>
+    <string name="screenshot_saved">Screenshot saved!</string>
     <string name="action_accept">Answer</string>
     <string name="action_decline">Decline</string>
 

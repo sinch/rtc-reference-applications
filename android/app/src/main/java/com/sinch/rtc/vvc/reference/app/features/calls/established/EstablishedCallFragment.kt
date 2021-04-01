@@ -12,6 +12,7 @@ import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.RTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentEstablishedCallBinding
 import com.sinch.rtc.vvc.reference.app.domain.calls.properties.VideoCallProperties
+import com.sinch.rtc.vvc.reference.app.features.calls.established.screenshot.Idle
 import com.sinch.rtc.vvc.reference.app.utils.base.fragment.MainActivityFragment
 import com.sinch.rtc.vvc.reference.app.utils.extensions.addVideoViewChild
 import com.sinch.rtc.vvc.reference.app.utils.extensions.makeMultiline
@@ -74,6 +75,7 @@ class EstablishedCallFragment :
         binding.isTorchToggleButton.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onTorchStateChanged(isChecked)
         }
+        binding.screenshotButton.setOnClickListener { viewModel.onScreenshotButtonClicked() }
 
         listOf(binding.smallVideoFrame, binding.bigVideoFrame).forEach {
             it.setOnLongClickListener {
@@ -107,12 +109,17 @@ class EstablishedCallFragment :
             binding.audioStateButton.audioState = it.audioState
             binding.isMutedToggleButton.setCheckedOmitListeners(it.isMuted)
         }
+        viewModel.captureState.observe(viewLifecycleOwner) {
+            binding.screenshotButton.isEnabled = it == Idle
+        }
+
         viewModel.videoCallProperties.observe(viewLifecycleOwner) { videoCallProperties ->
             listOf(
                 binding.smallVideoFrame,
                 binding.bigVideoFrame,
                 binding.isVideoPausedToggleButton,
-                binding.isTorchToggleButton
+                binding.isTorchToggleButton,
+                binding.screenshotButton
             ).forEach {
                 it.isVisible = (videoCallProperties != null)
             }

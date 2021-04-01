@@ -1,25 +1,28 @@
 package com.sinch.rtc.vvc.reference.app.features.calls.established
 
-import android.app.Application
+import android.app.*
 import android.os.Handler
 import android.os.Looper
 import android.text.format.DateUtils
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import com.sinch.android.rtc.SinchClient
 import com.sinch.android.rtc.calling.Call
 import com.sinch.android.rtc.calling.CallListener
+import com.sinch.android.rtc.video.RemoteVideoFrameListener
+import com.sinch.android.rtc.video.VideoFrame
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.domain.calls.AudioState
 import com.sinch.rtc.vvc.reference.app.domain.calls.properties.AudioCallProperties
 import com.sinch.rtc.vvc.reference.app.domain.calls.properties.CallProperties
 import com.sinch.rtc.vvc.reference.app.domain.calls.properties.VideoCallProperties
 import com.sinch.rtc.vvc.reference.app.domain.user.User
+import com.sinch.rtc.vvc.reference.app.features.calls.established.screenshot.*
 import com.sinch.rtc.vvc.reference.app.utils.extensions.*
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class EstablishedCallViewModel(
     private val sinchClient: SinchClient,
@@ -27,10 +30,11 @@ class EstablishedCallViewModel(
     private val sinchCallId: String,
     private val app: Application
 ) :
-    AndroidViewModel(app), CallListener {
+    AndroidViewModel(app), CallListener, RemoteVideoFrameListener {
 
     companion object {
         const val TAG = "EstablishCallViewModel"
+        const val SCREENSHOT_SUFIX = "screenshot"
     }
 
     private val callDurationMutable: MutableLiveData<Int> = MutableLiveData()
@@ -41,6 +45,7 @@ class EstablishedCallViewModel(
     private val audioCallPropertiesMutable: MutableLiveData<AudioCallProperties> = MutableLiveData()
     private val videoCallPropertiesMutable: MutableLiveData<VideoCallProperties?> =
         MutableLiveData()
+    private val frameCaptureStateMutable: MutableLiveData<FrameCaptureState> = MutableLiveData(Idle)
 
     private var isLocalVideoOnTop = true
     private var isVideoPaused = false
@@ -64,6 +69,7 @@ class EstablishedCallViewModel(
     val audioCallProperties: LiveData<AudioCallProperties> = audioCallPropertiesMutable
     val videoCallProperties: LiveData<VideoCallProperties?> = videoCallPropertiesMutable
     val callProperties: LiveData<CallProperties> = callPropertiesMutable
+    val captureState: LiveData<FrameCaptureState> = frameCaptureStateMutable
 
     init {
         sinchCall =
@@ -73,6 +79,7 @@ class EstablishedCallViewModel(
                 }
         sinchClient.videoController.setResizeBehaviour(loggedInUser.remoteScalingType)
         sinchClient.videoController.setLocalVideoResizeBehaviour(loggedInUser.localScalingType)
+        sinchClient.videoController.setRemoteVideoFrameListener(this)
         currentAudioState = AudioState.AAR
         updateAudioProperties()
         updateVideoProperties()
@@ -119,6 +126,11 @@ class EstablishedCallViewModel(
         updateVideoProperties()
     }
 
+    fun onScreenshotButtonClicked() {
+        Log.d(TAG, "Screenshot button clicked")
+        frameCaptureStateMutable.value = Triggered
+    }
+
     fun setIsPaused(isPaused: Boolean) {
         this.isVideoPaused = isPaused
         if (isPaused) {
@@ -151,6 +163,7 @@ class EstablishedCallViewModel(
     override fun onCleared() {
         super.onCleared()
         sinchCall?.removeCallListener(this)
+        sinchClient.videoController?.setRemoteVideoFrameListener(null)
         mainThreadHandler.removeCallbacksAndMessages(null)
     }
 
@@ -202,6 +215,33 @@ class EstablishedCallViewModel(
                     isTorchOn
                 )
             )
+        }
+    }
+
+    override fun onFrame(callId: String?, videoFrame: VideoFrame?) {
+        GlobalScope.launch(Dispatchers.Main) {
+            if (captureState.value == Triggered) {
+                if (videoFrame != null && callId != null) {
+                    frameCaptureStateMutable.value = Capturing
+                    launchScopedFrameCapture(callId, videoFrame)
+                } else {
+                    frameCaptureStateMutable.value = Idle
+                }
+            }
+        }
+    }
+
+    private fun launchScopedFrameCapture(callId: String, videoFrame: VideoFrame) {
+        viewModelScope.launch {
+            val result = ScreenshotCoroutineSaver(
+                app,
+                callId.plus(SCREENSHOT_SUFIX),
+                videoFrame
+            ).saveAsync().await()
+            if (result is Error) {
+                messageEvents.postValue(result.error.localizedMessage)
+            }
+            frameCaptureStateMutable.postValue(Idle)
         }
     }
 
