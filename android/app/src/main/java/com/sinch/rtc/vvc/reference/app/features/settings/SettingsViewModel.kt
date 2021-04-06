@@ -5,19 +5,21 @@ import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.sinch.android.rtc.*
 import com.sinch.android.rtc.video.VideoScalingType
-import com.sinch.rtc.vvc.reference.app.application.Constants
 import com.sinch.rtc.vvc.reference.app.application.service.SinchClientService
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
+import com.sinch.rtc.vvc.reference.app.storage.prefs.SharedPrefsManager
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 
 class SettingsViewModel(
     private val app: Application,
     private val userDao: UserDao,
     private val callDao: CallDao,
+    private val sharedPrefsManager: SharedPrefsManager,
     private val sinchClient: SinchClient?
 ) :
     AndroidViewModel(app), PushTokenRegistrationCallback {
@@ -26,15 +28,23 @@ class SettingsViewModel(
         const val TAG = "SettingsViewModel"
     }
 
+    data class DevData(val appKey: String, val appSecret: String, val environment: String)
+
+    private val devDataMutable = MutableLiveData(DevData(sharedPrefsManager.appKey, sharedPrefsManager.appSecret, sharedPrefsManager.environment))
+
     val navigationEvents: SingleLiveEvent<SettingsNavigationEvent> = SingleLiveEvent()
     val loggedInUser: LiveData<User?> = userDao.getLoggedInUserLiveData()
+    val devDataLiveData: LiveData<DevData> = devDataMutable
 
     fun onLogoutClicked() {
-        userDao.loadLoggedInUser()?.let { user ->
-            userDao.update(user.copy(isLoggedIn = false))
-            userController(user.id).unregisterPushToken(this)
-            performLogoutCleanup()
-            navigationEvents.postValue(Login)
+        logoutUser()
+    }
+
+    fun onUpdateDevSettingsClicked(newAppKey: String, newAppSecret: String, newEnv: String) {
+        sharedPrefsManager.apply {
+            appKey = newAppKey
+            appSecret = newAppSecret
+            environment = newEnv
         }
     }
 
@@ -58,6 +68,15 @@ class SettingsViewModel(
         }
     }
 
+    private fun logoutUser() {
+        userDao.loadLoggedInUser()?.let { user ->
+            userDao.update(user.copy(isLoggedIn = false))
+            userController(user).unregisterPushToken(this)
+            performLogoutCleanup()
+            navigationEvents.postValue(Login)
+        }
+    }
+
     override fun onPushTokenRegistered() {
         Log.d(TAG, "Push token unregistered")
     }
@@ -71,12 +90,12 @@ class SettingsViewModel(
         app.stopService(Intent(app, SinchClientService::class.java))
     }
 
-    private fun userController(userId: String): UserController =
+    private fun userController(user: User): UserController =
         Sinch.getUserControllerBuilder()
             .context(app)
-            .applicationKey(Constants.APP_KEY)
-            .userId(userId)
-            .environmentHost(Constants.ENVIRONMENT)
+            .applicationKey(sharedPrefsManager.appKey)
+            .userId(user.id)
+            .environmentHost(sharedPrefsManager.environment)
             .build()
 
 }

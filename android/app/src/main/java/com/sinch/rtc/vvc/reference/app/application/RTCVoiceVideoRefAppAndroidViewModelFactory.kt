@@ -18,6 +18,7 @@ import com.sinch.rtc.vvc.reference.app.features.login.LoginViewModel
 import com.sinch.rtc.vvc.reference.app.features.settings.SettingsViewModel
 import com.sinch.rtc.vvc.reference.app.navigation.main.MainViewModel
 import com.sinch.rtc.vvc.reference.app.storage.RTCVoiceVideoAppDatabase
+import com.sinch.rtc.vvc.reference.app.storage.prefs.SharedPrefsManager
 import com.sinch.rtc.vvc.reference.app.utils.jwt.FakeJWTFetcher
 
 typealias NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory = RTCVoiceVideoRefAppAndroidViewModelFactory<NavArgs>
@@ -32,11 +33,13 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         val roomDatabase = RTCVoiceVideoAppDatabase.getDatabase(application)
+        val prefsManager = SharedPrefsManager(application)
         return when (modelClass) {
             LoginViewModel::class.java -> {
                 LoginViewModel(
                     application,
-                    FakeJWTFetcher(),
+                    prefsManager,
+                    FakeJWTFetcher(prefsManager),
                     roomDatabase.userDao(),
                     roomDatabase.callDao()
                 ) as T
@@ -59,6 +62,7 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                     application,
                     roomDatabase.userDao(),
                     roomDatabase.callDao(),
+                    prefsManager,
                     sinchClient
                 ) as T
             }

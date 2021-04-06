@@ -14,12 +14,11 @@ import com.sinch.android.rtc.calling.Call
 import com.sinch.android.rtc.calling.CallClient
 import com.sinch.android.rtc.calling.CallClientListener
 import com.sinch.rtc.vvc.reference.app.R
-import com.sinch.rtc.vvc.reference.app.application.Constants
 import com.sinch.rtc.vvc.reference.app.features.calls.incoming.IncomingCallInitialAction
 import com.sinch.rtc.vvc.reference.app.features.calls.incoming.IncomingCallInitialData
 import com.sinch.rtc.vvc.reference.app.navigation.main.MainActivity
 import com.sinch.rtc.vvc.reference.app.storage.RTCVoiceVideoAppDatabase
-import com.sinch.rtc.vvc.reference.app.utils.jwt.FakeJWTFetcher
+import com.sinch.rtc.vvc.reference.app.storage.prefs.SharedPrefsManager
 import com.sinch.rtc.vvc.reference.app.utils.jwt.JWTFetcher
 
 class SinchClientService : Service(), SinchClientListener, CallClientListener {
@@ -35,8 +34,9 @@ class SinchClientService : Service(), SinchClientListener, CallClientListener {
     private val isInForeground: Boolean get() = checkIfInForeground()
     private val systemVersionDisallowsExplicitActivityStart: Boolean get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
-    private val jwtFetcher: JWTFetcher by lazy {
-        FakeJWTFetcher()
+    private lateinit var jwtFetcher: JWTFetcher
+    private val prefsManager: SharedPrefsManager by lazy {
+        SharedPrefsManager(this)
     }
     private val userDao by lazy {
         RTCVoiceVideoAppDatabase.getDatabase(this).userDao()
@@ -79,9 +79,9 @@ class SinchClientService : Service(), SinchClientListener, CallClientListener {
         Log.d(TAG, "Regsitering sinch client for user ${loggedInUser.id}")
         sinchClientInstance = Sinch.getSinchClientBuilder()
             .context(this)
-            .environmentHost(Constants.ENVIRONMENT)
+            .environmentHost(prefsManager.environment)
             .userId(loggedInUser.id)
-            .applicationKey(Constants.APP_KEY)
+            .applicationKey(prefsManager.appKey)
             .build()
             .apply {
                 addSinchClientListener(this@SinchClientService)
@@ -95,7 +95,7 @@ class SinchClientService : Service(), SinchClientListener, CallClientListener {
         Log.d(TAG, "onCredentialsRequired $clientRegistration")
         val loggedInUser = userDao.loadLoggedInUser();
         if (loggedInUser != null) {
-            jwtFetcher.acquireJWT(Constants.APP_KEY, loggedInUser.id) { jwt ->
+            jwtFetcher.acquireJWT(prefsManager.appKey, loggedInUser.id) { jwt ->
                 clientRegistration?.register(jwt)
             }
         }

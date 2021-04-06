@@ -9,12 +9,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.sinch.android.rtc.*
 import com.sinch.rtc.vvc.reference.app.R
-import com.sinch.rtc.vvc.reference.app.application.Constants
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallType
 import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
+import com.sinch.rtc.vvc.reference.app.storage.prefs.SharedPrefsManager
 import com.sinch.rtc.vvc.reference.app.utils.jwt.JWTFetcher
 import com.sinch.rtc.vvc.reference.app.utils.jwt.getString
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
@@ -22,6 +22,7 @@ import java.util.*
 
 class LoginViewModel(
     application: Application,
+    private val prefsManager: SharedPrefsManager,
     private val jwtFetcher: JWTFetcher,
     private val userDao: UserDao,
     private val callDao: CallDao
@@ -65,9 +66,9 @@ class LoginViewModel(
         )
         Sinch.getUserControllerBuilder()
             .context(getApplication())
-            .applicationKey(Constants.APP_KEY)
+            .applicationKey(prefsManager.appKey)
             .userId(username)
-            .environmentHost(Constants.ENVIRONMENT)
+            .environmentHost(prefsManager.environment)
             .build().registerUser(
                 this,
                 this
@@ -97,7 +98,10 @@ class LoginViewModel(
         Log.d(TAG, "onCredentialsRequired $clientRegistration")
         val currentState = viewModelState.value
         if (currentState is Logging) {
-            jwtFetcher.acquireJWT(Constants.APP_KEY, currentState.username) { jwt ->
+            jwtFetcher.acquireJWT(
+                prefsManager.appKey,
+                currentState.username
+            ) { jwt ->
                 clientRegistration.register(jwt)
             }
         }
@@ -113,7 +117,7 @@ class LoginViewModel(
         resetToIdleWithErrorMessage("${error?.message.orEmpty()}\nExtras: ${error?.extras}")
     }
 
-    private fun ifLoggingIn(f: (logginState: Logging) -> Unit) {
+    private fun ifLoggingIn(f: (loggingState: Logging) -> Unit) {
         val currentState = viewModelState.value
         if (currentState is Logging) {
             f(currentState)

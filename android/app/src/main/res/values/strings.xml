@@ -31,6 +31,7 @@
     <!-- Settings screen -->
     <string name="logout">Logout</string>
     <string name="clear_data">Clear user data</string>
+    <string name="update_dev">Update dev settings</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="local_scale_type">Local video scaling</string>
@@ -38,6 +39,13 @@
     <string name="aspect_fit">Aspect Fit</string>
     <string name="aspect_fill">Aspect Fill</string>
     <string name="aspect_balanced">Aspect Balanced</string>
+    <string name="appkey_hint">App key</string>
+    <string name="appsecret_hint">App secret</string>
+    <string name="environment_hint">Environment</string>
+    <string name="update_logout">Are you sure?</string>
+    <string name="update_message">These are app sensitive settings, application may not work properly if wrong values are set.</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <!-- Outgoing call screen -->
     <string name="cancel">Cancel</string>

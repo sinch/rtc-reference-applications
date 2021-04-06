@@ -10,6 +10,8 @@ interface UserDao {
     companion object {
         const val LOAD_LOGGED_IN_USER_QUERY =
             "SELECT * FROM ${Constants.USERS_TABLE_NAME} where ${Constants.USERS_IS_LOGGED_IN_COLUMN_NAME} = 1"
+        const val LOAD_USER_WITH_USERNAME_QUERY =
+            "SELECT * FROM ${Constants.USERS_TABLE_NAME} where ${Constants.USERS_ID_COLUMN_NAME} = :id"
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -26,6 +28,9 @@ interface UserDao {
 
     @Query(LOAD_LOGGED_IN_USER_QUERY)
     fun loadLoggedInUser(): User?
+
+    @Query(LOAD_USER_WITH_USERNAME_QUERY)
+    fun loadUserWithUsername(id: String): User?
 
     @Delete
     fun delete(user: User)
