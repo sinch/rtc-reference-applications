@@ -11,8 +11,4 @@ object Constants {
     const val CALL_HISTORY_ITEMS_TABLE_NAME = "history_items"
     const val CALL_ITEM_USER_ID_COLUMN_NAME = "user_id"
 
-    const val APP_KEY = "***"
-    const val APP_SECRET = "***"
-    const val ENVIRONMENT = "ocra.api.sinch.com"
-
 }

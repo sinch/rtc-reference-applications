@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import com.sinch.android.rtc.*
 import com.sinch.android.rtc.video.VideoScalingType
 import com.sinch.rtc.vvc.reference.app.application.service.SinchClientService
+import com.sinch.rtc.vvc.reference.app.domain.AppConfig
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
@@ -28,13 +29,11 @@ class SettingsViewModel(
         const val TAG = "SettingsViewModel"
     }
 
-    data class DevData(val appKey: String, val appSecret: String, val environment: String)
-
-    private val devDataMutable = MutableLiveData(DevData(sharedPrefsManager.appKey, sharedPrefsManager.appSecret, sharedPrefsManager.environment))
+    private val devDataMutable = MutableLiveData(AppConfig(sharedPrefsManager.appKey, sharedPrefsManager.appSecret, sharedPrefsManager.environment))
 
     val navigationEvents: SingleLiveEvent<SettingsNavigationEvent> = SingleLiveEvent()
     val loggedInUser: LiveData<User?> = userDao.getLoggedInUserLiveData()
-    val devDataLiveData: LiveData<DevData> = devDataMutable
+    val devDataLiveData: LiveData<AppConfig> = devDataMutable
 
     fun onLogoutClicked() {
         logoutUser()

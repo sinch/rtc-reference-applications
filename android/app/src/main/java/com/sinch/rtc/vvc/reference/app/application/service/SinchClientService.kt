@@ -19,6 +19,7 @@ import com.sinch.rtc.vvc.reference.app.features.calls.incoming.IncomingCallIniti
 import com.sinch.rtc.vvc.reference.app.navigation.main.MainActivity
 import com.sinch.rtc.vvc.reference.app.storage.RTCVoiceVideoAppDatabase
 import com.sinch.rtc.vvc.reference.app.storage.prefs.SharedPrefsManager
+import com.sinch.rtc.vvc.reference.app.utils.jwt.FakeJWTFetcher
 import com.sinch.rtc.vvc.reference.app.utils.jwt.JWTFetcher
 
 class SinchClientService : Service(), SinchClientListener, CallClientListener {
@@ -34,9 +35,11 @@ class SinchClientService : Service(), SinchClientListener, CallClientListener {
     private val isInForeground: Boolean get() = checkIfInForeground()
     private val systemVersionDisallowsExplicitActivityStart: Boolean get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
-    private lateinit var jwtFetcher: JWTFetcher
+    private val jwtFetcher: JWTFetcher by lazy {
+        FakeJWTFetcher(prefsManager)
+    }
     private val prefsManager: SharedPrefsManager by lazy {
-        SharedPrefsManager(this)
+        SharedPrefsManager(appContext = application)
     }
     private val userDao by lazy {
         RTCVoiceVideoAppDatabase.getDatabase(this).userDao()

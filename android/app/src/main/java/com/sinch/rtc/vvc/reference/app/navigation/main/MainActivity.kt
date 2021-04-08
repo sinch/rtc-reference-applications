@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -16,8 +17,10 @@ import com.sinch.rtc.vvc.reference.app.MainNavGraphDirections
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.ActivityMainBinding
+import com.sinch.rtc.vvc.reference.app.domain.AppConfig
 import com.sinch.rtc.vvc.reference.app.features.calls.incoming.IncomingCallInitialData
 import com.sinch.rtc.vvc.reference.app.utils.base.activity.ViewBindingActivity
+import com.sinch.rtc.vvc.reference.app.utils.extensions.jsonAssetAsObject
 
 class MainActivity : ViewBindingActivity<ActivityMainBinding>() {
 

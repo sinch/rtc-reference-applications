@@ -1,40 +1,41 @@
 package com.sinch.rtc.vvc.reference.app.storage.prefs
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
-import com.sinch.rtc.vvc.reference.app.application.Constants
+import com.sinch.rtc.vvc.reference.app.domain.AppConfig
+import com.sinch.rtc.vvc.reference.app.utils.extensions.defaultConfig
 
-class SharedPrefsManager(context: Context) {
+class SharedPrefsManager(private val appContext: Application) {
 
     companion object {
+        private const val PREFS_NAME = "sinchprefs"
         private const val APP_KEY = "app_key"
         private const val APP_SECRET_KEY = "app_secret"
         private const val ENV_KEY = "environment"
     }
 
-    private val preferences = defaultPrefs(context)
+    private val preferences = customPrefs(appContext, PREFS_NAME)
+
+    private val defaultConfig: AppConfig get() = appContext.defaultConfig
 
     var appKey: String
-        get() = preferences[APP_KEY, Constants.APP_KEY]
+        get() = preferences[APP_KEY, defaultConfig.appKey]
         set(value) {
             preferences[APP_KEY] = value
         }
 
     var appSecret: String
-        get() = preferences[APP_SECRET_KEY, Constants.APP_SECRET]
+        get() = preferences[APP_SECRET_KEY, defaultConfig.appSecret]
         set(value) {
             preferences[APP_SECRET_KEY] = value
         }
 
     var environment: String
-        get() = preferences[ENV_KEY, Constants.ENVIRONMENT]
+        get() = preferences[ENV_KEY, defaultConfig.environment]
         set(value) {
             preferences[ENV_KEY] = value
         }
-
-    private fun defaultPrefs(context: Context): SharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(context)
 
     private fun customPrefs(context: Context, name: String): SharedPreferences =
         context.getSharedPreferences(name, Context.MODE_PRIVATE)
