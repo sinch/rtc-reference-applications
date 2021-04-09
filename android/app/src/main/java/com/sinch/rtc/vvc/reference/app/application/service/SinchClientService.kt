@@ -44,6 +44,7 @@ class SinchClientService : Service(), SinchClientListener, CallClientListener {
     private val userDao by lazy {
         RTCVoiceVideoAppDatabase.getDatabase(this).userDao()
     }
+    private val appConfig get() = prefsManager.usedConfig
 
     private var sinchClientInstance: SinchClient? = null
 
@@ -82,9 +83,9 @@ class SinchClientService : Service(), SinchClientListener, CallClientListener {
         Log.d(TAG, "Regsitering sinch client for user ${loggedInUser.id}")
         sinchClientInstance = Sinch.getSinchClientBuilder()
             .context(this)
-            .environmentHost(prefsManager.environment)
+            .environmentHost(appConfig.environment)
             .userId(loggedInUser.id)
-            .applicationKey(prefsManager.appKey)
+            .applicationKey(appConfig.appKey)
             .build()
             .apply {
                 addSinchClientListener(this@SinchClientService)
@@ -96,9 +97,9 @@ class SinchClientService : Service(), SinchClientListener, CallClientListener {
 
     override fun onCredentialsRequired(clientRegistration: ClientRegistration?) {
         Log.d(TAG, "onCredentialsRequired $clientRegistration")
-        val loggedInUser = userDao.loadLoggedInUser();
+        val loggedInUser = userDao.loadLoggedInUser()
         if (loggedInUser != null) {
-            jwtFetcher.acquireJWT(prefsManager.appKey, loggedInUser.id) { jwt ->
+            jwtFetcher.acquireJWT(appConfig.appKey, loggedInUser.id) { jwt ->
                 clientRegistration?.register(jwt)
             }
         }

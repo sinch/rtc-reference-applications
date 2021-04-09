@@ -12,14 +12,20 @@ import com.sinch.android.rtc.video.VideoScalingType
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentSettingsBinding
+import com.sinch.rtc.vvc.reference.app.domain.AppConfig
 import com.sinch.rtc.vvc.reference.app.domain.calls.label
 import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.utils.base.fragment.ViewBindingFragment
+import com.sinch.rtc.vvc.reference.app.utils.extensions.defaultConfigs
 
 class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.fragment_settings) {
 
     private val viewModel: SettingsViewModel by viewModels {
         NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory(requireActivity().application)
+    }
+
+    private val configSpinnerValues by lazy {
+        requireContext().defaultConfigs.map { it.name } + AppConfig.CUSTOM_CONFIG_NAME
     }
 
     override fun setupBinding(root: View): FragmentSettingsBinding =
@@ -29,6 +35,7 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
         super.onViewCreated(view, savedInstanceState)
         setupButtons()
         setupScalingAdapters()
+        setupConfigAdapters()
         observeViewModel()
     }
 
@@ -44,6 +51,34 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
                 showConfirmationDialog()
             }
         }
+    }
+
+    private fun setupConfigAdapters() {
+        val itemsAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            configSpinnerValues
+        ).also {
+            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        binding.configsSpinner.adapter = itemsAdapter
+        binding.configsSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    viewModel.onEnvSpinnerItemChanged(
+                        configSpinnerValues[position], binding.appKeyInputEditText.text.toString(),
+                        binding.appSecretInputEditText.text.toString(),
+                        binding.environmentInputEditText.text.toString()
+                    )
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
     }
 
     private fun setupScalingAdapters() {
@@ -114,6 +149,7 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
                 it.isVisible = isAnyUserLoggedIn
             }
             listOf(
+                binding.configsSpinner,
                 binding.appKeyInputLayout,
                 binding.appSecretInputLayout,
                 binding.environmentInputLayout
@@ -131,6 +167,14 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
         }
 
         viewModel.devDataLiveData.observe(viewLifecycleOwner) {
+            listOf(
+                binding.appKeyInputEditText,
+                binding.appSecretInputEditText,
+                binding.environmentInputEditText
+            ).forEach { textInput ->
+                textInput.isEnabled = it.isCustom
+            }
+            binding.configsSpinner.setSelection(configSpinnerValues.indexOf(it.name))
             binding.appKeyInputEditText.setText(it.appKey)
             binding.appSecretInputEditText.setText(it.appSecret)
             binding.environmentInputEditText.setText(it.environment)

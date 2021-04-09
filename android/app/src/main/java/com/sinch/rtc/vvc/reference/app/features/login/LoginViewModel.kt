@@ -30,6 +30,7 @@ class LoginViewModel(
     AndroidViewModel(application), UserRegistrationCallback, PushTokenRegistrationCallback {
 
     private val viewModelState: MutableLiveData<LoginViewState> = MutableLiveData(Idle)
+    private val appConfig get() = prefsManager.usedConfig
     private var loggingTimeoutHandler: Handler? = null
 
     val errorMessages: SingleLiveEvent<String> = SingleLiveEvent()
@@ -66,9 +67,9 @@ class LoginViewModel(
         )
         Sinch.getUserControllerBuilder()
             .context(getApplication())
-            .applicationKey(prefsManager.appKey)
+            .applicationKey(appConfig.appKey)
             .userId(username)
-            .environmentHost(prefsManager.environment)
+            .environmentHost(appConfig.environment)
             .build().registerUser(
                 this,
                 this
@@ -99,7 +100,7 @@ class LoginViewModel(
         val currentState = viewModelState.value
         if (currentState is Logging) {
             jwtFetcher.acquireJWT(
-                prefsManager.appKey,
+                appConfig.appKey,
                 currentState.username
             ) { jwt ->
                 clientRegistration.register(jwt)

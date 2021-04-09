@@ -34,6 +34,7 @@
     <string name="update_dev">Update dev settings</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="environment">Environment</string>
     <string name="local_scale_type">Local video scaling</string>
     <string name="remote_video_scale_type">Remote video scaling</string>
     <string name="aspect_fit">Aspect Fit</string>

@@ -2,6 +2,7 @@ package com.sinch.rtc.vvc.reference.app.utils.extensions
 
 import android.content.Context
 import com.sinch.gson.Gson
+import com.sinch.gson.JsonSyntaxException
 import com.sinch.rtc.vvc.reference.app.domain.AppConfig
 import com.sinch.rtc.vvc.reference.app.utils.json.JSONAssetsParser
 import java.io.FileNotFoundException
@@ -15,10 +16,14 @@ private const val CONFIG_ASSET_FILENAME = "config.json"
 "environment": "ocra.api.sinch.com"
 }
  */
-val Context.defaultConfig: AppConfig
+val Context.defaultConfigs: List<AppConfig>
     get() {
-        return try {
-            jsonAssetAsObject(CONFIG_ASSET_FILENAME)
+        try {
+            return try {
+                jsonAssetAsObject<Array<AppConfig>>(CONFIG_ASSET_FILENAME).toList()
+            } catch (e: JsonSyntaxException) {
+                listOf(jsonAssetAsObject(CONFIG_ASSET_FILENAME))
+            }
         } catch (e: FileNotFoundException) {
             throw RuntimeException(
                 "Config file not present. Put config.json file inside assets " +

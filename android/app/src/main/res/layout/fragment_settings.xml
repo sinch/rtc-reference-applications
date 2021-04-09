@@ -52,6 +52,17 @@
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/loggedInSettings">
 
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/environment" />
+
+        <Spinner
+            android:id="@+id/configsSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/basic_margin" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/appKeyInputLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

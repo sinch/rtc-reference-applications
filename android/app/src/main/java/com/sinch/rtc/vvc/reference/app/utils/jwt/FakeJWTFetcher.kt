@@ -10,7 +10,7 @@ import com.sinch.rtc.vvc.reference.app.storage.prefs.SharedPrefsManager
 class FakeJWTFetcher(private val prefsManager: SharedPrefsManager) : JWTFetcher {
 
     override fun acquireJWT(applicationKey: String, userId: String, callback: (String) -> Unit) {
-        callback(JWT.create(applicationKey, prefsManager.appSecret, userId))
+        callback(JWT.create(applicationKey, prefsManager.usedConfig.appSecret, userId))
     }
 
 }

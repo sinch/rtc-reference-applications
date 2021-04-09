@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.sinch.rtc.vvc.reference.app.domain.AppConfig
-import com.sinch.rtc.vvc.reference.app.utils.extensions.defaultConfig
+import com.sinch.rtc.vvc.reference.app.utils.extensions.defaultConfigs
 
 class SharedPrefsManager(private val appContext: Application) {
 
@@ -13,26 +13,67 @@ class SharedPrefsManager(private val appContext: Application) {
         private const val APP_KEY = "app_key"
         private const val APP_SECRET_KEY = "app_secret"
         private const val ENV_KEY = "environment"
+        private const val IS_CUSTOM_ENV_KEY = "is_custom_key"
+        private const val USED_DEF_NAME_KEY = "def_pos_key"
     }
 
     private val preferences = customPrefs(appContext, PREFS_NAME)
 
-    private val defaultConfig: AppConfig get() = appContext.defaultConfig
+    val defaultConfigs: List<AppConfig> get() = appContext.defaultConfigs
 
-    var appKey: String
-        get() = preferences[APP_KEY, defaultConfig.appKey]
+    var usedConfig: AppConfig
+        get() {
+            return if (isCustomConfigUsed) {
+                AppConfig(
+                    AppConfig.CUSTOM_CONFIG_NAME,
+                    customAppKey,
+                    customAppSecret,
+                    customEnvironment,
+                    true
+                )
+            } else {
+                defaultConfigs.firstOrNull { it.name == usedDefaultConfigName }
+                    ?: defaultConfigs.first()
+            }
+        }
+        set(value) {
+            isCustomConfigUsed = value.isCustom
+            if (value.isCustom) {
+                usedDefaultConfigName = ""
+                customAppKey = value.appKey
+                customAppSecret = value.appSecret
+                customEnvironment = value.environment
+            } else {
+                usedDefaultConfigName = value.name
+            }
+        }
+
+    private var usedDefaultConfigName: String
+        get() = preferences[USED_DEF_NAME_KEY, ""]
+        set(value) {
+            preferences[USED_DEF_NAME_KEY] = value
+        }
+
+    private var isCustomConfigUsed: Boolean
+        get() = preferences[IS_CUSTOM_ENV_KEY, false]
+        set(value) {
+            preferences[IS_CUSTOM_ENV_KEY] = value
+        }
+
+    private var customAppKey: String
+        get() = preferences[APP_KEY, ""]
         set(value) {
             preferences[APP_KEY] = value
         }
 
-    var appSecret: String
-        get() = preferences[APP_SECRET_KEY, defaultConfig.appSecret]
+    private var customAppSecret: String
+        get() = preferences[APP_SECRET_KEY, ""]
         set(value) {
             preferences[APP_SECRET_KEY] = value
         }
 
-    var environment: String
-        get() = preferences[ENV_KEY, defaultConfig.environment]
+    private var customEnvironment: String
+        get() = preferences[ENV_KEY, ""]
         set(value) {
             preferences[ENV_KEY] = value
         }

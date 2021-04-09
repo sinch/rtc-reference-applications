@@ -29,7 +29,7 @@ class SettingsViewModel(
         const val TAG = "SettingsViewModel"
     }
 
-    private val devDataMutable = MutableLiveData(AppConfig(sharedPrefsManager.appKey, sharedPrefsManager.appSecret, sharedPrefsManager.environment))
+    private val devDataMutable = MutableLiveData(sharedPrefsManager.usedConfig)
 
     val navigationEvents: SingleLiveEvent<SettingsNavigationEvent> = SingleLiveEvent()
     val loggedInUser: LiveData<User?> = userDao.getLoggedInUserLiveData()
@@ -39,12 +39,32 @@ class SettingsViewModel(
         logoutUser()
     }
 
-    fun onUpdateDevSettingsClicked(newAppKey: String, newAppSecret: String, newEnv: String) {
-        sharedPrefsManager.apply {
-            appKey = newAppKey
-            appSecret = newAppSecret
-            environment = newEnv
+    fun onEnvSpinnerItemChanged(
+        name: String,
+        typedAppKey: String,
+        typedAppSecret: String,
+        typedEnv: String
+    ) {
+        val defaultConfigWithChosenName =
+            sharedPrefsManager.defaultConfigs.firstOrNull { it.name == name }
+        if (defaultConfigWithChosenName == null) {
+            devDataMutable.value =
+                AppConfig(AppConfig.CUSTOM_CONFIG_NAME, typedAppKey, typedAppSecret, typedEnv, true)
+        } else {
+            devDataMutable.value = defaultConfigWithChosenName
         }
+    }
+
+    fun onUpdateDevSettingsClicked(newAppKey: String, newAppSecret: String, newEnv: String) {
+        val currentAppConfig = devDataLiveData.value ?: return
+        if (currentAppConfig.isCustom) {
+            devDataMutable.value = currentAppConfig.copy(
+                appKey = newAppKey,
+                appSecret = newAppSecret,
+                environment = newEnv
+            )
+        }
+        sharedPrefsManager.usedConfig = devDataMutable.value ?: return
     }
 
     fun onClearDataClicked() {
@@ -92,9 +112,9 @@ class SettingsViewModel(
     private fun userController(user: User): UserController =
         Sinch.getUserControllerBuilder()
             .context(app)
-            .applicationKey(sharedPrefsManager.appKey)
+            .applicationKey(sharedPrefsManager.usedConfig.appKey)
             .userId(user.id)
-            .environmentHost(sharedPrefsManager.environment)
+            .environmentHost(sharedPrefsManager.usedConfig.environment)
             .build()
 
 }

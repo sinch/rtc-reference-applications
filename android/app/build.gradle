@@ -4,6 +4,18 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
+def configFilePath = "./src/main/assets/config.json"
+def configFileEmptyMessage = "Configuration file not found. Put your config.json file inside the " +
+        "assets folder and re-build the application\n" +
+        "Example of config.json:\n" +
+        "[{\n" +
+        "  \"name\": \"<ENVIRONMENT NAME\",\n" +
+        "  \"appKey\": \"<YOUR SINCH APP KEY>\",\n" +
+        "  \"appSecret\": \"<YOUR SINCH APP SECRET>\",\n" +
+        "  \"environment\": \"ocra.api.sinch.com\"\n" +
+        "}]"
+
+
 android {
     compileSdkVersion 29
     buildToolsVersion "30.0.1"
@@ -33,6 +45,12 @@ android {
     }
     buildFeatures {
         viewBinding true
+    }
+}
+
+preBuild.doFirst {
+    if (!file(configFilePath).exists()) {
+        ant.fail(configFileEmptyMessage)
     }
 }
 
