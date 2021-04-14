@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import com.sinch.rtc.vvc.reference.app.R
@@ -56,7 +55,7 @@ class EstablishedCallFragment :
 
     private fun handleNavigation(event: EstablishedCallNavigationEvent) {
         when (event) {
-            Back -> findNavController().popBackStack()
+            Back -> onBackPressed()
         }
     }
 

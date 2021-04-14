@@ -77,9 +77,11 @@ class EstablishedCallViewModel(
                 .apply {
                     addCallListener(this@EstablishedCallViewModel)
                 }
-        sinchClient.videoController.setResizeBehaviour(loggedInUser.remoteScalingType)
-        sinchClient.videoController.setLocalVideoResizeBehaviour(loggedInUser.localScalingType)
-        sinchClient.videoController.setRemoteVideoFrameListener(this)
+        sinchCall?.takeIf { it.details.isVideoOffered }?.let {
+            sinchClient.videoController.setResizeBehaviour(loggedInUser.remoteScalingType)
+            sinchClient.videoController.setLocalVideoResizeBehaviour(loggedInUser.localScalingType)
+            sinchClient.videoController.setRemoteVideoFrameListener(this)
+        }
         currentAudioState = AudioState.AAR
         updateAudioProperties()
         updateVideoProperties()
@@ -122,7 +124,9 @@ class EstablishedCallViewModel(
             messageEvents.postValue(app.getString(R.string.only_rear_camera_torch))
         }
         isTorchOn = isOn && !isFrontCameraUsed
-        sinchClient.videoController.setTorchMode(isTorchOn)
+        if (sinchClient.videoController != null) {
+            sinchClient.videoController.setTorchMode(isTorchOn)
+        }
         updateVideoProperties()
     }
 
@@ -163,7 +167,9 @@ class EstablishedCallViewModel(
     override fun onCleared() {
         super.onCleared()
         sinchCall?.removeCallListener(this)
-        sinchClient.videoController?.setRemoteVideoFrameListener(null)
+        sinchCall?.takeIf { it.details.isVideoOffered }?.let {
+            sinchClient.videoController.setRemoteVideoFrameListener(null)
+        }
         mainThreadHandler.removeCallbacksAndMessages(null)
     }
 
