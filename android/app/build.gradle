@@ -5,16 +5,23 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
 def configFilePath = "./src/main/assets/config.json"
-def configFileEmptyMessage = "Configuration file not found. Put your config.json file inside the " +
-        "assets folder and re-build the application\n" +
+def configFileEmptyMessage = "You are building Sinch Android Reference Sample Application project that requires presence of a configuration file with your auhthorization data.\n" +
+        "Create and place your config.json file inside the " +
+        "assets folder (app/src/main/assets) and re-build the application\n" +
         "Example of config.json:\n" +
         "[{\n" +
         "  \"name\": \"<ENVIRONMENT NAME\",\n" +
         "  \"appKey\": \"<YOUR SINCH APP KEY>\",\n" +
         "  \"appSecret\": \"<YOUR SINCH APP SECRET>\",\n" +
         "  \"environment\": \"ocra.api.sinch.com\"\n" +
-        "}]"
+        "}]\n" +
+        "Check the \"Create configuration file\" section of the Readme file for more details regarding its content and structure."
 
+def googleServicesJsonFilePath = "./google-services.json"
+def googleServicesJsonMissingMessage = "You are building Sinch Android Reference Sample Application project that uses Firebase Cloud Messaging for delivering push notifications.\n" +
+        "In order for push notification to work you must generate and include your application specific (with correspondent \"package_name\") google-services.json file.\n"+
+        "Follow the Firebase Cloud Messaging manual here https://firebase.google.com/docs/android/setup to get one.\n" +
+        "For more information regarding Sinch Managed Push Notifications refer to https://developers.sinch.com/docs/voice-android-cloud-push-notifications#2-provision-the-application-with-the-support-code"
 
 android {
     compileSdkVersion 29
@@ -51,6 +58,9 @@ android {
 preBuild.doFirst {
     if (!file(configFilePath).exists()) {
         ant.fail(configFileEmptyMessage)
+    }
+    if (!file(googleServicesJsonFilePath).exists()) {
+        ant.fail(googleServicesJsonMissingMessage)
     }
 }
 
