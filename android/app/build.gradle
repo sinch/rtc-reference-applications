@@ -23,6 +23,22 @@ def googleServicesJsonMissingMessage = "You are building Sinch Android Reference
         "Follow the Firebase Cloud Messaging manual here https://firebase.google.com/docs/android/setup to get one.\n" +
         "For more information regarding Sinch Managed Push Notifications refer to https://developers.sinch.com/docs/voice-android-cloud-push-notifications#2-provision-the-application-with-the-support-code"
 
+
+task runMakeSync(type: Exec) {
+    workingDir '..'
+    commandLine 'make', 'sync'
+}
+
+task runMakeSyncIfNeeded() {
+    def libs = fileTree("libs").filter { it.isFile() }.files.name
+    def isRTCSDKAlreadySynced = libs.findAll { it.contains("sinch-android-rtc")}
+    if (!isRTCSDKAlreadySynced) {
+        finalizedBy(runMakeSync)
+    } else {
+        println ("Sync skipped. VVC SDK already present.")
+    }
+}
+
 android {
     compileSdkVersion 29
     buildToolsVersion "30.0.1"
@@ -54,7 +70,7 @@ android {
         viewBinding true
     }
 }
-
+preBuild.dependsOn(runMakeSyncIfNeeded)
 preBuild.doFirst {
     if (!file(configFilePath).exists()) {
         ant.fail(configFileEmptyMessage)
