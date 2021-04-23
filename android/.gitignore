@@ -30,9 +30,6 @@ proguard/
 # Log Files
 *.log
 
-# Config file
-app/src/main/assets/config.json
-
 # Android Studio Navigation editor temp files
 .navigation/
 

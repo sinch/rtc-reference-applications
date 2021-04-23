@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Production",
+    "appKey": "<YOUR APP KEY>",
+    "appSecret": "<YOUR APP SECRET>",
+    "environment": "ocra.api.sinch.com"
+  }
+]

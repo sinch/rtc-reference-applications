@@ -8,7 +8,7 @@ Reference Applications for the Android Client.
 Run `make sync` to fetch the Sinch Android Voice & Video SDK from the artifactory. This step is necessary now, because the SDK is not hosted on jCenter or mavenCentral, otherwise, gradle plugin will handle this.
 
 #### 2. Create configuration file
-To communicate with Sinch API you must include your application specific authorization settings. In order to do this, create a file called 'config.json' and place it inside assets folders of the application - (app/src/main/assets): 
+To communicate with Sinch API you must include your application specific authorization settings (key and secret). In order to do this, check config.json file located in app/src/main/assets folder and fill it with these values copied from Sinch portal website of your application: 
 
 ![config.json](docs/img/conf_loc.png).
 

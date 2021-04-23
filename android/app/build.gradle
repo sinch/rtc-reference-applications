@@ -17,6 +17,10 @@ def configFileEmptyMessage = "You are building Sinch Android Reference Sample Ap
         "}]\n" +
         "Check the \"Create configuration file\" section of the Readme file for more details regarding its content and structure."
 
+def requiredConfigFileParamsMissingMessage = "You are building Sinch Android Reference Sample Application project that requires your application specific authorization data (key and secret).\n" +
+        "Check config.json file located in app/src/main/assets folder and fill it with these values copied from Sinch portal website of your application.\n" +
+        "Check the \"Create configuration file\" section of the Readme for more details regarding content and structure of the config.json file."
+
 def googleServicesJsonFilePath = "./google-services.json"
 def googleServicesJsonMissingMessage = "You are building Sinch Android Reference Sample Application project that uses Firebase Cloud Messaging for delivering push notifications.\n" +
         "In order for push notification to work you must generate and include your application specific (with correspondent \"package_name\") google-services.json file.\n"+
@@ -72,8 +76,12 @@ android {
 }
 preBuild.dependsOn(runMakeSyncIfNeeded)
 preBuild.doFirst {
-    if (!file(configFilePath).exists()) {
+    def configFile = file(configFilePath)
+    if (!configFile.exists()) {
         ant.fail(configFileEmptyMessage)
+    }
+    if (configFile.text.contains("<YOUR APP KEY>") || configFile.text.contains("<YOUR APP SECRET>")) {
+        ant.fail(requiredConfigFileParamsMissingMessage)
     }
     if (!file(googleServicesJsonFilePath).exists()) {
         ant.fail(googleServicesJsonMissingMessage)
