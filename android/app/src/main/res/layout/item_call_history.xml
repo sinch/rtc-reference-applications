@@ -49,11 +49,23 @@
         android:background="?android:attr/selectableItemBackground"
         android:paddingVertical="@dimen/basic_margin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/callTimeTextView"
+        app:layout_constraintEnd_toStartOf="@id/detailsIcon"
         app:layout_constraintStart_toEndOf="@id/seperator"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_goneMarginStart="@dimen/margin_small"
         tools:text="Test" />
+
+    <ImageView
+        android:id="@+id/detailsIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
+        app:layout_constraintStart_toEndOf="@id/destinationNameTextView"
+        app:layout_constraintEnd_toStartOf="@id/callTimeTextView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/ic_baseline_info_24" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/callTimeTextView"

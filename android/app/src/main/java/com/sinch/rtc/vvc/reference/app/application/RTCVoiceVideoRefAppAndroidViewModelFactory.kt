@@ -79,6 +79,7 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                 OutgoingCallViewModel(
                     sinchClient?.callClient!!,
                     arguments.callItemData,
+                    roomDatabase.callDao(),
                     application
                 ) as T
             }
@@ -88,6 +89,8 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                     sinchClient!!,
                     roomDatabase.userDao().loadLoggedInUser()!!,
                     arguments.sinchCallId,
+                    roomDatabase.callDao(),
+                    arguments.callItemData,
                     application
                 ) as T
             }

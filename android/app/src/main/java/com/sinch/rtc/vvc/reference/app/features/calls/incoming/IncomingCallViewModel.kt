@@ -11,11 +11,13 @@ import com.sinch.android.rtc.calling.CallEndCause
 import com.sinch.android.rtc.calling.CallListener
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
+import com.sinch.rtc.vvc.reference.app.domain.calls.insertAndGetWithGeneratedId
 import com.sinch.rtc.vvc.reference.app.domain.calls.properties.CallProperties
 import com.sinch.rtc.vvc.reference.app.domain.calls.requiredPermissions
 import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.utils.extensions.PermissionRequestResult
 import com.sinch.rtc.vvc.reference.app.utils.extensions.areAllPermissionsGranted
+import com.sinch.rtc.vvc.reference.app.utils.extensions.updateBasedOnSinchCall
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 
 class IncomingCallViewModel(
@@ -51,8 +53,9 @@ class IncomingCallViewModel(
         callPropertiesMutable.postValue(CallProperties(call.remoteUserId))
         isCallProgressingMutable.postValue(true)
         user?.let {
-            val generatedCallItem = CallItem(call = call, user = it)
-            callDao.insert(generatedCallItem)
+            val generatedCallItem = CallItem(call = call, user = it).let { item ->
+                callDao.insertAndGetWithGeneratedId(item)
+            }
             callItem = generatedCallItem
         }
         handleImmediateResponse()
@@ -84,10 +87,12 @@ class IncomingCallViewModel(
 
     override fun onCallEstablished(call: Call?) {
         Log.d(TAG, "onCallProgressing for $call")
+        callItem?.updateBasedOnSinchCall(call, callDao)
     }
 
     override fun onCallEnded(call: Call?) {
         Log.d(TAG, "Call ended with end cause ${call?.details?.endCause}")
+        callItem?.updateBasedOnSinchCall(call, callDao)
         if (call?.details?.endCause != CallEndCause.DENIED) { //Not initiated by the user
             navigationEvents.postValue(Back)
         }

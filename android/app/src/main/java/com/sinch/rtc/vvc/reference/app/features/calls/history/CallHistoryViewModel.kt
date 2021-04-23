@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
+import com.sinch.rtc.vvc.reference.app.domain.calls.insertAndGetWithGeneratedId
 import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.features.calls.history.list.CallHistoryEntryItem
 import com.sinch.rtc.vvc.reference.app.features.calls.history.list.DateHeaderItem
@@ -35,17 +36,20 @@ class CallHistoryViewModel(
     val navigationEvents: SingleLiveEvent<CallHistoryNavigationEvent> get() = navigationEventsMutable
 
     override fun onVideoClicked(item: CallItem) {
-        saveNewCallHistoryItem(item)
-        navigationEventsMutable.postValue(OutGoingCall(item))
+        navigationEventsMutable.postValue(OutGoingCall(saveNewCallHistoryItem(item)))
     }
 
     override fun onAudioClicked(item: CallItem) {
         saveNewCallHistoryItem(item)
-        navigationEventsMutable.postValue(OutGoingCall(item))
+        navigationEventsMutable.postValue(OutGoingCall(saveNewCallHistoryItem(item)))
     }
 
     override fun onCalleeNameClicked(item: CallItem) {
         navigationEventsMutable.postValue(NewCall(item))
+    }
+
+    override fun onInfoClicked(item: CallItem) {
+        navigationEventsMutable.postValue(Details(item))
     }
 
     private fun generateHeaderedCallItemsList(items: List<CallItem>): List<BaseItem<*>> {
@@ -66,8 +70,9 @@ class CallHistoryViewModel(
         return historyItemsWithHeaders
     }
 
-    private fun saveNewCallHistoryItem(baseItem: CallItem) {
-        callDao.insert(baseItem.copy(itemId = 0, startDate = Date()))
+    private fun saveNewCallHistoryItem(baseItem: CallItem): CallItem {
+        val valueToInsert = baseItem.copy(itemId = 0, startDate = Date())
+        return callDao.insertAndGetWithGeneratedId(valueToInsert)
     }
 
 }

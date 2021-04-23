@@ -9,16 +9,19 @@ import com.sinch.android.rtc.MissingPermissionException
 import com.sinch.android.rtc.calling.Call
 import com.sinch.android.rtc.calling.CallClient
 import com.sinch.android.rtc.calling.CallListener
+import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.requiredPermissions
 import com.sinch.rtc.vvc.reference.app.utils.extensions.PermissionRequestResult
 import com.sinch.rtc.vvc.reference.app.utils.extensions.areAllPermissionsGranted
 import com.sinch.rtc.vvc.reference.app.utils.extensions.createSinchCall
+import com.sinch.rtc.vvc.reference.app.utils.extensions.updateBasedOnSinchCall
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 
 class OutgoingCallViewModel(
     private val callClient: CallClient,
     private val callItem: CallItem,
+    private val callDao: CallDao,
     application: Application
 ) :
     AndroidViewModel(application), CallListener {
@@ -79,6 +82,7 @@ class OutgoingCallViewModel(
 
     override fun onCallEstablished(call: Call?) {
         Log.d(TAG, "onCallEstablished for $call")
+        callItem.updateBasedOnSinchCall(call, callDao)
         isCallProgressingMutable.value = false
         if (call != null) {
             navigationEvents.postValue(EstablishedCall(this.callItem, call.callId))
@@ -87,6 +91,7 @@ class OutgoingCallViewModel(
 
     override fun onCallEnded(call: Call?) {
         Log.d(TAG, "onCallEnded for $call")
+        callItem.updateBasedOnSinchCall(call, callDao)
         finishCurrentCall()
         navigationEvents.postValue(Back)
     }

@@ -23,6 +23,14 @@
     <string name="choose_type">Choose type</string>
     <string name="logged_in_template">Logged in as %s</string>
 
+    <!-- History screen -->
+    <string name="started_at">Started at: %s</string>
+    <string name="established_at">Established at: %s</string>
+    <string name="ended_at">Ended at: %s</string>
+    <string name="duration">Duration (s): %.2f</string>
+    <string name="end_cause">End cause: %s</string>
+    <string name="fail_msg">Failure message: %s</string>
+
     <!-- Login screen -->
     <string name="username_hint">Username</string>
     <string name="play_services_not_available_error_message">Play services not available</string>

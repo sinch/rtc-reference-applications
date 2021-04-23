@@ -6,3 +6,4 @@ sealed class CallHistoryNavigationEvent
 
 data class OutGoingCall(val callItem: CallItem) : CallHistoryNavigationEvent()
 data class NewCall(val callItem: CallItem) : CallHistoryNavigationEvent()
+data class Details(val callItem: CallItem): CallHistoryNavigationEvent()

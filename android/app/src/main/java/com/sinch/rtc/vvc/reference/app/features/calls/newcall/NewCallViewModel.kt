@@ -8,6 +8,7 @@ import androidx.lifecycle.Transformations
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallType
+import com.sinch.rtc.vvc.reference.app.domain.calls.insertAndGetWithGeneratedId
 import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.AppDestinationValidator
@@ -66,8 +67,7 @@ class NewCallViewModel(
 
     fun onCallButtonClicked() {
         val newCallItem = callItem.value?.copy(startDate = Date(), itemId = 0) ?: return
-        callDao.insert(newCallItem)
-        navigationEvents.postValue(OutgoingCall(newCallItem))
+        navigationEvents.postValue(OutgoingCall(callDao.insertAndGetWithGeneratedId(newCallItem)))
     }
 
 }

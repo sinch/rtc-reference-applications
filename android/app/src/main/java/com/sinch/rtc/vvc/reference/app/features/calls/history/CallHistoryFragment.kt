@@ -5,12 +5,15 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentHistoryBinding
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
+import com.sinch.rtc.vvc.reference.app.domain.calls.constructDetailsInfo
 import com.sinch.rtc.vvc.reference.app.features.calls.history.list.CallHistoryAdapter
 import com.sinch.rtc.vvc.reference.app.utils.base.fragment.ViewBindingFragment
+import com.sinch.rtc.vvc.reference.app.utils.extensions.makeMultiline
 
 class CallHistoryFragment : ViewBindingFragment<FragmentHistoryBinding>(R.layout.fragment_history) {
 
@@ -36,6 +39,7 @@ class CallHistoryFragment : ViewBindingFragment<FragmentHistoryBinding>(R.layout
             when (it) {
                 is OutGoingCall -> navigateToOutgoingCall(it.callItem)
                 is NewCall -> navigateToNewCall(it.callItem)
+                is Details -> showDetailsSnackBar(it.callItem)
             }
         }
     }
@@ -52,6 +56,15 @@ class CallHistoryFragment : ViewBindingFragment<FragmentHistoryBinding>(R.layout
                 item
             )
         )
+    }
+
+    private fun showDetailsSnackBar(item: CallItem) {
+        Snackbar.make(
+            requireView(),
+            item.constructDetailsInfo(requireContext()),
+            Snackbar.LENGTH_LONG
+        )
+            .makeMultiline().show()
     }
 
 }

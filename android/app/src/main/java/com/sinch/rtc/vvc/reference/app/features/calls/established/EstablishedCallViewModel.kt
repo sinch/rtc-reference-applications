@@ -13,6 +13,8 @@ import com.sinch.android.rtc.video.RemoteVideoFrameListener
 import com.sinch.android.rtc.video.VideoFrame
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.domain.calls.AudioState
+import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
+import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.properties.AudioCallProperties
 import com.sinch.rtc.vvc.reference.app.domain.calls.properties.CallProperties
 import com.sinch.rtc.vvc.reference.app.domain.calls.properties.VideoCallProperties
@@ -28,6 +30,8 @@ class EstablishedCallViewModel(
     private val sinchClient: SinchClient,
     private val loggedInUser: User,
     private val sinchCallId: String,
+    private val callDao: CallDao,
+    private val callItem: CallItem,
     private val app: Application
 ) :
     AndroidViewModel(app), CallListener, RemoteVideoFrameListener {
@@ -156,11 +160,13 @@ class EstablishedCallViewModel(
     }
 
     override fun onCallEstablished(call: Call?) {
+        callItem.updateBasedOnSinchCall(call, callDao)
         Log.d(TAG, "onCallEstablished $call")
     }
 
     override fun onCallEnded(call: Call?) {
         Log.d(TAG, "onCallEnded $call")
+        callItem.updateBasedOnSinchCall(call, callDao)
         navigationEvents.postValue(Back)
     }
 
@@ -198,6 +204,7 @@ class EstablishedCallViewModel(
 
     private fun updateCallProperties() {
         callPropertiesMutable.value = CallProperties(sinchCall?.remoteUserId.orEmpty())
+        callItem.updateBasedOnSinchCall(sinchCall, callDao)
     }
 
     private fun updateAudioProperties() {

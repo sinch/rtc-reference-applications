@@ -18,6 +18,7 @@ data class CallHistoryEntryItem(
         fun onVideoClicked(item: CallItem)
         fun onAudioClicked(item: CallItem)
         fun onCalleeNameClicked(item: CallItem)
+        fun onInfoClicked(item: CallItem)
     }
 
     override val layoutId = R.layout.item_call_history
@@ -32,6 +33,9 @@ data class CallHistoryEntryItem(
                 if (callItem.type == CallType.AppToAppVideo) View.VISIBLE else View.INVISIBLE
             iconVideo.setOnClickListener {
                 historyItemClickListener.onVideoClicked(callItem)
+            }
+            detailsIcon.setOnClickListener {
+                historyItemClickListener.onInfoClicked(callItem)
             }
 
             destinationNameTextView.text = callItem.destination

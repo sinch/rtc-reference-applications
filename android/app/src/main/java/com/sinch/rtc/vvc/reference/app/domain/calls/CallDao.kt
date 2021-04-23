@@ -13,7 +13,10 @@ interface CallDao {
     }
 
     @Insert
-    fun insert(callItem: CallItem)
+    fun insert(callItem: CallItem): Long
+
+    @Update
+    fun update(callItem: CallItem)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(callItem: List<CallItem>)
@@ -26,4 +29,9 @@ interface CallDao {
 
     @Delete
     fun delete(callItems: List<CallItem>)
+}
+
+fun CallDao.insertAndGetWithGeneratedId(callItem: CallItem): CallItem {
+    val newId = insert(callItem)
+    return callItem.copy(itemId = newId)
 }
