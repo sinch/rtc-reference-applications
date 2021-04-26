@@ -83,4 +83,6 @@
     <string name="aar_on_msg">Automatic Audio Routing enabled</string>
     <string name="external_speaker_on_msg">External speaker enabled</string>
     <string name="phone_speaker_on">Phone speaker enabled</string>
+    <string name="video_pause">Video paused</string>
+    <string name="video_resumed">Video resumed</string>
 </resources>

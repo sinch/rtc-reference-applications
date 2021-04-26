@@ -78,7 +78,11 @@ class EstablishedCallFragment :
         }
         binding.screenshotButton.setOnClickListener {
             viewModel.onScreenshotButtonClicked()
-            Snackbar.make(requireView(), getString(R.string.screenshot_saved), Snackbar.LENGTH_SHORT)
+            Snackbar.make(
+                requireView(),
+                getString(R.string.screenshot_saved),
+                Snackbar.LENGTH_SHORT
+            )
                 .makeMultiline().show()
         }
 
@@ -92,6 +96,12 @@ class EstablishedCallFragment :
             it.setOnClickListener { viewModel.toggleFrontCamera() }
         }
         binding.isVideoPausedToggleButton.setOnCheckedChangeListener { _, isChecked ->
+            Snackbar.make(
+                requireView(),
+                getString(if (isChecked) R.string.video_pause else R.string.video_resumed),
+                Snackbar.LENGTH_SHORT
+            )
+                .makeMultiline().show()
             viewModel.setIsPaused(isChecked)
         }
     }
@@ -137,6 +147,10 @@ class EstablishedCallFragment :
     private fun adjustVideoOnlyUI(videoCallProperties: VideoCallProperties) {
         binding.isVideoPausedToggleButton.setCheckedOmitListeners(videoCallProperties.isVideoPaused)
         binding.isTorchToggleButton.setCheckedOmitListeners(videoCallProperties.isTorchOn)
+        binding.smallVideoFrameOverlay.isVisible =
+            videoCallProperties.isLocalOnTop && videoCallProperties.isVideoPaused
+        binding.bigVideoFrameOverlay.isVisible =
+            !videoCallProperties.isLocalOnTop && videoCallProperties.isVideoPaused
         if (videoCallProperties.isLocalOnTop) {
             binding.bigVideoFrame.addVideoViewChild(videoCallProperties.remoteView)
             binding.smallVideoFrame.addVideoViewChild(videoCallProperties.localView)
@@ -156,11 +170,12 @@ class EstablishedCallFragment :
             .makeMultiline().show()
     }
 
-    private val AudioState.modeEnabledMessage: String get() =
-        when (this) {
-            AudioState.AAR -> getString(R.string.aar_on_msg)
-            AudioState.SPEAKER -> getString(R.string.external_speaker_on_msg)
-            AudioState.PHONE -> getString(R.string.phone_speaker_on)
-        }
+    private val AudioState.modeEnabledMessage: String
+        get() =
+            when (this) {
+                AudioState.AAR -> getString(R.string.aar_on_msg)
+                AudioState.SPEAKER -> getString(R.string.external_speaker_on_msg)
+                AudioState.PHONE -> getString(R.string.phone_speaker_on)
+            }
 
 }
