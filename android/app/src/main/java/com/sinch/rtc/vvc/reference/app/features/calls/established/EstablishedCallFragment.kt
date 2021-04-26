@@ -10,6 +10,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.RTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentEstablishedCallBinding
+import com.sinch.rtc.vvc.reference.app.domain.calls.AudioState
 import com.sinch.rtc.vvc.reference.app.domain.calls.properties.VideoCallProperties
 import com.sinch.rtc.vvc.reference.app.features.calls.established.screenshot.Idle
 import com.sinch.rtc.vvc.reference.app.utils.base.fragment.MainActivityFragment
@@ -64,6 +65,7 @@ class EstablishedCallFragment :
 
         binding.audioStateButton.onAudioStateChanged = { newState ->
             viewModel.onAudioStateChanged(newState)
+            showModeMessage(newState)
         }
 
         binding.isMutedToggleButton.setOnCheckedChangeListener { _, isChecked ->
@@ -74,7 +76,11 @@ class EstablishedCallFragment :
         binding.isTorchToggleButton.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onTorchStateChanged(isChecked)
         }
-        binding.screenshotButton.setOnClickListener { viewModel.onScreenshotButtonClicked() }
+        binding.screenshotButton.setOnClickListener {
+            viewModel.onScreenshotButtonClicked()
+            Snackbar.make(requireView(), getString(R.string.screenshot_saved), Snackbar.LENGTH_SHORT)
+                .makeMultiline().show()
+        }
 
         listOf(binding.smallVideoFrame, binding.bigVideoFrame).forEach {
             it.setOnLongClickListener {
@@ -144,5 +150,17 @@ class EstablishedCallFragment :
         Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG)
             .makeMultiline().show()
     }
+
+    private fun showModeMessage(mode: AudioState) {
+        Snackbar.make(requireView(), mode.modeEnabledMessage, Snackbar.LENGTH_SHORT)
+            .makeMultiline().show()
+    }
+
+    private val AudioState.modeEnabledMessage: String get() =
+        when (this) {
+            AudioState.AAR -> getString(R.string.aar_on_msg)
+            AudioState.SPEAKER -> getString(R.string.external_speaker_on_msg)
+            AudioState.PHONE -> getString(R.string.phone_speaker_on)
+        }
 
 }

@@ -80,5 +80,7 @@
     <string name="torch">Is torch on</string>
     <string name="is_paused">Is paused</string>
     <string name="only_rear_camera_torch">Setting torch is only possible for rear camera</string>
-
+    <string name="aar_on_msg">Automatic Audio Routing enabled</string>
+    <string name="external_speaker_on_msg">External speaker enabled</string>
+    <string name="phone_speaker_on">Phone speaker enabled</string>
 </resources>
