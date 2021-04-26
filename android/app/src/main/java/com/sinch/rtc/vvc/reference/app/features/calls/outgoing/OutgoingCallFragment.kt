@@ -28,7 +28,7 @@ class OutgoingCallFragment :
     }
 
     private val progressingCallTonePlayer: MediaPlayer by lazy {
-        MediaPlayer.create(requireContext(), R.raw.progress_tone).apply { isLooping = true }
+        MediaPlayer.create(requireContext(), R.raw.progress_out).apply { isLooping = true }
     }
 
     override fun setupBinding(root: View): FragmentOutgoingCallBinding =
