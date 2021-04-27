@@ -3,9 +3,7 @@ package com.sinch.rtc.vvc.reference.app.navigation.main
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.nfc.Tag
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -121,7 +119,7 @@ class MainActivity : ViewBindingActivity<ActivityMainBinding>() {
 
     private fun observeNavigationEvents() {
         viewModel.navigationEvents.observe(this) {
-            Log.d(TAG,"Navigation event observed $it")
+            Log.d(TAG, "Navigation event observed $it")
             when (it) {
                 Login -> {
                     finish()
@@ -153,7 +151,7 @@ class MainActivity : ViewBindingActivity<ActivityMainBinding>() {
             intent.getParcelableExtra(INITIAL_INCOMING_CALL_DATA) as? IncomingCallInitialData
         incomingCallData?.let {
             viewModel.onIncomingCallRequested(it)
-            intent.extras?.clear()
+            intent = intent.apply { removeExtra(INITIAL_INCOMING_CALL_DATA) }
         }
     }
 
