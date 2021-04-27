@@ -23,10 +23,6 @@ class MainViewModel(
         const val TAG = "MainViewModel"
     }
 
-    init {
-        app.bindService(Intent(app, SinchClientService::class.java), this, Context.BIND_AUTO_CREATE)
-    }
-
     private var initialCallIncomingCallInitialData: IncomingCallInitialData? = null
 
     val navigationEvents: SingleLiveEvent<MainNavigationEvent> = SingleLiveEvent()
@@ -61,6 +57,18 @@ class MainViewModel(
     override fun onCleared() {
         super.onCleared()
         app.unbindService(this)
+    }
+
+    fun onViewCreated() {
+        if (sinchClient == null) {
+            app.bindService(
+                Intent(app, SinchClientService::class.java),
+                this,
+                Context.BIND_AUTO_CREATE
+            )
+        } else {
+            routeToDestination()
+        }
     }
 
     fun onIncomingCallRequested(data: IncomingCallInitialData) {

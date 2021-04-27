@@ -3,7 +3,10 @@ package com.sinch.rtc.vvc.reference.app.navigation.main
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.nfc.Tag
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -23,6 +26,7 @@ class MainActivity : ViewBindingActivity<ActivityMainBinding>() {
 
     companion object {
         const val INITIAL_INCOMING_CALL_DATA = "INC_CALL_DATA"
+        const val TAG = "MainActivity"
     }
 
     private val viewModel: MainViewModel by viewModels {
@@ -50,6 +54,7 @@ class MainActivity : ViewBindingActivity<ActivityMainBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.onViewCreated()
         observeNavigationEvents()
         parseIntent()
     }
@@ -116,6 +121,7 @@ class MainActivity : ViewBindingActivity<ActivityMainBinding>() {
 
     private fun observeNavigationEvents() {
         viewModel.navigationEvents.observe(this) {
+            Log.d(TAG,"Navigation event observed $it")
             when (it) {
                 Login -> {
                     finish()
