@@ -21,10 +21,12 @@ import com.sinch.rtc.vvc.reference.app.domain.calls.properties.VideoCallProperti
 import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.features.calls.established.screenshot.*
 import com.sinch.rtc.vvc.reference.app.utils.extensions.*
+import com.sinch.rtc.vvc.reference.app.utils.jwt.getString
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 class EstablishedCallViewModel(
     private val sinchClient: SinchClient,
@@ -39,6 +41,7 @@ class EstablishedCallViewModel(
     companion object {
         const val TAG = "EstablishCallViewModel"
         const val SCREENSHOT_SUFIX = "screenshot"
+        const val REMOTE_VIDEO_FRAME_MAX_INTERVAL_MS = 1500L
     }
 
     private val callDurationMutable: MutableLiveData<Int> = MutableLiveData()
@@ -52,6 +55,7 @@ class EstablishedCallViewModel(
     private val frameCaptureStateMutable: MutableLiveData<FrameCaptureState> = MutableLiveData(Idle)
 
     private var isLocalVideoOnTop = true
+    private var isRemoteVideoPaused = false
     private var isVideoPaused = false
     private var isTorchOn = false
     private var currentAudioState: AudioState = AudioState.AAR
@@ -60,6 +64,7 @@ class EstablishedCallViewModel(
             setNewAudioState(value)
             updateAudioProperties()
         }
+    private var lastVideoFrameTimestamp: Long? = null
 
     val callDurationFormatted: LiveData<String> = Transformations.map(callDurationMutable) {
         DateUtils.formatElapsedTime(it.toLong())
@@ -90,7 +95,7 @@ class EstablishedCallViewModel(
         updateAudioProperties()
         updateVideoProperties()
         updateCallProperties()
-        initiateCallTimeCheck()
+        initiateCallTimer()
     }
 
     fun onBackPressed() {
@@ -179,11 +184,12 @@ class EstablishedCallViewModel(
         mainThreadHandler.removeCallbacksAndMessages(null)
     }
 
-    private fun initiateCallTimeCheck() {
+    private fun initiateCallTimer() {
         val delayMS = 1000L
         val checkCallTimeRunnable = object : Runnable {
             override fun run() {
                 checkCallTime()
+                checkRemoteVideoOffered()
                 mainThreadHandler.postDelayed(this, delayMS)
             }
         }
@@ -200,6 +206,19 @@ class EstablishedCallViewModel(
     private fun checkCallTime() {
         val durationInS = sinchCall?.details?.duration ?: return
         callDurationMutable.value = durationInS
+    }
+
+    private fun checkRemoteVideoOffered() {
+        val currentTimestamp = Date().time
+        val previousTimestamp = lastVideoFrameTimestamp
+        if (
+            !isRemoteVideoPaused &&
+            previousTimestamp != null &&
+            (currentTimestamp - previousTimestamp) > REMOTE_VIDEO_FRAME_MAX_INTERVAL_MS) {
+            isRemoteVideoPaused = true
+            messageEvents.postValue(getString(R.string.remote_paused))
+            updateVideoProperties()
+        }
     }
 
     private fun updateCallProperties() {
@@ -225,6 +244,7 @@ class EstablishedCallViewModel(
                     sinchClient.videoController,
                     isLocalVideoOnTop,
                     isVideoPaused,
+                    isRemoteVideoPaused,
                     isTorchOn
                 )
             )
@@ -232,6 +252,7 @@ class EstablishedCallViewModel(
     }
 
     override fun onFrame(callId: String?, videoFrame: VideoFrame?) {
+        lastVideoFrameTimestamp = Date().time
         GlobalScope.launch(Dispatchers.Main) {
             if (captureState.value == Triggered) {
                 if (videoFrame != null && callId != null) {
@@ -240,6 +261,11 @@ class EstablishedCallViewModel(
                 } else {
                     frameCaptureStateMutable.value = Idle
                 }
+            }
+            if (isRemoteVideoPaused) {
+                messageEvents.postValue(getString(R.string.remote_video_resumed))
+                isRemoteVideoPaused = false
+                updateVideoProperties()
             }
         }
     }

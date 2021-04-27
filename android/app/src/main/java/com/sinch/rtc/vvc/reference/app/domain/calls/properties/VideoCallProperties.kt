@@ -10,12 +10,14 @@ data class VideoCallProperties(
     val isFrontCameraUsed: Boolean,
     val isLocalOnTop: Boolean,
     val isVideoPaused: Boolean,
+    val isRemoteVideoPaused: Boolean,
     val isTorchOn: Boolean
 ) {
     constructor(
         videoController: VideoController,
         isLocalOnTop: Boolean,
         isPaused: Boolean,
+        isRemotePaused: Boolean,
         isTorchEnabled: Boolean
     ) : this(
         videoController.remoteView,
@@ -23,6 +25,7 @@ data class VideoCallProperties(
         videoController.isFrontCameraUsedForCapture,
         isLocalOnTop = isLocalOnTop,
         isVideoPaused = isPaused,
+        isRemoteVideoPaused = isRemotePaused,
         isTorchOn = isTorchEnabled
     )
 }

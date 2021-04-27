@@ -21,7 +21,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
+    <FrameLayout
         android:id="@+id/bigVideoFrameOverlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -30,7 +30,17 @@
         app:layout_constraintBottom_toBottomOf="@id/bigVideoFrame"
         app:layout_constraintEnd_toEndOf="@id/bigVideoFrame"
         app:layout_constraintStart_toStartOf="@id/bigVideoFrame"
-        app:layout_constraintTop_toTopOf="@id/bigVideoFrame" />
+        app:layout_constraintTop_toTopOf="@id/bigVideoFrame">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:alpha="0.5"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_baseline_videocam_off_24" />
+
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/smallVideoFrame"
@@ -39,7 +49,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
+    <FrameLayout
         android:id="@+id/smallVideoFrameOverlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -48,7 +58,17 @@
         app:layout_constraintBottom_toBottomOf="@id/smallVideoFrame"
         app:layout_constraintEnd_toEndOf="@id/smallVideoFrame"
         app:layout_constraintStart_toStartOf="@id/smallVideoFrame"
-        app:layout_constraintTop_toTopOf="@id/smallVideoFrame" />
+        app:layout_constraintTop_toTopOf="@id/smallVideoFrame">
+
+        <ImageView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center"
+            android:alpha="0.5"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_baseline_videocam_off_24" />
+
+    </FrameLayout>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline80"

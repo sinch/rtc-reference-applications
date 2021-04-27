@@ -148,9 +148,9 @@ class EstablishedCallFragment :
         binding.isVideoPausedToggleButton.setCheckedOmitListeners(videoCallProperties.isVideoPaused)
         binding.isTorchToggleButton.setCheckedOmitListeners(videoCallProperties.isTorchOn)
         binding.smallVideoFrameOverlay.isVisible =
-            videoCallProperties.isLocalOnTop && videoCallProperties.isVideoPaused
+            (videoCallProperties.isLocalOnTop && videoCallProperties.isVideoPaused) || (!videoCallProperties.isLocalOnTop && videoCallProperties.isRemoteVideoPaused)
         binding.bigVideoFrameOverlay.isVisible =
-            !videoCallProperties.isLocalOnTop && videoCallProperties.isVideoPaused
+            (!videoCallProperties.isLocalOnTop && videoCallProperties.isVideoPaused) || (videoCallProperties.isLocalOnTop && videoCallProperties.isRemoteVideoPaused)
         if (videoCallProperties.isLocalOnTop) {
             binding.bigVideoFrame.addVideoViewChild(videoCallProperties.remoteView)
             binding.smallVideoFrame.addVideoViewChild(videoCallProperties.localView)
@@ -161,7 +161,7 @@ class EstablishedCallFragment :
     }
 
     private fun showError(message: String) {
-        Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG)
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT)
             .makeMultiline().show()
     }
 
