@@ -100,10 +100,10 @@
         android:id="@+id/calleNameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
         android:background="@drawable/rounded_corner_callee_bg"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="sasasasa" />
@@ -112,11 +112,11 @@
         android:id="@+id/durationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
         android:background="@drawable/rounded_corner_callee_bg"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/calleNameText" />
+        app:layout_constraintBaseline_toBaselineOf="@id/calleNameText"
+        app:layout_constraintStart_toEndOf="@id/calleNameText" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/callSettingsLayout"
