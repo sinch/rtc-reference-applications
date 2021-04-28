@@ -177,6 +177,7 @@ class EstablishedCallViewModel(
 
     override fun onCleared() {
         super.onCleared()
+        sinchCall?.hangup()
         sinchCall?.removeCallListener(this)
         sinchCall?.takeIf { it.details.isVideoOffered }?.let {
             sinchClient.videoController.setRemoteVideoFrameListener(null)
