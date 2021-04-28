@@ -32,7 +32,7 @@ class IncomingCallViewModel(
     private val call: Call
     private var callItem: CallItem? = null
 
-    private val isCallProgressingMutable: MutableLiveData<Boolean> = MutableLiveData(false)
+    private val isCallProgressingMutable: MutableLiveData<Boolean> = MutableLiveData(true)
     private val callPropertiesMutable: MutableLiveData<CallProperties> = MutableLiveData()
     private val permissionsRequiredEvents: SingleLiveEvent<List<String>> = SingleLiveEvent()
 
@@ -51,7 +51,6 @@ class IncomingCallViewModel(
             addCallListener(this@IncomingCallViewModel)
         }
         callPropertiesMutable.postValue(CallProperties(call.remoteUserId))
-        isCallProgressingMutable.postValue(true)
         user?.let {
             val generatedCallItem = CallItem(call = call, user = it).let { item ->
                 callDao.insertAndGetWithGeneratedId(item)

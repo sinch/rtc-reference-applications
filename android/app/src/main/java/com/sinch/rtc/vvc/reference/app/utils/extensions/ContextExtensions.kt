@@ -1,6 +1,7 @@
 package com.sinch.rtc.vvc.reference.app.utils.extensions
 
 import android.content.Context
+import android.media.MediaPlayer
 import com.sinch.gson.Gson
 import com.sinch.gson.JsonSyntaxException
 import com.sinch.rtc.vvc.reference.app.domain.AppConfig
@@ -37,3 +38,10 @@ inline fun <reified T> Context.jsonAssetAsObject(jsonFileName: String): T =
         JSONAssetsParser.inputToString(assets.open(jsonFileName)),
         T::class.java
     )
+
+fun MediaPlayer.safeStop() {
+    try {
+        stop()
+    } catch (ignored: Exception) {
+    }
+}

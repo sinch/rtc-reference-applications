@@ -2,6 +2,7 @@ package com.sinch.rtc.vvc.reference.app.features.calls.incoming
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +13,14 @@ import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.RTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentIncomingCallBinding
 import com.sinch.rtc.vvc.reference.app.utils.base.fragment.MainActivityFragment
+import com.sinch.rtc.vvc.reference.app.utils.extensions.safeStop
 
 class IncomingCallFragment :
     MainActivityFragment<FragmentIncomingCallBinding>(R.layout.fragment_incoming_call) {
+
+    companion object {
+        const val TAG = "IncomingCallFragment"
+    }
 
     private val args: IncomingCallFragmentArgs by navArgs()
     private val viewModel: IncomingCallViewModel by viewModels {
@@ -48,9 +54,7 @@ class IncomingCallFragment :
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if (progressingCallTonePlayer.isPlaying) {
-            progressingCallTonePlayer.pause()
-        }
+        progressingCallTonePlayer.safeStop()
     }
 
     override fun onResume() {
@@ -74,10 +78,11 @@ class IncomingCallFragment :
             declineButton.setOnClickListener { onBackPressed() }
         }
         viewModel.isCallProgressing.observe(viewLifecycleOwner) { isProgressing ->
+            Log.d(TAG, "Call is progressing $isProgressing")
             if (isProgressing) {
                 progressingCallTonePlayer.start()
-            } else if (progressingCallTonePlayer.isPlaying) {
-                progressingCallTonePlayer.stop()
+            } else {
+                progressingCallTonePlayer.safeStop()
             }
         }
     }
