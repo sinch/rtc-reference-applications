@@ -92,6 +92,7 @@ class EstablishedCallViewModel(
             sinchClient.videoController.setRemoteVideoFrameListener(this)
         }
         currentAudioState = AudioState.AAR
+        sinchClient.audioController.setMuted(false)
         updateAudioProperties()
         updateVideoProperties()
         updateCallProperties()
