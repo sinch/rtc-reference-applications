@@ -1,7 +1,7 @@
 .PHONY: sync clean build
 .DEFAULT_GOAL := build
-SDK_VERSION=4.0.7
-SDK_REVISION=a2daff18
+SDK_VERSION=4.2.4
+SDK_REVISION=c45da19
 
 SINCH_SDK_DIR = ./app/libs
 SINCH_SDK_BINARY = ${SINCH_SDK_DIR}/sinch-android-rtc-${SDK_VERSION}.zip
@@ -21,6 +21,7 @@ ${SINCH_SDK_AAR}: ${SINCH_SDK_BINARY}
 	touch $@
 
 ${SINCH_SDK_BINARY}: ${SINCH_SDK_DIR}
+	find ${SINCH_SDK_DIR} -name '*sinch-android-rtc*' -delete
 	curl -0 "https://download.sinch.com/android/${SDK_VERSION}/sinch-android-rtc-${SDK_VERSION}_${SDK_REVISION}.zip" -o ${SINCH_SDK_BINARY}
 	cd ${SINCH_SDK_DIR} && unzip -o ./$(notdir $(SINCH_SDK_BINARY))	
 
