@@ -78,12 +78,7 @@ class EstablishedCallFragment :
         }
         binding.screenshotButton.setOnClickListener {
             viewModel.onScreenshotButtonClicked()
-            Snackbar.make(
-                requireView(),
-                getString(R.string.screenshot_saved),
-                Snackbar.LENGTH_SHORT
-            )
-                .makeMultiline().show()
+            showSnackbar(getString(R.string.screenshot_saved))
         }
 
         listOf(binding.smallVideoFrame, binding.bigVideoFrame).forEach {
@@ -96,12 +91,7 @@ class EstablishedCallFragment :
             it.setOnClickListener { viewModel.toggleFrontCamera() }
         }
         binding.isVideoPausedToggleButton.setOnCheckedChangeListener { _, isChecked ->
-            Snackbar.make(
-                requireView(),
-                getString(if (isChecked) R.string.video_pause else R.string.video_resumed),
-                Snackbar.LENGTH_SHORT
-            )
-                .makeMultiline().show()
+            showSnackbar(getString(if (isChecked) R.string.video_pause else R.string.video_resumed))
             viewModel.setIsPaused(isChecked)
         }
     }
@@ -161,13 +151,11 @@ class EstablishedCallFragment :
     }
 
     private fun showError(message: String) {
-        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT)
-            .makeMultiline().show()
+        showSnackbar(message)
     }
 
     private fun showModeMessage(mode: AudioState) {
-        Snackbar.make(requireView(), mode.modeEnabledMessage, Snackbar.LENGTH_SHORT)
-            .makeMultiline().show()
+        showSnackbar(mode.modeEnabledMessage)
     }
 
     private val AudioState.modeEnabledMessage: String
@@ -177,5 +165,13 @@ class EstablishedCallFragment :
                 AudioState.SPEAKER -> getString(R.string.external_speaker_on_msg)
                 AudioState.PHONE -> getString(R.string.phone_speaker_on)
             }
+
+    private fun showSnackbar(message: String) {
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT)
+            .apply {
+                anchorView = binding.callSettingsLayout
+            }
+            .makeMultiline().show()
+    }
 
 }
