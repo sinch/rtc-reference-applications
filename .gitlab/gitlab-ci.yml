@@ -1,0 +1,46 @@
+include:
+    # Metadata shared by many jobs
+    - local: .gitlab/rules.yml
+    - local: .gitlab/artifacts.yml
+
+    # OS builds
+    - local: .gitlab/os-android.yml
+    - local: .gitlab/release.yml
+
+
+# NOTE: It’s possible to overwrite a globally defined before_script or after_script with per-job actions
+# Deploy host gradle.properties to the root of the repo
+# CI_GRADLE_PROPERTIES_PATH is set in runner config
+default:
+  before_script:
+    - cp -v $CI_GRADLE_PROPERTIES_PATH .
+    - cp -rf -v $CI_REF_APP_GOOGLE_SERVICE_PATH ./android/app
+    - cp -rf -v $CI_REF_APP_CONFIG_PATH ./android/app/src/main/assets
+
+stages:
+    - Cut Release
+    - build
+    # Add test stage when build system will be ready for it
+    - Test Dist Sample Apps
+
+############################################## pipeline jobs
+
+build:device:release:
+    extends:
+        - .conf:env
+        - .conf:release
+        - .conf:artifacts
+        - .conf:runner:tags
+        - .conf:rule:default
+        - .build:do
+
+test:dist:samples:
+    extends:
+        - .conf:env
+        - .conf:release
+        - .conf:runner:tags
+        - .conf:rule:default
+        - .test:do
+
+    dependencies:
+        - build:device:release

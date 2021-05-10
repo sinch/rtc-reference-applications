@@ -47,6 +47,10 @@ android {
     compileSdkVersion 29
     buildToolsVersion "30.0.1"
 
+    lintOptions {
+        abortOnError false
+    }
+
     defaultConfig {
         applicationId "com.sinch.rtc.vvc.reference.app"
         minSdkVersion 21

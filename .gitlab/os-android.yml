@@ -1,0 +1,68 @@
+# OS-specific builder configurations and build commands
+
+# Base config
+.base:
+    variables:
+        ANDROID_NDK_ROOT: "$HOME/android-ndk-r16b"
+
+        # WARNING: This is only for debugging and must not be enabled on real builds as it leak
+        # secrets and keys in the log
+        # CI_DEBUG_TRACE: "true"
+
+.conf:env:
+    extends: .base
+
+    variables:
+        # Note that shell runners only support runners with a single
+        # concurrency level. We can't use `$CI_CONCURRENT_ID` because this may
+        # change between the build and test stages which we doesn't support.
+        # Even if we could, it could change if other runners on the machine
+        # could run at the same time, so we drop it.
+        # GIT_CLONE_PATH: ""
+
+        GIT_SUBMODULE_STRATEGY: "recursive"
+        # technique to avoid downloading NDK from internet during build
+        DOWNLOAD_NDK: "false"
+
+.conf:runner:tags:
+    tags:
+        - shell
+        - concurrent
+        - android-ndk-r16b
+
+.conf:debug:
+    variables:
+        CONFIGURATION: "Debug"
+
+.conf:release:
+    variables:
+        CONFIGURATION: "Release"
+
+.before_script_android: &before_script_android
+    - pwd
+    - ./android/gradlew --version
+    - echo $PATH
+    - echo $JAVA_HOME
+    - echo $ANDROID_HOME
+    - echo $RELEASE_STORE_FILE
+
+
+.build:do:
+    stage: build
+
+    script:
+        - *before_script_android
+        - cd android
+        - ./gradlew clean
+        - ./gradlew :app:assembleRelease
+
+    interruptible: true
+
+.test:do:
+    stage: Test Dist Sample Apps
+
+    script:
+        - *before_script_android
+        - echo Sample app tests not implemented yet
+
+    interruptible: true
