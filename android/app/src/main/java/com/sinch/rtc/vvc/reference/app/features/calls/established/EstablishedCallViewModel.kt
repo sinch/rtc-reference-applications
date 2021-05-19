@@ -1,10 +1,13 @@
 package com.sinch.rtc.vvc.reference.app.features.calls.established
 
+import android.Manifest
 import android.app.*
+import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
 import android.text.format.DateUtils
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import com.sinch.android.rtc.SinchClient
 import com.sinch.android.rtc.calling.Call
@@ -74,7 +77,7 @@ class EstablishedCallViewModel(
         SingleLiveEvent()
     val messageEvents: SingleLiveEvent<String> = SingleLiveEvent()
 
-    val audioRoutingPermissionRequiredEvent = SingleLiveEvent<Unit>()
+    val videoPermissionsRequestEvent = SingleLiveEvent<Unit>()
     val audioCallProperties: LiveData<AudioCallProperties> = audioCallPropertiesMutable
     val videoCallProperties: LiveData<VideoCallProperties?> = videoCallPropertiesMutable
     val callProperties: LiveData<CallProperties> = callPropertiesMutable
@@ -90,6 +93,12 @@ class EstablishedCallViewModel(
             sinchClient.videoController.setResizeBehaviour(loggedInUser.remoteScalingType)
             sinchClient.videoController.setLocalVideoResizeBehaviour(loggedInUser.localScalingType)
             sinchClient.videoController.setRemoteVideoFrameListener(this)
+            setIsPaused(
+                ContextCompat.checkSelfPermission(
+                    app,
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            )
         }
         currentAudioState = AudioState.AAR
         sinchClient.audioController.setMuted(false)
@@ -113,6 +122,15 @@ class EstablishedCallViewModel(
             sinchClient.audioController.setAutomaticRoutingEnabled(true)
         }
         updateAudioProperties()
+    }
+
+    fun onVideoPermissionResult(result: PermissionRequestResult) {
+        setIsPaused(!result.areAllPermissionsGranted)
+        if (result.areAllPermissionsGranted) {
+            messageEvents.postValue(getString(R.string.video_resumed))
+        } else {
+            messageEvents.postValue(getString(R.string.video_permissions_explanation))
+        }
     }
 
     fun onMuteCheckboxChanged(isOn: Boolean) {
@@ -145,14 +163,13 @@ class EstablishedCallViewModel(
         frameCaptureStateMutable.value = Triggered
     }
 
-    fun setIsPaused(isPaused: Boolean) {
-        this.isVideoPaused = isPaused
-        if (isPaused) {
-            sinchCall?.pauseVideo()
+    fun requestIsPaused(isPaused: Boolean) {
+        if (!isPaused) {
+            videoPermissionsRequestEvent.call()
         } else {
-            sinchCall?.resumeVideo()
+            messageEvents.postValue(getString(R.string.video_pause))
+            setIsPaused(true)
         }
-        updateVideoProperties()
     }
 
     fun onVideoPositionToggled() {
@@ -186,6 +203,16 @@ class EstablishedCallViewModel(
         mainThreadHandler.removeCallbacksAndMessages(null)
     }
 
+    private fun setIsPaused(isPaused: Boolean) {
+        this.isVideoPaused = isPaused
+        if (isPaused) {
+            sinchCall?.pauseVideo()
+        } else {
+            sinchCall?.resumeVideo()
+        }
+        updateVideoProperties()
+    }
+
     private fun initiateCallTimer() {
         val delayMS = 1000L
         val checkCallTimeRunnable = object : Runnable {
@@ -211,12 +238,16 @@ class EstablishedCallViewModel(
     }
 
     private fun checkRemoteVideoOffered() {
+        if (lastVideoFrameTimestamp == null) {
+            lastVideoFrameTimestamp = Date().time
+        }
         val currentTimestamp = Date().time
         val previousTimestamp = lastVideoFrameTimestamp
         if (
             !isRemoteVideoPaused &&
             previousTimestamp != null &&
-            (currentTimestamp - previousTimestamp) > REMOTE_VIDEO_FRAME_MAX_INTERVAL_MS) {
+            (currentTimestamp - previousTimestamp) > REMOTE_VIDEO_FRAME_MAX_INTERVAL_MS
+        ) {
             isRemoteVideoPaused = true
             messageEvents.postValue(getString(R.string.remote_paused))
             updateVideoProperties()

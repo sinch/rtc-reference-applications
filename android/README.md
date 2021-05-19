@@ -4,10 +4,7 @@ Reference Applications for the Android Client.
 
 # Set up
 
-#### 1. Download the SDK
-Run `make sync` to fetch the Sinch Android Voice & Video SDK from the artifactory. This step is necessary now, because the SDK is not hosted on jCenter or mavenCentral, otherwise, gradle plugin will handle this.
-
-#### 2. Create configuration file
+#### 1. Create configuration file
 To communicate with Sinch API you must include your application specific authorization settings (key and secret). In order to do this, check config.json file located in app/src/main/assets folder and fill it with these values copied from Sinch portal website of your application: 
 
 ![config.json](docs/img/conf_loc.png).
@@ -58,7 +55,7 @@ To do this simply place a list of the environment objects in the 'config.json' f
 }]
 ```
 
-#### 3. Add your google-services.json file
+#### 2. Add your google-services.json file
 
 This sample uses Firebase Cloud Messaging for delivering push notifications.  
 In order for push notification to work you must generate and include your application specific (with correspondent "package_name") google-services.json file.  

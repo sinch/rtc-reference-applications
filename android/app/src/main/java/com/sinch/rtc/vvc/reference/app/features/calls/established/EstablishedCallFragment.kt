@@ -91,8 +91,7 @@ class EstablishedCallFragment :
             it.setOnClickListener { viewModel.toggleFrontCamera() }
         }
         binding.isVideoPausedToggleButton.setOnCheckedChangeListener { _, isChecked ->
-            showSnackbar(getString(if (isChecked) R.string.video_pause else R.string.video_resumed))
-            viewModel.setIsPaused(isChecked)
+            viewModel.requestIsPaused(isChecked)
         }
     }
 
@@ -105,9 +104,9 @@ class EstablishedCallFragment :
         viewModel.callDurationFormatted.observe(viewLifecycleOwner) {
             binding.durationText.text = it
         }
-        viewModel.audioRoutingPermissionRequiredEvent.observe(viewLifecycleOwner) {
-            requestPermissions(listOf(Manifest.permission.BLUETOOTH)) {
-                viewModel.onAudioRoutingPermissionsResult(it)
+        viewModel.videoPermissionsRequestEvent.observe(viewLifecycleOwner) {
+            requestPermissions(listOf(Manifest.permission.CAMERA)) {
+                viewModel.onVideoPermissionResult(it)
             }
         }
         viewModel.audioCallProperties.observe(viewLifecycleOwner) {

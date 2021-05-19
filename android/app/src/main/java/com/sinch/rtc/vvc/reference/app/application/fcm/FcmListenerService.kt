@@ -23,10 +23,7 @@ class FcmListenerService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         Log.d(TAG, "onMessageReceived called with $remoteMessage")
-        if (SinchHelpers.isSinchPushPayload(remoteMessage.data) && !isVideoCallWithoutGrantedPermissions(
-                remoteMessage
-            )
-        ) {
+        if (SinchHelpers.isSinchPushPayload(remoteMessage.data)) {
             startService(Intent(this, SinchClientService::class.java))
             bindService(
                 Intent(this, SinchClientService::class.java),

@@ -17,6 +17,7 @@ import com.sinch.rtc.vvc.reference.app.domain.calls.requiredPermissions
 import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.utils.extensions.PermissionRequestResult
 import com.sinch.rtc.vvc.reference.app.utils.extensions.areAllPermissionsGranted
+import com.sinch.rtc.vvc.reference.app.utils.extensions.areAudioPermissionsGranted
 import com.sinch.rtc.vvc.reference.app.utils.extensions.updateBasedOnSinchCall
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 
@@ -69,7 +70,7 @@ class IncomingCallViewModel(
     }
 
     fun onPermissionsResult(permissionRequestResult: PermissionRequestResult) {
-        if (permissionRequestResult.areAllPermissionsGranted) {
+        if (permissionRequestResult.areAudioPermissionsGranted) {
             call.answer()
             callItem?.let {
                 navigationEvents.value = EstablishedCall(it, callId)
