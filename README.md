@@ -7,3 +7,5 @@ See respected READMEs for:
 - [iOS Client](./ios/README.md)
 - [JS Client](./js/README.md)
 - [Backend](./backend/README.md)
+
+![Android](https://github.com/sinch/rtc-reference-applications/actions/workflows/build.yml/badge.svg)
