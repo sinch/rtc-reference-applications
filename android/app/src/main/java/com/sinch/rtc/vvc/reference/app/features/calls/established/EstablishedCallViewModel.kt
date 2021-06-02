@@ -218,7 +218,9 @@ class EstablishedCallViewModel(
         val checkCallTimeRunnable = object : Runnable {
             override fun run() {
                 checkCallTime()
-                checkRemoteVideoOffered()
+                if(sinchCall?.details?.isVideoOffered == true) {
+                    checkLastFrameTimestamp()
+                }
                 mainThreadHandler.postDelayed(this, delayMS)
             }
         }
@@ -237,7 +239,7 @@ class EstablishedCallViewModel(
         callDurationMutable.value = durationInS
     }
 
-    private fun checkRemoteVideoOffered() {
+    private fun checkLastFrameTimestamp() {
         if (lastVideoFrameTimestamp == null) {
             lastVideoFrameTimestamp = Date().time
         }
