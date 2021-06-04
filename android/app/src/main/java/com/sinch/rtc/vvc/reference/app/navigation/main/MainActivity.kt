@@ -147,6 +147,11 @@ class MainActivity : ViewBindingActivity<ActivityMainBinding>() {
     }
 
     private fun parseIntent() {
+        if (intent.flags and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY != 0) {
+//            Workaround for the case when app is brought to front after launching from "recents"
+//            screen after it was created via notification https://stackoverflow.com/a/41381757
+            return
+        }
         val incomingCallData =
             intent.getParcelableExtra(INITIAL_INCOMING_CALL_DATA) as? IncomingCallInitialData
         incomingCallData?.let {
