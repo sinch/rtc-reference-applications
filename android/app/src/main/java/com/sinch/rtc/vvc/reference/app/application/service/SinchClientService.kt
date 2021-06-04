@@ -2,8 +2,10 @@ package com.sinch.rtc.vvc.reference.app.application.service
 
 import android.app.*
 import android.app.ActivityManager.RunningAppProcessInfo
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
@@ -21,6 +23,8 @@ import com.sinch.rtc.vvc.reference.app.storage.RTCVoiceVideoAppDatabase
 import com.sinch.rtc.vvc.reference.app.storage.prefs.SharedPrefsManager
 import com.sinch.rtc.vvc.reference.app.utils.jwt.FakeJWTFetcher
 import com.sinch.rtc.vvc.reference.app.utils.jwt.JWTFetcher
+import java.io.File
+
 
 class SinchClientService : Service(), SinchClientListener, CallClientListener {
 
@@ -38,6 +42,17 @@ class SinchClientService : Service(), SinchClientListener, CallClientListener {
     private val jwtFetcher: JWTFetcher by lazy {
         FakeJWTFetcher(prefsManager)
     }
+
+    private val notificationSoundUri: Uri by lazy {
+        Uri.parse(
+            ContentResolver.SCHEME_ANDROID_RESOURCE
+                    + File.pathSeparator + File.separator + File.separator
+                    + packageName
+                    + File.separator
+                    + R.raw.progress_tone
+        )
+    }
+
     private val prefsManager: SharedPrefsManager by lazy {
         SharedPrefsManager(appContext = application)
     }
@@ -153,6 +168,7 @@ class SinchClientService : Service(), SinchClientListener, CallClientListener {
                     it
                 )
             }
+            call.addCallListener(NotificationCancellationListener(notificationManager))
         } else {
             startActivity(mainActivityIntent)
         }
@@ -164,6 +180,9 @@ class SinchClientService : Service(), SinchClientListener, CallClientListener {
             .setContentTitle(getString(R.string.incoming_call_notification_title))
             .setContentText(call.remoteUserId)
             .setSmallIcon(R.drawable.call_pressed)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setSound(notificationSoundUri)
+            .setCategory(NotificationCompat.CATEGORY_CALL)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setContentIntent(
                 createNotificationPendingIntent(
@@ -206,7 +225,9 @@ class SinchClientService : Service(), SinchClientListener, CallClientListener {
                 }, NOTIFICATION_PENDING_INTENT_ID + 3)
             )
             .setOngoing(true)
-            .build()
+            .build().apply {
+                flags = flags or Notification.FLAG_INSISTENT
+            }
     }
 
     private fun createNotificationPendingIntent(source: Intent, id: Int): PendingIntent =
