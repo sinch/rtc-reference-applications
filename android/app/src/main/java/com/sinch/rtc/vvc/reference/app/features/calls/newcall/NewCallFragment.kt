@@ -23,7 +23,6 @@ class NewCallFragment : MainActivityFragment<FragmentNewCallBinding>(R.layout.fr
     }
 
     private val callTypes = listOf(
-        CallType.AppToPhone,
         CallType.AppToAppAudio,
         CallType.AppToAppVideo,
         CallType.AppToSip

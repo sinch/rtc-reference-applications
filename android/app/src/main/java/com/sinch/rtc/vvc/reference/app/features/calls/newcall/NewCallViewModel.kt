@@ -30,7 +30,7 @@ class NewCallViewModel(
     private val callItemMutable: MutableLiveData<CallItem> =
         MutableLiveData(
             initialCallItem ?: CallItem(
-                CallType.AppToPhone,
+                CallType.AppToAppAudio,
                 "",
                 Date(),
                 userId = loggedInUser?.id.orEmpty()
