@@ -1,0 +1,80 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  font-family:  "Atlas Grotesk Web","Helvetica",sans-serif;
+  padding-bottom: 40px;
+  background-color: #ffffff;
+}
+
+fieldset {
+  width: 90%;
+  border-style: none;
+}
+
+video {
+  border-style: solid;
+}
+
+.material-icons {
+  font-size: 1.5rem;
+}
+
+.header {
+  font-weight: 900;
+  font-size: 2rem;
+}
+
+.header_l1 {
+  font-weight: 900;
+  font-size: 1.25rem;
+  color: #37474f;
+  padding-bottom: 5px; 
+}
+
+.footer {
+  font-family:  "Atlas Grotesk Web","Helvetica",sans-serif;
+  font-size: 0.75rem;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.sinchheader {
+  padding-top: 20px;
+  padding-left: 30px;
+  padding-bottom: 20px;
+  width: 100%;
+  background-color: #323e47!important;
+}
+
+.sinchbody {
+  padding-top: 10px;
+  padding-right: 15px;
+  padding-left: 15px;
+  padding-bottom: 20px;
+  width: 100%;
+}
+
+.status {
+  padding-left: 10px;
+}
+
+.input-field {
+  width: 60%;
+}
+
+.collapsible {
+  border-top: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  margin: 0rem;
+}
+
+.collapsible-body {
+  padding: 0rem;
+}
+
+#videos-container {
+  padding-top: 30px;
+  padding-left: 15px;
+  padding-bottom: 20px;
+}

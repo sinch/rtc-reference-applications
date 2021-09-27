@@ -1,0 +1,58 @@
+<html>
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <meta name="viewport" content="initial-scale=1.0, width=device-width">
+        <title>Sinch Calling SDK - SimpleCall Phone Number Sample</title>
+        <!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <link rel="stylesheet" href="../style/sample.css">
+        <script src="https://cdn.sinch.com/latest/sinch-rtc-min.js"></script>
+    </head>
+    <body>
+        <header class="sinchheader">
+            <img width="165" height="69" src="../style/header-logo-300x125-1.png" alt="Sinch">
+        </header>
+        <ul class="collapsible">
+            <li>
+                <div class="collapsible-header"><i class="material-icons">menu</i><span class="header_l1">In-app to phone (PSTN) calling demo</span></div>
+                <div class="collapsible-body">
+                <ul class="collection">
+                    <li class="collection-item avatar">
+                        <i class="small material-icons circle green">phone</i>
+                        <span class="header_l1">Step One</span>
+                        <p>Enter a telephone number in <a href="https://en.wikipedia.org/wiki/E.164">E164</a> format</p>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <section class="sinchbody">
+            <form>
+                <div class="input-box">
+                    <fieldset>
+                        <div class="input-field">
+                            <i class="material-icons prefix">phone</i>
+                            <input placeholder="Enter phone number e.g. +460000000000" id="to" type="tel" >
+                        </div>
+                    </fieldset>
+                    <button class="btn-small" id="call">Call</button>
+                </div>
+            </form>
+        </section>
+        <section class="card blue-grey darken-1">
+            <div class="card-content white-text">
+                <div id="status">Client not started</div>
+            </div>
+        </section>
+        <footer class="footer">&copy; Powered by Sinch-RTC 2020</footer>
+        <script type="module" src="callnumber.js"></script>
+        <script type="text/javascript" >
+            document.addEventListener('DOMContentLoaded', function() {
+                var elems = document.querySelectorAll('.collapsible');
+                var instances = M.Collapsible.init(elems, {});
+            });
+        </script>
+    </body>
+</html>
