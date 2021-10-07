@@ -18,4 +18,4 @@ const APPLICATION_SECRET = 'APPLICATION_SECRET'; // Replace with your own applic
 
 ## Documentation
 
-Read full documentation [here](https://developers.sinch.com/docs/voice-video-client/beta/js-cloud/).
+Read full documentation [here](https://developers.sinch.com/docs/in-app-calling/js-cloud/).
