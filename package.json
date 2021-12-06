@@ -1,0 +1,14 @@
+{
+  "name": "pre-commit-handler-javscript",
+  "version": "1.0.0",
+  "description": "Used for handling pre-commits for Javascript app",
+  "author": "Sinch",
+  "license": "ISC",
+  "private": true,
+  "devDependencies": {
+    "husky": "^7.0.4"
+  },
+  "scripts": {
+    "prepare": "husky install"
+  }
+}

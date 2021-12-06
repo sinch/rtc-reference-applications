@@ -1,0 +1,28 @@
+{
+  "name": "rtc-js-sdk-reference-app",
+  "version": "1.0.0",
+  "description": "Reference app for RTC JS SDK",
+  "author": "Sinch",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.3.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "lint-staged": "^11.2.6",
+    "prettier": "2.4.1"
+  },
+  "lint-staged": {
+    "*.js": "eslint --fix --cache",
+    "*": "prettier --write --ignore-unknown"
+  },
+  "scripts": {
+    "start": "cd samples && npx http-server",
+    "prepare": "cd .. && npm install && husky install",
+    "lint": "prettier --check . && eslint '**/*.js'"
+  },
+  "engines": {
+    "npm": ">=8.0.0",
+    "node": ">=16.0.0"
+  }
+}

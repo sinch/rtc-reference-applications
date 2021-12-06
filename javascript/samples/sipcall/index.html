@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+    <meta content="utf-8" http-equiv="encoding" />
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    <title>Sinch Calling SDK - SimpleCall SIP Endpoint Sample</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="../common/style/favicon-32x32.png"
+    />
+    <!--Import Google Icon Font-->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <link rel="stylesheet" href="../common/style/sample.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdn.sinch.com/latest/sinch-rtc-min.js"></script>
+    <!-- start:js -->
+    <!-- end:js -->
+  </head>
+  <body>
+    <header class="sinchheader">
+      <a href="../index.html"
+        ><img
+          width="165"
+          height="69"
+          src="../common/style/header-logo-300x125-1.png"
+          alt="Sinch"
+      /></a>
+    </header>
+    <ul class="collapsible">
+      <li>
+        <div class="collapsible-header">
+          <i class="material-icons">menu</i
+          ><span class="header_l1">In-app to SIP calling demo</span>
+        </div>
+        <div class="collapsible-body">
+          <ul class="collection">
+            <li class="collection-item avatar">
+              <i class="small material-icons circle green">phone</i>
+              <span class="header_l1">Step One</span>
+              <p>
+                Enter your SIP endpoint in
+                <a href="https://en.wikipedia.org/wiki/E.164">E164</a> format
+              </p>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+    <div id="status" class="status">
+      <span id="statusheader">Sinch client is not started</span>
+    </div>
+    <section class="sinchbody">
+      <form>
+        <div class="input-box">
+          <fieldset>
+            <div class="input-field">
+              <i class="material-icons prefix">phone</i>
+              <input
+                placeholder="Enter your SIP Endpoint e.g. 11111111@my_sip_server.com:5061;transport=tls"
+                id="to"
+                type="text"
+              />
+            </div>
+          </fieldset>
+          <button class="btn-small" id="call">Call</button>
+        </div>
+      </form>
+    </section>
+    <footer class="footer">
+      <div id="version"></div>
+      <span>&copy; Powered by Sinch-RTC 2021</span>
+    </footer>
+    <script type="module" src="index.js"></script>
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+        const elems = document.querySelectorAll(".collapsible");
+        const instances = M.Collapsible.init(elems, {});
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+    <meta content="utf-8" http-equiv="encoding" />
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    <title>Sinch calling demo</title>
+    <!--Import Google Icon Font-->
+    <link rel="icon" type="image/png" href="./common/style/favicon-32x32.png" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <link rel="stylesheet" href="./common/style/sample.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="sinchheader">
+      <a href="index.html"
+        ><img
+          width="165"
+          height="69"
+          src="./common/style/header-logo-300x125-1.png"
+          alt="Sinch"
+      /></a>
+    </div>
+    <div class="row">
+      <div class="col s12"></div>
+      <div class="col s12 m2"></div>
+      <div class="col s12 m8">
+        <form class="token-input" id="demotype">
+          <!-- <h5 class="h5 mb-3 font-weight-normal">..Enter token</h5>-->
+          <input
+            class="form-control"
+            type="text"
+            name="k"
+            id="k"
+            placeholder="application key"
+          />
+          <input
+            class="form-control"
+            type="text"
+            name="s"
+            id="s"
+            placeholder="secret "
+          />
+          <button
+            class="waves-effect waves-light btn-small center"
+            id="videocall"
+            type="submit"
+            onClick="demo(this.id)"
+          >
+            <i class="large material-icons right">video_call</i>video
+          </button>
+          <button
+            class="waves-effect waves-light btn-small"
+            id="voicecall"
+            type="submit"
+            onClick="demo(this.id)"
+          >
+            <i class="large material-icons right">phone_android</i>audio
+          </button>
+          <button
+            class="waves-effect waves-light btn-small"
+            id="numbercall"
+            type="submit"
+            onClick="demo(this.id)"
+          >
+            <i class="large material-icons right">call</i>phone
+          </button>
+          <button
+            class="waves-effect waves-light btn-small"
+            id="sipcall"
+            type="submit"
+            onClick="demo(this.id)"
+          >
+            <i class="large material-icons right">computer</i>SIP
+          </button>
+        </form>
+      </div>
+      <div class="col s12 m2"></div>
+    </div>
+    <script type="text/javascript">
+      function demo(type) {
+        event.preventDefault();
+        const k = document.getElementById("k").value;
+        const s = document.getElementById("s").value;
+        const token = btoa(k + ":" + s);
+        console.log("token " + token);
+        const dest = type + "/index.html?t=" + token;
+        location.href = dest;
+      }
+    </script>
+  </body>
+</html>

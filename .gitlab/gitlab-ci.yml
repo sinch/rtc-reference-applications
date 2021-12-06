@@ -18,6 +18,7 @@ default:
     - cp -rf -v $CI_REF_APP_CONFIG_PATH ./android/app/src/main/assets
 
 stages:
+    - Lint Javascript
     - Cut Release
     - build
     # Add test stage when build system will be ready for it
@@ -44,3 +45,15 @@ test:dist:samples:
 
     dependencies:
         - build:device:release
+
+lint:javascript:
+    stage: Lint Javascript
+    tags:
+        - docker
+    image: node:16-slim
+    before_script:
+        - ""
+    script:
+        - cd javascript
+        - npm ci
+        - npm run lint

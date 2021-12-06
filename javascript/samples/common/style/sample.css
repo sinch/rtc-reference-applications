@@ -1,0 +1,137 @@
+body {
+  margin: 0px;
+  padding: 0px 0 40px 0;
+  font-family: "Atlas Grotesk Web", "Helvetica", sans-serif;
+  background-color: #ffffff;
+  height: 100%;
+  width: 100%;
+  max-width: 640px;
+}
+
+fieldset {
+  width: 90%;
+  border-style: none;
+}
+
+.header {
+  font-weight: 900;
+  font-size: 2rem;
+}
+
+.header_l1 {
+  font-weight: 900;
+  font-size: 1.25rem;
+  color: #37474f;
+  padding: 0 0 5px 5px;
+}
+
+.material-icons {
+  padding: 2px 0 0 0;
+  font-size: 1.5rem;
+}
+
+.sinchheader {
+  padding-top: 20px;
+  padding-left: 30px;
+  padding-bottom: 20px;
+  width: 100%;
+  background-color: #323e47;
+}
+
+.token-input {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn-small {
+  margin: 5px 0 0 0;
+  max-width: 120px;
+  width: 100%;
+}
+
+.sinchbody {
+  padding-top: 10px;
+  padding-right: 15px;
+  padding-left: 15px;
+  padding-bottom: 20px;
+  width: 100%;
+}
+
+.footer {
+  font-family: "Atlas Grotesk Web", "Helvetica", sans-serif;
+  font-size: 0.75rem;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.status {
+  width: 100%;
+  padding: 5px 0 5px 20px;
+  background-color: #ffd740;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.input-field {
+  width: 100%;
+}
+
+.collapsible {
+  border-top: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  margin: 0rem;
+}
+
+.collapsible-header {
+  padding: 0.25rem;
+}
+
+.collapsible-body {
+  padding: 0rem;
+}
+
+.videos-container {
+  height: 480px;
+  width: 640px;
+  display: block;
+  background-color: grey;
+  overflow: auto;
+}
+
+.incoming-video {
+  width: 100%;
+  max-width: 640px;
+  position: absolute;
+}
+
+.outgoing-video {
+  padding: 2% 2% 0 2%;
+  width: 30%;
+  position: relative;
+  float: left;
+}
+
+.dialer-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: 20px 20px 20px;
+  grid-gap: 30px;
+  padding: 0px;
+}
+
+.dialer-container > div {
+  text-align: center;
+  padding: 0px 0;
+  font-size: 15px;
+}
+
+.callcontrol {
+  display: none;
+}
+
+.calldestination {
+  display: none;
+}
