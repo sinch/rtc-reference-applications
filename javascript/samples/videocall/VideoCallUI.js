@@ -156,9 +156,9 @@ export default class VideoCallUI {
   }
 
   removeVideoStream(id) {
-    const videostream = document.getElementById(id);
     console.log("Action: Remove videosteam ==>", id);
-    videostream.remove();
+    const videostream = document.getElementById(id);
+    videostream?.remove();
   }
 
   getUserId() {
