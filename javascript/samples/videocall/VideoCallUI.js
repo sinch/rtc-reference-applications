@@ -20,8 +20,6 @@ export default class VideoCallUI {
 
     this.handleStartClientClick();
     this.handleMakeCallClick();
-
-    setVisibility("videos-container", HIDE);
     setState("call", DISABLE);
     setState("answer", DISABLE);
     setState("hangup", DISABLE);

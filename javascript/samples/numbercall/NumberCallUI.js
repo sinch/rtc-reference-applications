@@ -15,7 +15,6 @@ export default class NumberCallUI {
     setText("version", `Sinch - Version:  ${Sinch.version}`);
     setVisibility("sinchclient", SHOW);
     setVisibility("call-destination", HIDE);
-    setVisibility("dialer", HIDE);
   }
 
   handleStartClientClick(sinchPhone) {
