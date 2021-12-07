@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "cd samples && npx http-server",
-    "prepare": "cd ../.. && npm install && husky install",
+    "prepare": "cd .. && npm install && husky install",
     "lint": "prettier --check . && eslint '**/*.js'"
   },
   "engines": {
