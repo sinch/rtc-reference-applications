@@ -1,23 +1,23 @@
 export default class Crypto {
   static algorithm = { name: "HMAC", hash: { name: "SHA-256" } };
 
-  static convertUTF8ToArrayBuffer(s) {
-    return new TextEncoder().encode(s);
+  static convertUTF8ToArrayBuffer(data) {
+    return new TextEncoder().encode(data);
   }
 
-  static async getKey(secret) {
+  static getKey(secret) {
     return window.crypto.subtle.importKey("raw", secret, this.algorithm, true, [
       "sign",
       "verify",
     ]);
   }
 
-  static async HmacSHA256(m, secret) {
+  static async hmacSHA256(data, secret) {
     const key = await this.getKey(secret);
     return crypto.subtle.sign(
       this.algorithm,
       key,
-      this.convertUTF8ToArrayBuffer(m)
+      this.convertUTF8ToArrayBuffer(data)
     );
   }
 
@@ -25,15 +25,15 @@ export default class Crypto {
     return window.crypto.getRandomValues(new Uint8Array(length));
   }
 
-  static convertArrayBufferToHex(b) {
-    return Array.from(new Uint8Array(b), (byte) =>
+  static convertArrayBufferToHex(data) {
+    return Array.from(new Uint8Array(data), (byte) =>
       // eslint-disable-next-line no-bitwise
       `0${(byte & 0xff).toString(16)}`.slice(-2)
     ).join("");
   }
 
-  static toBase64(u8) {
-    return btoa(String.fromCharCode.apply(null, u8));
+  static toBase64(data) {
+    return btoa(String.fromCharCode.apply(null, data));
   }
 
   static fromBase64(data) {

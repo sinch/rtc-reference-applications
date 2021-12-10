@@ -1,6 +1,7 @@
 import {
-  generateJwtToken,
-  APPLICATION_KEY,
+  getJwtToken,
+  getUserId,
+  getApplicationKey,
   API_URL,
 } from "../common/common.js";
 import VoiceCallUI from "./VoiceCallUI.js";
@@ -8,14 +9,9 @@ import VoiceCallUI from "./VoiceCallUI.js";
 export default class VoiceCallSinchClientWrapper {
   constructor() {
     this.ui = new VoiceCallUI(this);
-  }
-
-  startSinchClient(userId) {
-    console.log("Sinch - Starting client");
-
     const sinchClient = Sinch.getSinchClientBuilder()
-      .applicationKey(APPLICATION_KEY)
-      .userId(userId)
+      .applicationKey(getApplicationKey())
+      .userId(getUserId())
       .environmentHost(API_URL)
       .build();
 
@@ -45,9 +41,8 @@ export default class VoiceCallSinchClientWrapper {
 
         this.ui.onClientStarted(sinchClient);
       },
-
       onCredentialsRequired: (sinchClient, clientRegistration) => {
-        generateJwtToken(sinchClient.localUserId)
+        getJwtToken()
           .then(clientRegistration.register)
           .catch((error) => {
             clientRegistration.registerFailed();

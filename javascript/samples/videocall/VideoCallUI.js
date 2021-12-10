@@ -15,10 +15,8 @@ import {
 } from "../common/common.js";
 
 export default class VideoCallUI {
-  constructor(sinchPhone) {
-    this.sinchPhone = sinchPhone;
-
-    this.handleStartClientClick();
+  constructor(sinchClientWrapper) {
+    this.sinchClientWrapper = sinchClientWrapper;
     this.handleMakeCallClick();
     setState("call", DISABLE);
     setState("answer", DISABLE);
@@ -29,7 +27,6 @@ export default class VideoCallUI {
   onClientStarted(sinchClient) {
     this.setStatus(`Client started for ${sinchClient.userId}`);
     setText("statusclient-userid", `${sinchClient.userId}`);
-    setVisibility("sinchclient", HIDE);
     setState("call", ENABLE);
     setVisibility("callcontrol", SHOW);
     setVisibility("calldestination", SHOW);
@@ -38,7 +35,7 @@ export default class VideoCallUI {
   async makeCall() {
     const callee = this.getCallee();
     this.setStatus(`Make call to ${callee}`);
-    await this.sinchPhone.makeCall(callee);
+    await this.sinchClientWrapper.makeCall(callee);
     setState("call", ENABLE);
     setState("answer", DISABLE);
     setState("hangup", ENABLE);
@@ -121,13 +118,6 @@ export default class VideoCallUI {
     document.getElementById(id).innerHTML = text;
   }
 
-  handleStartClientClick() {
-    document.getElementById("start-client").addEventListener("click", () => {
-      const userId = this.getUserId();
-      this.sinchPhone.startSinchClient(userId);
-    });
-  }
-
   handleMakeCallClick() {
     document
       .getElementById("call")
@@ -157,10 +147,6 @@ export default class VideoCallUI {
     console.log("Action: Remove videosteam ==>", id);
     const videostream = document.getElementById(id);
     videostream?.remove();
-  }
-
-  getUserId() {
-    return document.getElementById("userId").value;
   }
 
   getCallee() {

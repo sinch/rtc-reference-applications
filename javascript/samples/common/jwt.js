@@ -40,19 +40,19 @@ export default class JWT {
     };
   }
 
-  sortObject(o) {
+  sortObject(object) {
     const sorted = {};
-    Object.keys(o)
+    Object.keys(object)
       .sort()
       .forEach((key) => {
-        sorted[key] = o[key];
+        sorted[key] = object[key];
       });
     return sorted;
   }
 
   // Create signature from headers and payload
   async signToken(headers, payload, signingKey) {
-    const signature = await Crypto.HmacSHA256(
+    const signature = await Crypto.hmacSHA256(
       `${headers}.${payload}`,
       signingKey
     );
@@ -61,7 +61,7 @@ export default class JWT {
 
   async toJwt() {
     const date = this.formatDate(this.iat);
-    const signingKey = await Crypto.HmacSHA256(
+    const signingKey = await Crypto.hmacSHA256(
       date,
       Crypto.fromBase64(this.base64Secret)
     );

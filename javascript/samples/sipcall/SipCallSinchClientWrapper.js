@@ -1,16 +1,17 @@
 import {
-  generateJwtToken,
-  APPLICATION_KEY,
+  getJwtToken,
+  getUserId,
+  getApplicationKey,
   setText,
   API_URL,
 } from "../common/common.js";
 import SipCallUI from "./SipCallUI.js";
 
 export default class SipCallSinchClientWrapper {
-  constructor(userId) {
+  constructor() {
     this.sinchClient = Sinch.getSinchClientBuilder()
-      .applicationKey(APPLICATION_KEY)
-      .userId(userId)
+      .applicationKey(getApplicationKey())
+      .userId(getUserId())
       .environmentHost(API_URL)
       .build();
 
@@ -35,7 +36,7 @@ export default class SipCallSinchClientWrapper {
       },
 
       onCredentialsRequired: (sinchClient, clientRegistration) => {
-        generateJwtToken(sinchClient.localUserId)
+        getJwtToken()
           .then(clientRegistration.register)
           .catch((error) => {
             clientRegistration.registerFailed();

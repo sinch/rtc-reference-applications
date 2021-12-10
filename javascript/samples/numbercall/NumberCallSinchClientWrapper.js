@@ -1,21 +1,21 @@
 import {
-  generateJwtToken,
+  getJwtToken,
+  getUserId,
+  getApplicationKey,
   API_URL,
-  APPLICATION_KEY,
   setText,
 } from "../common/common.js";
 import NumberCallUI from "./NumberCallUI.js";
 
 export default class NumberCallSinchClientWrapper {
-  constructor(userId) {
+  constructor() {
     this.ui = new NumberCallUI(this);
-    this.userId = userId;
   }
 
   startSinchClient(callerIdentifier) {
     this.sinchClient = Sinch.getSinchClientBuilder()
-      .applicationKey(APPLICATION_KEY)
-      .userId(this.userId)
+      .applicationKey(getApplicationKey())
+      .userId(getUserId())
       .callerIdentifier(callerIdentifier)
       .environmentHost(API_URL)
       .build();
@@ -36,7 +36,7 @@ export default class NumberCallSinchClientWrapper {
       },
 
       onCredentialsRequired: (sinchClient, clientRegistration) => {
-        generateJwtToken(sinchClient.localUserId)
+        getJwtToken()
           .then(clientRegistration.register)
           .catch((error) => {
             clientRegistration.registerFailed();

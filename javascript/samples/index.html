@@ -36,16 +36,23 @@
           <input
             class="form-control"
             type="text"
-            name="k"
-            id="k"
-            placeholder="application key"
+            name="key"
+            id="key"
+            placeholder="Application key"
           />
           <input
             class="form-control"
             type="text"
-            name="s"
-            id="s"
-            placeholder="secret "
+            name="secret"
+            id="secret"
+            placeholder="Secret"
+          />
+          <input
+            placeholder="Enter user id"
+            type="text"
+            id="userid"
+            name="userid"
+            class="form-control"
           />
           <button
             class="waves-effect waves-light btn-small center"
@@ -83,16 +90,18 @@
       </div>
       <div class="col s12 m2"></div>
     </div>
-    <script type="text/javascript">
-      function demo(type) {
+    <script type="module">
+      import { setupLogin } from "./common/common.js";
+      const demo = (type) => {
         event.preventDefault();
-        const k = document.getElementById("k").value;
-        const s = document.getElementById("s").value;
-        const token = btoa(k + ":" + s);
-        console.log("token " + token);
-        const dest = type + "/index.html?t=" + token;
-        location.href = dest;
-      }
+        const applicationKey = document.getElementById("key").value;
+        const applicationSecret = document.getElementById("secret").value;
+        const userid = document.getElementById("userid").value;
+        setupLogin(applicationKey, applicationSecret, userid).then(() => {
+          location.href = type + "/index.html";
+        });
+      };
+      window.demo = demo;
     </script>
   </body>
 </html>

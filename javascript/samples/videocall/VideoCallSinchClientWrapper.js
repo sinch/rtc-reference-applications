@@ -1,6 +1,7 @@
 import {
-  generateJwtToken,
-  APPLICATION_KEY,
+  getJwtToken,
+  getApplicationKey,
+  getUserId,
   API_URL,
 } from "../common/common.js";
 import VideoCallUI from "./VideoCallUI.js";
@@ -14,14 +15,10 @@ export default class VideoCallSinchClientWrapper {
       console.error("Service worker not started");
     }
     this.ui = new VideoCallUI(this);
-  }
-
-  startSinchClient(userId) {
-    console.log("Sinch - Starting client");
 
     this.sinchClient = Sinch.getSinchClientBuilder()
-      .applicationKey(APPLICATION_KEY)
-      .userId(userId)
+      .applicationKey(getApplicationKey())
+      .userId(getUserId())
       .environmentHost(API_URL)
       .build();
     this.sinchClient.addListener(this.#sinchClientListener());
@@ -50,7 +47,7 @@ export default class VideoCallSinchClientWrapper {
       },
 
       onCredentialsRequired: (sinchClient, clientRegistration) => {
-        generateJwtToken(sinchClient.localUserId)
+        getJwtToken()
           .then(clientRegistration.register)
           .catch((error) => {
             clientRegistration.registerFailed();

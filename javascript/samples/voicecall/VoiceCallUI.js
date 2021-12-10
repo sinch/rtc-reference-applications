@@ -10,7 +10,6 @@ import {
   setState,
   setVisibility,
   SHOW,
-  HIDE,
   setText,
 } from "../common/common.js";
 
@@ -18,7 +17,6 @@ export default class VoiceCallUI {
   constructor(sinchPhone) {
     this.sinchPhone = sinchPhone;
     this.audio = new Audio();
-    this.handleStartClientClick(sinchPhone);
     this.handleMakeCallClick();
     setText("version", `Sinch - Version:  ${Sinch.version}`);
   }
@@ -37,9 +35,7 @@ export default class VoiceCallUI {
 
   onClientStarted(sinchClient) {
     this.setStatus(`Sinch - Client started for ${sinchClient.userId}`);
-    setState("start-client", DISABLE);
     setState("call", ENABLE);
-    setVisibility("sinchclient", HIDE);
     setVisibility("callcontrol", SHOW);
   }
 
@@ -90,13 +86,6 @@ export default class VoiceCallUI {
     console.log(`Status: ${text}`);
   }
 
-  handleStartClientClick() {
-    document.getElementById("start-client").addEventListener("click", () => {
-      const userId = this.getUserId();
-      this.sinchPhone.startSinchClient(userId);
-    });
-  }
-
   handleMakeCallClick() {
     document
       .getElementById("call")
@@ -115,10 +104,6 @@ export default class VoiceCallUI {
     answerElement.removeEventListener("click", this.handleAnswer);
     this.handleAnswer = () => call.answer();
     answerElement.addEventListener("click", this.handleAnswer);
-  }
-
-  getUserId() {
-    return document.getElementById("userId").value;
   }
 
   getCallee() {
