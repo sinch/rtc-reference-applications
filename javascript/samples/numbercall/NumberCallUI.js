@@ -65,7 +65,7 @@ export default class NumberCallUI {
         document.getElementById("to").value = newToValue;
         if (this.currentCall && targetId.startsWith("dtmf")) {
           console.log(`Placeholder for SendDTMF ==>${tone}`);
-          new Audio(`../sounds/${event.target.id}.mp3`).play();
+          new Audio(`../common/sounds/${event.target.id}.mp3`).play();
           this.currentCall.sendDtmf(tone);
         }
       });
