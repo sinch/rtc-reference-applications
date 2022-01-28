@@ -131,3 +131,7 @@ fieldset {
 .callcontrol {
   display: none;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}

@@ -33,20 +33,35 @@
       <div class="col s12 m2"></div>
       <div class="col s12 m8">
         <form class="token-input" id="demotype">
-          <input
-            class="form-control"
-            type="text"
-            name="key"
-            id="key"
-            placeholder="Application key"
-          />
-          <input
-            class="form-control"
-            type="text"
-            name="secret"
-            id="secret"
-            placeholder="Secret"
-          />
+          <div class="input-field">
+            <input
+              class="form-control"
+              type="password"
+              name="key"
+              id="key"
+              placeholder="Application key"
+              autofocus
+            />
+            <i
+              class="small material-icons prefix cursor-pointer"
+              id="keyVisibility"
+              >visibility</i
+            >
+          </div>
+          <div class="input-field">
+            <input
+              class="form-control"
+              type="password"
+              name="secret"
+              id="secret"
+              placeholder="Secret"
+            />
+            <i
+              class="small material-icons prefix cursor-pointer"
+              id="secretVisibility"
+              >visibility</i
+            >
+          </div>
           <input
             placeholder="Enter user id"
             type="text"
@@ -58,7 +73,6 @@
             class="waves-effect waves-light btn-small center"
             id="videocall"
             type="submit"
-            onClick="demo(this.id)"
           >
             <i class="large material-icons right">video_call</i>video
           </button>
@@ -66,7 +80,6 @@
             class="waves-effect waves-light btn-small"
             id="voicecall"
             type="submit"
-            onClick="demo(this.id)"
           >
             <i class="large material-icons right">phone_android</i>audio
           </button>
@@ -74,7 +87,6 @@
             class="waves-effect waves-light btn-small"
             id="numbercall"
             type="submit"
-            onClick="demo(this.id)"
           >
             <i class="large material-icons right">call</i>phone
           </button>
@@ -82,7 +94,6 @@
             class="waves-effect waves-light btn-small"
             id="sipcall"
             type="submit"
-            onClick="demo(this.id)"
           >
             <i class="large material-icons right">computer</i>SIP
           </button>
@@ -90,18 +101,6 @@
       </div>
       <div class="col s12 m2"></div>
     </div>
-    <script type="module">
-      import { setupLogin } from "./common/common.js";
-      const demo = (type) => {
-        event.preventDefault();
-        const applicationKey = document.getElementById("key").value;
-        const applicationSecret = document.getElementById("secret").value;
-        const userid = document.getElementById("userid").value;
-        setupLogin(applicationKey, applicationSecret, userid).then(() => {
-          location.href = type + "/index.html";
-        });
-      };
-      window.demo = demo;
-    </script>
+    <script type="module" src="./index.js"></script>
   </body>
 </html>
