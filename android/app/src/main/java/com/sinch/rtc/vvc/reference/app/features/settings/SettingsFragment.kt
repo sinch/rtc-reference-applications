@@ -73,7 +73,8 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
                     viewModel.onEnvSpinnerItemChanged(
                         configSpinnerValues[position], binding.appKeyInputEditText.text.toString(),
                         binding.appSecretInputEditText.text.toString(),
-                        binding.environmentInputEditText.text.toString()
+                        binding.environmentInputEditText.text.toString(),
+                        binding.cliInputEditText.text.toString()
                     )
                 }
 
@@ -123,7 +124,8 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
                 viewModel.onUpdateDevSettingsClicked(
                     binding.appKeyInputEditText.text.toString(),
                     binding.appSecretInputEditText.text.toString(),
-                    binding.environmentInputEditText.text.toString()
+                    binding.environmentInputEditText.text.toString(),
+                    binding.cliInputEditText.text.toString()
                 )
             }.setNegativeButton(R.string.no, null).show()
     }
@@ -152,7 +154,8 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
                 binding.configsSpinner,
                 binding.appKeyInputLayout,
                 binding.appSecretInputLayout,
-                binding.environmentInputLayout
+                binding.environmentInputLayout,
+                binding.cliInputLayout
             ).forEach {
                 it.isEnabled = !isAnyUserLoggedIn
             }
@@ -170,7 +173,8 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
             listOf(
                 binding.appKeyInputEditText,
                 binding.appSecretInputEditText,
-                binding.environmentInputEditText
+                binding.environmentInputEditText,
+                binding.cliInputEditText
             ).forEach { textInput ->
                 textInput.isEnabled = it.isCustom
             }
@@ -178,6 +182,7 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
             binding.appKeyInputEditText.setText(it.appKey)
             binding.appSecretInputEditText.setText(it.appSecret)
             binding.environmentInputEditText.setText(it.environment)
+            binding.cliInputEditText.setText(it.cli)
         }
     }
 

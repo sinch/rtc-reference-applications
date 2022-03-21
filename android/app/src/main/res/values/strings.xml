@@ -51,6 +51,7 @@
     <string name="appkey_hint">App key</string>
     <string name="appsecret_hint">App secret</string>
     <string name="environment_hint">Environment</string>
+    <string name="cli_hint">CLI</string>
     <string name="update_logout">Are you sure?</string>
     <string name="update_message">These are app sensitive settings, application may not work properly if wrong values are set.</string>
     <string name="yes">Yes</string>

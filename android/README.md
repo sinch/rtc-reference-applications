@@ -17,7 +17,8 @@ Basic structure of the file looks as follows:
   "name": "production",
   "appKey": "<PRODUCTION APP KEY>",
   "appSecret": "<PRODUCTION APP SECRET>",
-  "environment": "<PRODUCTION ENDPOINT>"
+  "environment": "<PRODUCTION ENDPOINT>",
+  "cli": "<CALLER IDENTIFIER>"
 }
 ```
 
@@ -27,6 +28,7 @@ Parameters description:
 * appKey - Application key copied from your Sinch portal webpage of the application.
 * appSecret - Application secret copied from your Sinch portal webpage of the application.
 * environment - Base URL used to make REST calls against Sinch API (E.g. ocra.api.sinch.com).
+* cli - Caller identifier used while making PSTN calls. This property is optional however it won't be possible to make App-To-Phone calls if not defined (the option won't be listed).
 
 It possible to include as many environments as you wish (you will be able to switch between them from the settings screen of the sample):
 ![settings](docs/img/settings.jpeg)
@@ -39,7 +41,8 @@ To do this simply place a list of the environment objects in the 'config.json' f
   "name": "Production",
   "appKey": "<PRODUCTION APP KEY>",
   "appSecret": "<PRODUCTION APP SECRET>",
-  "environment": "<PRODUCTION ENDPOINT>"
+  "environment": "<PRODUCTION ENDPOINT>",
+  "cli": "<CLI USED IN PRODUCTION ENV>"
 },
 {
   "name": "Staging",

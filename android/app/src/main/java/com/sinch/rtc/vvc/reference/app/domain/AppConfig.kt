@@ -5,6 +5,7 @@ data class AppConfig(
     val appKey: String,
     val appSecret: String,
     val environment: String,
+    val cli: String? = null,
     val isCustom: Boolean = false
 ) {
     companion object {

@@ -29,6 +29,7 @@ class SharedPrefsManager(private val appContext: Application) {
                     customAppKey,
                     customAppSecret,
                     customEnvironment,
+                    "",
                     true
                 )
             } else {

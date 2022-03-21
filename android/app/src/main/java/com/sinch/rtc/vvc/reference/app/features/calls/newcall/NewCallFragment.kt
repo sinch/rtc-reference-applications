@@ -22,11 +22,6 @@ class NewCallFragment : MainActivityFragment<FragmentNewCallBinding>(R.layout.fr
         const val TAG = "NewCallFragment"
     }
 
-    private val callTypes = listOf(
-        CallType.AppToAppAudio,
-        CallType.AppToAppVideo,
-        CallType.AppToSip
-    )
     private val args: NewCallFragmentArgs by navArgs()
     private val viewModel: NewCallViewModel by viewModels {
         RTCVoiceVideoRefAppAndroidViewModelFactory(
@@ -50,7 +45,7 @@ class NewCallFragment : MainActivityFragment<FragmentNewCallBinding>(R.layout.fr
         }
 
         viewModel.callItem.observe(viewLifecycleOwner) {
-            binding.callTypeSpinner.setSelection(callTypes.indexOf(it.type))
+            binding.callTypeSpinner.setSelection(viewModel.callTypes.indexOf(it.type))
             binding.destinationInputEditText.setTextKeepState(it.destination)
             setupKeyboardType(it.type)
         }
@@ -73,7 +68,7 @@ class NewCallFragment : MainActivityFragment<FragmentNewCallBinding>(R.layout.fr
         val itemsAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
-            callTypes.map { it.newCallLabel(requireContext()) }).also {
+            viewModel.callTypes.map { it.newCallLabel(requireContext()) }).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
         binding.callTypeSpinner.apply {
@@ -85,7 +80,7 @@ class NewCallFragment : MainActivityFragment<FragmentNewCallBinding>(R.layout.fr
                     position: Int,
                     id: Long
                 ) {
-                    onTypeChanged(callTypes[position])
+                    onTypeChanged(viewModel.callTypes[position])
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}

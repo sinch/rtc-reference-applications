@@ -100,6 +100,7 @@ class SinchClientService : Service(), SinchClientListener, CallClientListener {
             .context(this)
             .environmentHost(appConfig.environment)
             .userId(loggedInUser.id)
+            .callerIdentifier(appConfig.cli.orEmpty())
             .applicationKey(appConfig.appKey)
             .build()
             .apply {

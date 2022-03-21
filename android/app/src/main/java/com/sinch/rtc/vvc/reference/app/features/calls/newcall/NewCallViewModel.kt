@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.sinch.rtc.vvc.reference.app.domain.AppConfig
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallType
@@ -21,6 +22,7 @@ import java.util.*
 class NewCallViewModel(
     initialCallItem: CallItem?,
     app: Application,
+    private val usedConfig: AppConfig,
     private val userDao: UserDao,
     private val callDao: CallDao
 ) : AndroidViewModel(app) {
@@ -49,6 +51,20 @@ class NewCallViewModel(
         }
 
     val loggedInUserLiveData get() = userDao.getLoggedInUserLiveData()
+
+    val callTypes: List<CallType>
+        get() {
+            val base = mutableListOf(
+                CallType.AppToAppAudio,
+                CallType.AppToAppVideo,
+                CallType.AppToSip
+            )
+            return if (!usedConfig.cli.isNullOrBlank()) {
+                base.apply { add(CallType.AppToPhone) }
+            } else {
+                base
+            }
+        }
 
     fun onCallTypeSelected(newType: CallType) {
         destinationValidator = when (newType) {

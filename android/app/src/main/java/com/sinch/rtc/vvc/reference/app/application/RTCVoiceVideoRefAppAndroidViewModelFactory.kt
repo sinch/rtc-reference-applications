@@ -70,6 +70,7 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                 NewCallViewModel(
                     (args as NewCallFragmentArgs).initialCallItem,
                     application,
+                    prefsManager.usedConfig,
                     roomDatabase.userDao(),
                     roomDatabase.callDao()
                 ) as T

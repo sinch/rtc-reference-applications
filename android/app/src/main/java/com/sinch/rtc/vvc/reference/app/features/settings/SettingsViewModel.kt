@@ -43,25 +43,27 @@ class SettingsViewModel(
         name: String,
         typedAppKey: String,
         typedAppSecret: String,
-        typedEnv: String
+        typedEnv: String,
+        typedCli: String
     ) {
         val defaultConfigWithChosenName =
             sharedPrefsManager.defaultConfigs.firstOrNull { it.name == name }
         if (defaultConfigWithChosenName == null) {
             devDataMutable.value =
-                AppConfig(AppConfig.CUSTOM_CONFIG_NAME, typedAppKey, typedAppSecret, typedEnv, true)
+                AppConfig(AppConfig.CUSTOM_CONFIG_NAME, typedAppKey, typedAppSecret, typedEnv, typedCli, true)
         } else {
             devDataMutable.value = defaultConfigWithChosenName
         }
     }
 
-    fun onUpdateDevSettingsClicked(newAppKey: String, newAppSecret: String, newEnv: String) {
+    fun onUpdateDevSettingsClicked(newAppKey: String, newAppSecret: String, newEnv: String, newCli: String) {
         val currentAppConfig = devDataLiveData.value ?: return
         if (currentAppConfig.isCustom) {
             devDataMutable.value = currentAppConfig.copy(
                 appKey = newAppKey,
                 appSecret = newAppSecret,
-                environment = newEnv
+                environment = newEnv,
+                cli = newCli
             )
         }
         sharedPrefsManager.usedConfig = devDataMutable.value ?: return
