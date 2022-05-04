@@ -5,10 +5,10 @@
   "author": "Sinch",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^8.3.0",
+    "eslint": "^8.14.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.25.3",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
     "lint-staged": "^11.2.6",
     "prettier": "2.4.1"
   },
