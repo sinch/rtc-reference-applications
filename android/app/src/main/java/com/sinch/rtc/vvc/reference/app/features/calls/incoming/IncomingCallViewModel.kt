@@ -48,7 +48,7 @@ class IncomingCallViewModel(
 
     init {
         Log.d(TAG, "IncomingCallViewModel initialised with $callId")
-        call = sinchClient.callClient.getCall(callId).apply {
+        call = sinchClient.callController.getCall(callId).apply {
             addCallListener(this@IncomingCallViewModel)
         }
         callPropertiesMutable.postValue(CallProperties(call.remoteUserId))

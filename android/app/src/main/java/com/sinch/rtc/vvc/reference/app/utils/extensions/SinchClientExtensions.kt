@@ -22,7 +22,12 @@ fun AudioController.setMuted(isMuted: Boolean) {
 
 fun AudioController.setAutomaticRoutingEnabled(isEnabled: Boolean) {
     if (isEnabled) {
-        enableAutomaticAudioRouting(true, AudioController.UseSpeakerphone.SPEAKERPHONE_AUTO)
+        enableAutomaticAudioRouting(
+            AudioController.AudioRoutingConfig(
+                AudioController.UseSpeakerphone.SPEAKERPHONE_AUTO,
+                true
+            )
+        )
     } else {
         disableAutomaticAudioRouting()
     }

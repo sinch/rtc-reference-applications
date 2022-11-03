@@ -6,4 +6,5 @@
         name: "$CI_JOB_NAME-$CI_JOB_STAGE-$CI_COMMIT_REF_NAME"
         paths:
             - android/app/build/outputs/apk/debug/app-debug.apk
+            - android/app/build/outputs/apk/release/app-release-unsigned.apk
             - android/app/google-services.json

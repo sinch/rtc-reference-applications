@@ -78,7 +78,8 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
             OutgoingCallViewModel::class.java -> {
                 val arguments = (args as OutgoingCallFragmentArgs)
                 OutgoingCallViewModel(
-                    sinchClient?.callClient!!,
+                    sinchClient?.callController!!,
+                    prefsManager,
                     arguments.callItemData,
                     roomDatabase.callDao(),
                     application

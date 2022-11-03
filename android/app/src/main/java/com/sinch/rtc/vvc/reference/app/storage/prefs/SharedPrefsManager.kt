@@ -15,6 +15,7 @@ class SharedPrefsManager(private val appContext: Application) {
         private const val ENV_KEY = "environment"
         private const val IS_CUSTOM_ENV_KEY = "is_custom_key"
         private const val USED_DEF_NAME_KEY = "def_pos_key"
+        private const val FCM_REG_TOKEN_KEY = "fcm_token"
     }
 
     private val preferences = customPrefs(appContext, PREFS_NAME)
@@ -77,6 +78,12 @@ class SharedPrefsManager(private val appContext: Application) {
         get() = preferences[ENV_KEY, ""]
         set(value) {
             preferences[ENV_KEY] = value
+        }
+
+    var fcmRegistrationToken: String
+        get() = preferences[FCM_REG_TOKEN_KEY, ""]
+        set(value) {
+            preferences[FCM_REG_TOKEN_KEY] = value
         }
 
     private fun customPrefs(context: Context, name: String): SharedPreferences =

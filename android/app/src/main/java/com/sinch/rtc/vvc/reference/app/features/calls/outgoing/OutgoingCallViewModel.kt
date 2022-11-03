@@ -7,11 +7,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sinch.android.rtc.MissingPermissionException
 import com.sinch.android.rtc.calling.Call
-import com.sinch.android.rtc.calling.CallClient
+import com.sinch.android.rtc.calling.CallController
 import com.sinch.android.rtc.calling.CallListener
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.requiredPermissions
+import com.sinch.rtc.vvc.reference.app.storage.prefs.SharedPrefsManager
 import com.sinch.rtc.vvc.reference.app.utils.extensions.PermissionRequestResult
 import com.sinch.rtc.vvc.reference.app.utils.extensions.areAllPermissionsGranted
 import com.sinch.rtc.vvc.reference.app.utils.extensions.createSinchCall
@@ -19,7 +20,8 @@ import com.sinch.rtc.vvc.reference.app.utils.extensions.updateBasedOnSinchCall
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 
 class OutgoingCallViewModel(
-    private val callClient: CallClient,
+    private val callController: CallController,
+    private val prefsManager: SharedPrefsManager,
     private val callItem: CallItem,
     private val callDao: CallDao,
     application: Application
@@ -68,7 +70,7 @@ class OutgoingCallViewModel(
 
     private fun initializeCall() {
         try {
-            sinchCall = callItem.createSinchCall(callClient)
+            sinchCall = callItem.createSinchCall(callController, prefsManager.usedConfig.cli)
                 .apply { addCallListener(this@OutgoingCallViewModel) }
         } catch (e: MissingPermissionException) {
             permissionsRequiredEvent.postValue(callItem.type.requiredPermissions)

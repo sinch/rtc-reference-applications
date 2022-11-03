@@ -55,6 +55,7 @@
         - cd android
         - ./gradlew clean
         - ./gradlew :app:assembleRelease
+        - ./gradlew :app:assembleDebug
 
     interruptible: true
 

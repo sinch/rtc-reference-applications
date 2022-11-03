@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.FirebaseApp
 import com.sinch.android.rtc.*
 import com.sinch.android.rtc.video.VideoScalingType
 import com.sinch.rtc.vvc.reference.app.application.service.SinchClientService
@@ -23,7 +24,7 @@ class SettingsViewModel(
     private val sharedPrefsManager: SharedPrefsManager,
     private val sinchClient: SinchClient?
 ) :
-    AndroidViewModel(app), PushTokenRegistrationCallback {
+    AndroidViewModel(app), PushTokenRegistrationCallback, PushTokenUnregistrationCallback {
 
     companion object {
         const val TAG = "SettingsViewModel"
@@ -50,13 +51,25 @@ class SettingsViewModel(
             sharedPrefsManager.defaultConfigs.firstOrNull { it.name == name }
         if (defaultConfigWithChosenName == null) {
             devDataMutable.value =
-                AppConfig(AppConfig.CUSTOM_CONFIG_NAME, typedAppKey, typedAppSecret, typedEnv, typedCli, true)
+                AppConfig(
+                    AppConfig.CUSTOM_CONFIG_NAME,
+                    typedAppKey,
+                    typedAppSecret,
+                    typedEnv,
+                    typedCli,
+                    true
+                )
         } else {
             devDataMutable.value = defaultConfigWithChosenName
         }
     }
 
-    fun onUpdateDevSettingsClicked(newAppKey: String, newAppSecret: String, newEnv: String, newCli: String) {
+    fun onUpdateDevSettingsClicked(
+        newAppKey: String,
+        newAppSecret: String,
+        newEnv: String,
+        newCli: String
+    ) {
         val currentAppConfig = devDataLiveData.value ?: return
         if (currentAppConfig.isCustom) {
             devDataMutable.value = currentAppConfig.copy(
@@ -106,17 +119,31 @@ class SettingsViewModel(
         Log.d(TAG, "Push token unregistration failed with error $error")
     }
 
+    override fun onPushTokenUnregistered() {
+        Log.d(TAG, "Push token unregistered")
+    }
+
+    override fun onPushTokenUnregistrationFailed(error: SinchError?) {
+        Log.d(TAG, "Push token unregistration failed with error $error")
+    }
+
     private fun performLogoutCleanup() {
         sinchClient?.terminateGracefully()
         app.stopService(Intent(app, SinchClientService::class.java))
     }
 
     private fun userController(user: User): UserController =
-        Sinch.getUserControllerBuilder()
+        UserController.builder()
             .context(app)
             .applicationKey(sharedPrefsManager.usedConfig.appKey)
             .userId(user.id)
             .environmentHost(sharedPrefsManager.usedConfig.environment)
+            .pushConfiguration(
+                PushConfiguration.fcmPushConfigurationBuilder()
+                    .senderID(FirebaseApp.getInstance().options.gcmSenderId)
+                    .registrationToken(sharedPrefsManager.fcmRegistrationToken)
+                    .build()
+            )
             .build()
 
 }

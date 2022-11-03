@@ -85,7 +85,7 @@ class EstablishedCallViewModel(
 
     init {
         sinchCall =
-            sinchClient.callClient.getCall(sinchCallId)
+            sinchClient.callController.getCall(sinchCallId)
                 .apply {
                     addCallListener(this@EstablishedCallViewModel)
                 }

@@ -11,7 +11,7 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.sinch.android.rtc.SinchHelpers
+import com.sinch.android.rtc.SinchPush
 import com.sinch.rtc.vvc.reference.app.application.service.SinchClientService
 
 class FcmListenerService : FirebaseMessagingService() {
@@ -23,14 +23,15 @@ class FcmListenerService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         Log.d(TAG, "onMessageReceived called with $remoteMessage")
-        if (SinchHelpers.isSinchPushPayload(remoteMessage.data)) {
+        if (SinchPush.isSinchPushPayload(remoteMessage.data)) {
             startService(Intent(this, SinchClientService::class.java))
             bindService(
                 Intent(this, SinchClientService::class.java),
                 object : ServiceConnection {
                     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                         if (service is SinchClientService.SinchClientServiceBinder) {
-                            service.sinchClient?.relayRemotePushNotificationPayload(remoteMessage.data)
+                            service.sinchClient?.relayRemotePushNotification(
+                                SinchPush.queryPushNotificationPayload(applicationContext, remoteMessage.data))
                         }
                         unbindService(this)
                     }
@@ -45,9 +46,8 @@ class FcmListenerService : FirebaseMessagingService() {
 
     private fun isVideoCallWithoutGrantedPermissions(remoteMessage: RemoteMessage): Boolean {
         val pushNotificationPayload =
-            SinchHelpers.queryPushNotificationPayload(applicationContext, remoteMessage.data)
-        if (pushNotificationPayload.isCall &&
-            pushNotificationPayload.callResult.isVideoOffered &&
+            SinchPush.queryPushNotificationPayload(applicationContext, remoteMessage.data)
+        if (pushNotificationPayload.isVideoOffered &&
             ContextCompat.checkSelfPermission(
                 applicationContext,
                 Manifest.permission.CAMERA

@@ -11,10 +11,11 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.google.firebase.FirebaseApp
 import com.sinch.android.rtc.*
 import com.sinch.android.rtc.calling.Call
-import com.sinch.android.rtc.calling.CallClient
-import com.sinch.android.rtc.calling.CallClientListener
+import com.sinch.android.rtc.calling.CallController
+import com.sinch.android.rtc.calling.CallControllerListener
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.features.calls.incoming.IncomingCallInitialAction
 import com.sinch.rtc.vvc.reference.app.features.calls.incoming.IncomingCallInitialData
@@ -25,8 +26,7 @@ import com.sinch.rtc.vvc.reference.app.utils.jwt.FakeJWTFetcher
 import com.sinch.rtc.vvc.reference.app.utils.jwt.JWTFetcher
 import java.io.File
 
-
-class SinchClientService : Service(), SinchClientListener, CallClientListener {
+class SinchClientService : Service(), SinchClientListener, CallControllerListener {
 
     companion object {
         const val TAG = "SinchClientService"
@@ -96,17 +96,20 @@ class SinchClientService : Service(), SinchClientListener, CallClientListener {
             return
         }
         Log.d(TAG, "Regsitering sinch client for user ${loggedInUser.id}")
-        sinchClientInstance = Sinch.getSinchClientBuilder()
+        sinchClientInstance = SinchClient.builder()
             .context(this)
             .environmentHost(appConfig.environment)
             .userId(loggedInUser.id)
-            .callerIdentifier(appConfig.cli.orEmpty())
             .applicationKey(appConfig.appKey)
+            .pushConfiguration(PushConfiguration.fcmPushConfigurationBuilder()
+                .senderID(FirebaseApp.getInstance().options.gcmSenderId)
+                .registrationToken(prefsManager.fcmRegistrationToken)
+                .build()
+            )
             .build()
             .apply {
                 addSinchClientListener(this@SinchClientService)
-                callClient.addCallClientListener(this@SinchClientService)
-                setSupportManagedPush(true)
+                callController.addCallControllerListener(this@SinchClientService)
                 start()
             }
     }
@@ -133,6 +136,14 @@ class SinchClientService : Service(), SinchClientListener, CallClientListener {
         Log.d(TAG, "onPushTokenRegistered")
     }
 
+    override fun onPushTokenUnregistered() {
+        Log.d(TAG, "onPushTokenUnregistered")
+    }
+
+    override fun onPushTokenUnregistrationFailed(p0: SinchError?) {
+        Log.d(TAG, "onPushTokenUnregistrationFailed $p0")
+    }
+
     override fun onPushTokenRegistrationFailed(p0: SinchError?) {
         Log.d(TAG, "onPushTokenRegistrationFailed $p0")
     }
@@ -149,7 +160,7 @@ class SinchClientService : Service(), SinchClientListener, CallClientListener {
         Log.d(TAG, "onLogMessage $p1 $p2")
     }
 
-    override fun onIncomingCall(p0: CallClient?, call: Call?) {
+    override fun onIncomingCall(p0: CallController?, call: Call?) {
         Log.d(TAG, "onIncomingCall $call")
         if (call == null) {
             return

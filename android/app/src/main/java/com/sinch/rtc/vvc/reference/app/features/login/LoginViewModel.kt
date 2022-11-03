@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.google.firebase.FirebaseApp
 import com.sinch.android.rtc.*
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
@@ -52,11 +53,7 @@ class LoginViewModel(
 
     fun onLoginClicked(username: String) {
         Log.d(TAG, "Login clicked with username $username")
-        if (SinchHelpers.isGooglePlayServicesAvailable(getApplication())) {
-            login(username)
-        } else {
-            errorMessages.postValue(getString(R.string.play_services_not_available_error_message))
-        }
+        login(username)
     }
 
     private fun login(username: String) {
@@ -65,11 +62,17 @@ class LoginViewModel(
             isUserRegistered = false,
             isPushTokenRegistered = false
         )
-        Sinch.getUserControllerBuilder()
+        UserController.builder()
             .context(getApplication())
             .applicationKey(appConfig.appKey)
             .userId(username)
             .environmentHost(appConfig.environment)
+            .pushConfiguration(
+                PushConfiguration.fcmPushConfigurationBuilder()
+                    .senderID(FirebaseApp.getInstance().options.gcmSenderId)
+                    .registrationToken(prefsManager.fcmRegistrationToken)
+                    .build()
+            )
             .build().registerUser(
                 this,
                 this
