@@ -51,7 +51,7 @@ export default class VideoCallUI {
   }
 
   onIncomingCall(call) {
-    this.setStatus(`Incoming call from ${call.origin}`);
+    this.setStatus(`Incoming call from ${call.remoteUserId}`);
     this.handleAnswerClick(call);
     this.handleHangupClick(call);
     this.playRingtone(INCOMING_RINGTONE);

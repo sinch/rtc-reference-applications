@@ -24,7 +24,7 @@ export default class VoiceCallUI {
   onIncomingCall(call) {
     this.handleAnswerClick(call);
     this.handleHangupClick(call);
-    this.setStatus(`Incoming call from ${call.origin}`);
+    this.setStatus(`Incoming call from ${call.remoteUserId}`);
     this.playRingtone(INCOMING_RINGTONE);
     setState("call", DISABLE);
     setState("hangup", ENABLE);
