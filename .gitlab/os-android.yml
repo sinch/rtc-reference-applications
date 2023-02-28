@@ -26,9 +26,7 @@
 
 .conf:runner:tags:
     tags:
-        - shell
-        - concurrent
-        - android-ndk-r16b
+        - rtc-mac
 
 .conf:debug:
     variables:

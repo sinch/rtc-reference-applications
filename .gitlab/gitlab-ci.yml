@@ -49,7 +49,7 @@ test:dist:samples:
 lint:javascript:
     stage: Lint Javascript
     tags:
-        - docker
+        - rtc-mac-docker
     image: node:16-slim
     before_script:
         - ""
