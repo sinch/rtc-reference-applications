@@ -1,0 +1,70 @@
+disabled_rules:
+  - class_delegate_protocol
+  - colon
+  - comma
+  - control_statement
+  - function_parameter_count
+  - identifier_name
+  - line_length
+  - nesting
+  - switch_case_alignment
+  - trailing_whitespace
+  - void_function_in_ternary
+opt_in_rules:
+  - anyobject_protocol
+  - closure_spacing
+  - collection_alignment
+  - convenience_type
+  - empty_count
+  - explicit_init
+  - fatal_error_message
+  - first_where
+  - identical_operands
+  - joined_default_parameter
+  - last_where
+  - legacy_random
+  - let_var_whitespace
+  - multiline_arguments
+  - multiline_parameters
+  - operator_usage_whitespace
+  - overridden_super_call
+  - private_outlet
+  - prohibited_super_call
+  - redundant_nil_coalescing
+  - static_operator
+  - unavailable_function
+  - unneeded_parentheses_in_closure_argument
+  - untyped_error_in_catch
+  - unused_control_flow_label
+  - vertical_parameter_alignment_on_call
+  - xct_specific_matcher
+included:
+  - Source
+excluded:
+  - Carthage
+  - fastlane/*
+  - Pods
+analyzer_rules:
+  - explicit_self
+  - unused_import
+
+force_cast: error
+force_try:
+  severity: warning
+
+type_body_length:
+  warning: 300
+  error: 400
+
+file_length:
+  warning: 600
+  error: 1200
+
+type_name:
+  min_length:
+    warning: 1
+  max_length:
+    warning: 40
+    error: 50
+  excluded: iPhone
+  allowed_symbols: ["_"] 

@@ -1,0 +1,861 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AE3FB6EA29B8AF970068C5E8 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AE3FB6E929B8AF970068C5E8 /* .swiftlint.yml */; };
+		AE52FEDC29B0A8B20052D62B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE52FEDB29B0A8B10052D62B /* SystemConfiguration.framework */; };
+		AEA8491329CDD59000715A9E /* SinchClientMediator+SinchClientDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA8491229CDD59000715A9E /* SinchClientMediator+SinchClientDelegate.swift */; };
+		AEA8491529CDD5BC00715A9E /* SinchClientMediator+CXProviderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA8491429CDD5BC00715A9E /* SinchClientMediator+CXProviderDelegate.swift */; };
+		AEA8491729CDD5FD00715A9E /* SinchClientMediator+SinchCallClientDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA8491629CDD5FD00715A9E /* SinchClientMediator+SinchCallClientDelegate.swift */; };
+		AEA8491A29CDD62200715A9E /* SinchClientMediator+SinchCallDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA8491929CDD62200715A9E /* SinchClientMediator+SinchCallDelegate.swift */; };
+		AEA8491C29CDD64B00715A9E /* SinchClientMediator+SinchAudioControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA8491B29CDD64B00715A9E /* SinchClientMediator+SinchAudioControllerDelegate.swift */; };
+		AEA849C529D572E400715A9E /* SinchRTC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AEA849C329D572E400715A9E /* SinchRTC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AEE9CD6E299CD36E00F860C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CD6D299CD36E00F860C3 /* AppDelegate.swift */; };
+		AEE9CD72299CD36E00F860C3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CD71299CD36E00F860C3 /* LoginViewController.swift */; };
+		AEE9CD75299CD36E00F860C3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AEE9CD73299CD36E00F860C3 /* Main.storyboard */; };
+		AEE9CD77299CD36F00F860C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AEE9CD76299CD36F00F860C3 /* Assets.xcassets */; };
+		AEE9CD7A299CD36F00F860C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AEE9CD78299CD36F00F860C3 /* LaunchScreen.storyboard */; };
+		AEE9CDA3299CDD5200F860C3 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDA2299CDD3200F860C3 /* libc++.tbd */; };
+		AEE9CDA5299CDE7B00F860C3 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDA4299CDD5F00F860C3 /* libz.tbd */; };
+		AEE9CDA7299CDE8300F860C3 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDA6299CDE8300F860C3 /* Security.framework */; };
+		AEE9CDA9299CDE9400F860C3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDA8299CDE9400F860C3 /* AVFoundation.framework */; };
+		AEE9CDAB299CDEAA00F860C3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDAA299CDEAA00F860C3 /* AudioToolbox.framework */; };
+		AEE9CDAD299CDFA800F860C3 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDAC299CDFA800F860C3 /* VideoToolbox.framework */; };
+		AEE9CDAF299CDFC900F860C3 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDAE299CDFC900F860C3 /* CoreMedia.framework */; };
+		AEE9CDB1299CDFD800F860C3 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDB0299CDFD800F860C3 /* CoreVideo.framework */; };
+		AEE9CDB3299CDFE100F860C3 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDB2299CDFE000F860C3 /* CoreImage.framework */; };
+		AEE9CDB5299CDFE900F860C3 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDB4299CDFE900F860C3 /* GLKit.framework */; };
+		AEE9CDB7299CDFF200F860C3 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDB6299CDFF200F860C3 /* OpenGLES.framework */; };
+		AEE9CDB9299CE00600F860C3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDB8299CE00600F860C3 /* QuartzCore.framework */; };
+		AEE9CDBB299CE00E00F860C3 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDBA299CE00E00F860C3 /* Metal.framework */; };
+		AEE9CDBD299CEF8100F860C3 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDBC299CEF8100F860C3 /* Config.swift */; };
+		AEE9CDCA299E1BD100F860C3 /* incoming.wav in Resources */ = {isa = PBXBuildFile; fileRef = AEE9CDC8299E1BD100F860C3 /* incoming.wav */; };
+		AEE9CDCB299E1BD100F860C3 /* ringback.wav in Resources */ = {isa = PBXBuildFile; fileRef = AEE9CDC9299E1BD100F860C3 /* ringback.wav */; };
+		AEE9CDD2299E283500F860C3 /* SinchClientMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDD1299E283500F860C3 /* SinchClientMediator.swift */; };
+		AEE9CDD4299E32D600F860C3 /* SinchJWT.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDD3299E32D600F860C3 /* SinchJWT.swift */; };
+		AEE9CDD6299E392D00F860C3 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDD5299E392D00F860C3 /* MainViewController.swift */; };
+		AEE9CDD8299E398500F860C3 /* AudioCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDD7299E398500F860C3 /* AudioCallViewController.swift */; };
+		AEE9CDDA299E565700F860C3 /* CallRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDD9299E565700F860C3 /* CallRegistry.swift */; };
+		AEE9CDDC299E566D00F860C3 /* Synchronized.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDDB299E566D00F860C3 /* Synchronized.swift */; };
+		AEE9CDE0299F85DE00F860C3 /* UIViewController+Presentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDDF299F85DE00F860C3 /* UIViewController+Presentation.swift */; };
+		AEE9CDE229A3B65800F860C3 /* Ringtone.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDE129A3B65800F860C3 /* Ringtone.swift */; };
+		AEEE418629C09183006E6F60 /* CallError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEE418529C09183006E6F60 /* CallError.swift */; };
+		AEF5B29129ADF510002B3D57 /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF5B29029ADF510002B3D57 /* UIViewController+Alert.swift */; };
+		AEF5B29629AE0366002B3D57 /* VideoCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF5B29529AE0366002B3D57 /* VideoCallViewController.swift */; };
+		AEFCE52929A8B45900A85564 /* Int+TimePresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEFCE52829A8B45900A85564 /* Int+TimePresentation.swift */; };
+		AEFCE52D29A8CA7700A85564 /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEFCE52C29A8CA7700A85564 /* Identifiable.swift */; };
+		DD63242F2A09257C000521FF /* SinchRTC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEA849C329D572E400715A9E /* SinchRTC.xcframework */; settings = {ATTRIBUTES = (Required, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AEE9CD81299CD36F00F860C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AEE9CD62299CD36E00F860C3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AEE9CD69299CD36E00F860C3;
+			remoteInfo = "rtc-vvc-reference-application";
+		};
+		AEE9CD8B299CD36F00F860C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AEE9CD62299CD36E00F860C3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AEE9CD69299CD36E00F860C3;
+			remoteInfo = "rtc-vvc-reference-application";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AEEE418A29C450BB006E6F60 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				AEA849C529D572E400715A9E /* SinchRTC.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		AE3FB6E929B8AF970068C5E8 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		AE52FEDB29B0A8B10052D62B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		AEA8491229CDD59000715A9E /* SinchClientMediator+SinchClientDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SinchClientMediator+SinchClientDelegate.swift"; sourceTree = "<group>"; };
+		AEA8491429CDD5BC00715A9E /* SinchClientMediator+CXProviderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SinchClientMediator+CXProviderDelegate.swift"; sourceTree = "<group>"; };
+		AEA8491629CDD5FD00715A9E /* SinchClientMediator+SinchCallClientDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SinchClientMediator+SinchCallClientDelegate.swift"; sourceTree = "<group>"; };
+		AEA8491929CDD62200715A9E /* SinchClientMediator+SinchCallDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SinchClientMediator+SinchCallDelegate.swift"; sourceTree = "<group>"; };
+		AEA8491B29CDD64B00715A9E /* SinchClientMediator+SinchAudioControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SinchClientMediator+SinchAudioControllerDelegate.swift"; sourceTree = "<group>"; };
+		AEA849C329D572E400715A9E /* SinchRTC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = SinchRTC.xcframework; sourceTree = "<group>"; };
+		AEE9CD6A299CD36E00F860C3 /* SinchReferenceApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SinchReferenceApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AEE9CD6D299CD36E00F860C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AEE9CD71299CD36E00F860C3 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		AEE9CD74299CD36E00F860C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		AEE9CD76299CD36F00F860C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AEE9CD79299CD36F00F860C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AEE9CD7B299CD36F00F860C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AEE9CD80299CD36F00F860C3 /* SinchReferenceAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SinchReferenceAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AEE9CD8A299CD36F00F860C3 /* SinchReferenceAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SinchReferenceAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AEE9CDA2299CDD3200F860C3 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		AEE9CDA4299CDD5F00F860C3 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		AEE9CDA6299CDE8300F860C3 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		AEE9CDA8299CDE9400F860C3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		AEE9CDAA299CDEAA00F860C3 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		AEE9CDAC299CDFA800F860C3 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		AEE9CDAE299CDFC900F860C3 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		AEE9CDB0299CDFD800F860C3 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		AEE9CDB2299CDFE000F860C3 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		AEE9CDB4299CDFE900F860C3 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		AEE9CDB6299CDFF200F860C3 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		AEE9CDB8299CE00600F860C3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		AEE9CDBA299CE00E00F860C3 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		AEE9CDBC299CEF8100F860C3 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		AEE9CDC8299E1BD100F860C3 /* incoming.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = incoming.wav; sourceTree = "<group>"; };
+		AEE9CDC9299E1BD100F860C3 /* ringback.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringback.wav; sourceTree = "<group>"; };
+		AEE9CDCF299E1CAB00F860C3 /* development.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = development.entitlements; sourceTree = "<group>"; };
+		AEE9CDD1299E283500F860C3 /* SinchClientMediator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinchClientMediator.swift; sourceTree = "<group>"; };
+		AEE9CDD3299E32D600F860C3 /* SinchJWT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SinchJWT.swift; sourceTree = "<group>"; };
+		AEE9CDD5299E392D00F860C3 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		AEE9CDD7299E398500F860C3 /* AudioCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCallViewController.swift; sourceTree = "<group>"; };
+		AEE9CDD9299E565700F860C3 /* CallRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallRegistry.swift; sourceTree = "<group>"; };
+		AEE9CDDB299E566D00F860C3 /* Synchronized.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synchronized.swift; sourceTree = "<group>"; };
+		AEE9CDDF299F85DE00F860C3 /* UIViewController+Presentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Presentation.swift"; sourceTree = "<group>"; };
+		AEE9CDE129A3B65800F860C3 /* Ringtone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ringtone.swift; sourceTree = "<group>"; };
+		AEEE418529C09183006E6F60 /* CallError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallError.swift; sourceTree = "<group>"; };
+		AEF5B29029ADF510002B3D57 /* UIViewController+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
+		AEF5B29529AE0366002B3D57 /* VideoCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCallViewController.swift; sourceTree = "<group>"; };
+		AEFCE52829A8B45900A85564 /* Int+TimePresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+TimePresentation.swift"; sourceTree = "<group>"; };
+		AEFCE52C29A8CA7700A85564 /* Identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiable.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AEE9CD67299CD36E00F860C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD63242F2A09257C000521FF /* SinchRTC.xcframework in Frameworks */,
+				AEE9CDAF299CDFC900F860C3 /* CoreMedia.framework in Frameworks */,
+				AE52FEDC29B0A8B20052D62B /* SystemConfiguration.framework in Frameworks */,
+				AEE9CDB9299CE00600F860C3 /* QuartzCore.framework in Frameworks */,
+				AEE9CDBB299CE00E00F860C3 /* Metal.framework in Frameworks */,
+				AEE9CDA3299CDD5200F860C3 /* libc++.tbd in Frameworks */,
+				AEE9CDAD299CDFA800F860C3 /* VideoToolbox.framework in Frameworks */,
+				AEE9CDB5299CDFE900F860C3 /* GLKit.framework in Frameworks */,
+				AEE9CDA5299CDE7B00F860C3 /* libz.tbd in Frameworks */,
+				AEE9CDA9299CDE9400F860C3 /* AVFoundation.framework in Frameworks */,
+				AEE9CDB1299CDFD800F860C3 /* CoreVideo.framework in Frameworks */,
+				AEE9CDA7299CDE8300F860C3 /* Security.framework in Frameworks */,
+				AEE9CDB3299CDFE100F860C3 /* CoreImage.framework in Frameworks */,
+				AEE9CDAB299CDEAA00F860C3 /* AudioToolbox.framework in Frameworks */,
+				AEE9CDB7299CDFF200F860C3 /* OpenGLES.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AEE9CD7D299CD36F00F860C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AEE9CD87299CD36F00F860C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AEA8491129CDD56E00715A9E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				AEA8491229CDD59000715A9E /* SinchClientMediator+SinchClientDelegate.swift */,
+				AEA8491429CDD5BC00715A9E /* SinchClientMediator+CXProviderDelegate.swift */,
+				AEA8491629CDD5FD00715A9E /* SinchClientMediator+SinchCallClientDelegate.swift */,
+				AEA8491929CDD62200715A9E /* SinchClientMediator+SinchCallDelegate.swift */,
+				AEA8491B29CDD64B00715A9E /* SinchClientMediator+SinchAudioControllerDelegate.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		AEE9CD61299CD36E00F860C3 = {
+			isa = PBXGroup;
+			children = (
+				AEE9CD6C299CD36E00F860C3 /* SinchReferenceApp */,
+				AEE9CD6B299CD36E00F860C3 /* Products */,
+				AEE9CD9D299CDBF700F860C3 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		AEE9CD6B299CD36E00F860C3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AEE9CD6A299CD36E00F860C3 /* SinchReferenceApp.app */,
+				AEE9CD80299CD36F00F860C3 /* SinchReferenceAppTests.xctest */,
+				AEE9CD8A299CD36F00F860C3 /* SinchReferenceAppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AEE9CD6C299CD36E00F860C3 /* SinchReferenceApp */ = {
+			isa = PBXGroup;
+			children = (
+				AEE9CDDE299F85AD00F860C3 /* Extensions */,
+				AEE9CDCE299E1C6500F860C3 /* AudioCallViewController */,
+				AEF5B29229ADFDD9002B3D57 /* VideoCallViewController */,
+				AEE9CDCD299E1C5700F860C3 /* MainViewController */,
+				AEE9CDCC299E1BFE00F860C3 /* LoginViewController */,
+				AEE9CDD0299E280E00F860C3 /* Mediator */,
+				AEE9CDBC299CEF8100F860C3 /* Config.swift */,
+				AEE9CDE129A3B65800F860C3 /* Ringtone.swift */,
+				AEE9CD6D299CD36E00F860C3 /* AppDelegate.swift */,
+				AEE9CD73299CD36E00F860C3 /* Main.storyboard */,
+				AEE9CD7B299CD36F00F860C3 /* Info.plist */,
+				AEE9CD76299CD36F00F860C3 /* Assets.xcassets */,
+				AEE9CD78299CD36F00F860C3 /* LaunchScreen.storyboard */,
+				AEE9CDBF299E196300F860C3 /* Resources */,
+				AEE9CDCF299E1CAB00F860C3 /* development.entitlements */,
+				AE3FB6E929B8AF970068C5E8 /* .swiftlint.yml */,
+			);
+			path = SinchReferenceApp;
+			sourceTree = "<group>";
+		};
+		AEE9CD9D299CDBF700F860C3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AEA849C329D572E400715A9E /* SinchRTC.xcframework */,
+				AE52FEDB29B0A8B10052D62B /* SystemConfiguration.framework */,
+				AEE9CDBA299CE00E00F860C3 /* Metal.framework */,
+				AEE9CDB8299CE00600F860C3 /* QuartzCore.framework */,
+				AEE9CDB6299CDFF200F860C3 /* OpenGLES.framework */,
+				AEE9CDB4299CDFE900F860C3 /* GLKit.framework */,
+				AEE9CDB2299CDFE000F860C3 /* CoreImage.framework */,
+				AEE9CDB0299CDFD800F860C3 /* CoreVideo.framework */,
+				AEE9CDAE299CDFC900F860C3 /* CoreMedia.framework */,
+				AEE9CDAC299CDFA800F860C3 /* VideoToolbox.framework */,
+				AEE9CDAA299CDEAA00F860C3 /* AudioToolbox.framework */,
+				AEE9CDA8299CDE9400F860C3 /* AVFoundation.framework */,
+				AEE9CDA6299CDE8300F860C3 /* Security.framework */,
+				AEE9CDA4299CDD5F00F860C3 /* libz.tbd */,
+				AEE9CDA2299CDD3200F860C3 /* libc++.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		AEE9CDBF299E196300F860C3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AEE9CDC8299E1BD100F860C3 /* incoming.wav */,
+				AEE9CDC9299E1BD100F860C3 /* ringback.wav */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		AEE9CDCC299E1BFE00F860C3 /* LoginViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AEE9CD71299CD36E00F860C3 /* LoginViewController.swift */,
+			);
+			path = LoginViewController;
+			sourceTree = "<group>";
+		};
+		AEE9CDCD299E1C5700F860C3 /* MainViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AEE9CDD5299E392D00F860C3 /* MainViewController.swift */,
+			);
+			path = MainViewController;
+			sourceTree = "<group>";
+		};
+		AEE9CDCE299E1C6500F860C3 /* AudioCallViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AEE9CDD7299E398500F860C3 /* AudioCallViewController.swift */,
+			);
+			path = AudioCallViewController;
+			sourceTree = "<group>";
+		};
+		AEE9CDD0299E280E00F860C3 /* Mediator */ = {
+			isa = PBXGroup;
+			children = (
+				AEE9CDDD299E70DB00F860C3 /* Support */,
+				AEA8491129CDD56E00715A9E /* Extensions */,
+				AEE9CDD1299E283500F860C3 /* SinchClientMediator.swift */,
+			);
+			path = Mediator;
+			sourceTree = "<group>";
+		};
+		AEE9CDDD299E70DB00F860C3 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				AEE9CDD3299E32D600F860C3 /* SinchJWT.swift */,
+				AEE9CDD9299E565700F860C3 /* CallRegistry.swift */,
+				AEE9CDDB299E566D00F860C3 /* Synchronized.swift */,
+				AEEE418529C09183006E6F60 /* CallError.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		AEE9CDDE299F85AD00F860C3 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				AEFCE52C29A8CA7700A85564 /* Identifiable.swift */,
+				AEE9CDDF299F85DE00F860C3 /* UIViewController+Presentation.swift */,
+				AEF5B29029ADF510002B3D57 /* UIViewController+Alert.swift */,
+				AEFCE52829A8B45900A85564 /* Int+TimePresentation.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		AEF5B29229ADFDD9002B3D57 /* VideoCallViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AEF5B29529AE0366002B3D57 /* VideoCallViewController.swift */,
+			);
+			path = VideoCallViewController;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AEE9CD69299CD36E00F860C3 /* SinchReferenceApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AEE9CD94299CD36F00F860C3 /* Build configuration list for PBXNativeTarget "SinchReferenceApp" */;
+			buildPhases = (
+				AEE9CD66299CD36E00F860C3 /* Sources */,
+				AEE9CD67299CD36E00F860C3 /* Frameworks */,
+				AEE9CD68299CD36E00F860C3 /* Resources */,
+				AEEE418A29C450BB006E6F60 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SinchReferenceApp;
+			productName = "rtc-vvc-reference-application";
+			productReference = AEE9CD6A299CD36E00F860C3 /* SinchReferenceApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AEE9CD7F299CD36F00F860C3 /* SinchReferenceAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AEE9CD97299CD36F00F860C3 /* Build configuration list for PBXNativeTarget "SinchReferenceAppTests" */;
+			buildPhases = (
+				AEE9CD7C299CD36F00F860C3 /* Sources */,
+				AEE9CD7D299CD36F00F860C3 /* Frameworks */,
+				AEE9CD7E299CD36F00F860C3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AEE9CD82299CD36F00F860C3 /* PBXTargetDependency */,
+			);
+			name = SinchReferenceAppTests;
+			productName = "rtc-vvc-reference-applicationTests";
+			productReference = AEE9CD80299CD36F00F860C3 /* SinchReferenceAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		AEE9CD89299CD36F00F860C3 /* SinchReferenceAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AEE9CD9A299CD36F00F860C3 /* Build configuration list for PBXNativeTarget "SinchReferenceAppUITests" */;
+			buildPhases = (
+				AEE9CD86299CD36F00F860C3 /* Sources */,
+				AEE9CD87299CD36F00F860C3 /* Frameworks */,
+				AEE9CD88299CD36F00F860C3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AEE9CD8C299CD36F00F860C3 /* PBXTargetDependency */,
+			);
+			name = SinchReferenceAppUITests;
+			productName = "rtc-vvc-reference-applicationUITests";
+			productReference = AEE9CD8A299CD36F00F860C3 /* SinchReferenceAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AEE9CD62299CD36E00F860C3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1420;
+				LastUpgradeCheck = 1420;
+				TargetAttributes = {
+					AEE9CD69299CD36E00F860C3 = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					AEE9CD7F299CD36F00F860C3 = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = AEE9CD69299CD36E00F860C3;
+					};
+					AEE9CD89299CD36F00F860C3 = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = AEE9CD69299CD36E00F860C3;
+					};
+				};
+			};
+			buildConfigurationList = AEE9CD65299CD36E00F860C3 /* Build configuration list for PBXProject "SinchReferenceApp" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AEE9CD61299CD36E00F860C3;
+			productRefGroup = AEE9CD6B299CD36E00F860C3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AEE9CD69299CD36E00F860C3 /* SinchReferenceApp */,
+				AEE9CD7F299CD36F00F860C3 /* SinchReferenceAppTests */,
+				AEE9CD89299CD36F00F860C3 /* SinchReferenceAppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AEE9CD68299CD36E00F860C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AE3FB6EA29B8AF970068C5E8 /* .swiftlint.yml in Resources */,
+				AEE9CDCA299E1BD100F860C3 /* incoming.wav in Resources */,
+				AEE9CD7A299CD36F00F860C3 /* LaunchScreen.storyboard in Resources */,
+				AEE9CDCB299E1BD100F860C3 /* ringback.wav in Resources */,
+				AEE9CD77299CD36F00F860C3 /* Assets.xcassets in Resources */,
+				AEE9CD75299CD36E00F860C3 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AEE9CD7E299CD36F00F860C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AEE9CD88299CD36F00F860C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AEE9CD66299CD36E00F860C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AEEE418629C09183006E6F60 /* CallError.swift in Sources */,
+				AEE9CDE0299F85DE00F860C3 /* UIViewController+Presentation.swift in Sources */,
+				AEA8491529CDD5BC00715A9E /* SinchClientMediator+CXProviderDelegate.swift in Sources */,
+				AEE9CD72299CD36E00F860C3 /* LoginViewController.swift in Sources */,
+				AEE9CDD4299E32D600F860C3 /* SinchJWT.swift in Sources */,
+				AEFCE52929A8B45900A85564 /* Int+TimePresentation.swift in Sources */,
+				AEE9CDE229A3B65800F860C3 /* Ringtone.swift in Sources */,
+				AEF5B29629AE0366002B3D57 /* VideoCallViewController.swift in Sources */,
+				AEA8491329CDD59000715A9E /* SinchClientMediator+SinchClientDelegate.swift in Sources */,
+				AEE9CDDA299E565700F860C3 /* CallRegistry.swift in Sources */,
+				AEA8491A29CDD62200715A9E /* SinchClientMediator+SinchCallDelegate.swift in Sources */,
+				AEFCE52D29A8CA7700A85564 /* Identifiable.swift in Sources */,
+				AEE9CDD2299E283500F860C3 /* SinchClientMediator.swift in Sources */,
+				AEE9CDD6299E392D00F860C3 /* MainViewController.swift in Sources */,
+				AEE9CDDC299E566D00F860C3 /* Synchronized.swift in Sources */,
+				AEE9CD6E299CD36E00F860C3 /* AppDelegate.swift in Sources */,
+				AEA8491C29CDD64B00715A9E /* SinchClientMediator+SinchAudioControllerDelegate.swift in Sources */,
+				AEE9CDBD299CEF8100F860C3 /* Config.swift in Sources */,
+				AEA8491729CDD5FD00715A9E /* SinchClientMediator+SinchCallClientDelegate.swift in Sources */,
+				AEE9CDD8299E398500F860C3 /* AudioCallViewController.swift in Sources */,
+				AEF5B29129ADF510002B3D57 /* UIViewController+Alert.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AEE9CD7C299CD36F00F860C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AEE9CD86299CD36F00F860C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AEE9CD82299CD36F00F860C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AEE9CD69299CD36E00F860C3 /* SinchReferenceApp */;
+			targetProxy = AEE9CD81299CD36F00F860C3 /* PBXContainerItemProxy */;
+		};
+		AEE9CD8C299CD36F00F860C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AEE9CD69299CD36E00F860C3 /* SinchReferenceApp */;
+			targetProxy = AEE9CD8B299CD36F00F860C3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		AEE9CD73299CD36E00F860C3 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AEE9CD74299CD36E00F860C3 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		AEE9CD78299CD36F00F860C3 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AEE9CD79299CD36F00F860C3 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		AEE9CD92299CD36F00F860C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AEE9CD93299CD36F00F860C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AEE9CD95299CD36F00F860C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SinchReferenceApp/development.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 589CW2BWK2;
+				ENABLE_BITCODE = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SinchReferenceApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SinchReferenceApp;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Sinch Reference Application wants to use your camera to be able to make a video call.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Sinch Reference Application wants to use your microphone to be able to capture your voice in a call.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sinch.rtc.SinchCallKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		AEE9CD96299CD36F00F860C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SinchReferenceApp/development.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 589CW2BWK2;
+				ENABLE_BITCODE = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SinchReferenceApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = SinchReferenceApp;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Sinch Reference Application wants to use your camera to be able to make a video call.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Sinch Reference Application wants to use your microphone to be able to capture your voice in a call.";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sinch.rtc.SinchCallKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		AEE9CD98299CD36F00F860C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 589CW2BWK2;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sinch.SinchReferenceAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SinchReferenceApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SinchReferenceApp";
+			};
+			name = Debug;
+		};
+		AEE9CD99299CD36F00F860C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 589CW2BWK2;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sinch.SinchReferenceAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SinchReferenceApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SinchReferenceApp";
+			};
+			name = Release;
+		};
+		AEE9CD9B299CD36F00F860C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 589CW2BWK2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sinch.SinchReferenceAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = "";
+			};
+			name = Debug;
+		};
+		AEE9CD9C299CD36F00F860C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 589CW2BWK2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sinch.SinchReferenceAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AEE9CD65299CD36E00F860C3 /* Build configuration list for PBXProject "SinchReferenceApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AEE9CD92299CD36F00F860C3 /* Debug */,
+				AEE9CD93299CD36F00F860C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AEE9CD94299CD36F00F860C3 /* Build configuration list for PBXNativeTarget "SinchReferenceApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AEE9CD95299CD36F00F860C3 /* Debug */,
+				AEE9CD96299CD36F00F860C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AEE9CD97299CD36F00F860C3 /* Build configuration list for PBXNativeTarget "SinchReferenceAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AEE9CD98299CD36F00F860C3 /* Debug */,
+				AEE9CD99299CD36F00F860C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AEE9CD9A299CD36F00F860C3 /* Build configuration list for PBXNativeTarget "SinchReferenceAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AEE9CD9B299CD36F00F860C3 /* Debug */,
+				AEE9CD9C299CD36F00F860C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AEE9CD62299CD36E00F860C3 /* Project object */;
+}

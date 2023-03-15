@@ -6,9 +6,9 @@ cut:branch:release:
     stage: Cut Release
 
     extends:
-        - .conf:env
+        - .conf:android:env
         - .conf:rule:for:release:cut
-        - .conf:runner:tags
+        - .conf:android:runner:tags
 
     script:
         - echo Nothing to release for now

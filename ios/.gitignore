@@ -1,0 +1,25 @@
+## User settings
+xcuserdata/
+
+## Xcode 8 and earlier
+*.xcscmblueprint
+*.xccheckout
+build
+
+### Xcode Patch ###
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+/*.gcno
+
+## App packaging
+*.ipa
+*.dSYM.zip
+
+.build/
+
+# XCFramework is downloaded on-demand.
+SinchRTC.xcframework/
+version.txt

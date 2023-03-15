@@ -1,6 +1,6 @@
 # Lists of paths for artifacts of various stages.
 
-.conf:artifacts:
+.conf:android:artifacts:
     artifacts:
         expire_in: 5d
         name: "$CI_JOB_NAME-$CI_JOB_STAGE-$CI_COMMIT_REF_NAME"

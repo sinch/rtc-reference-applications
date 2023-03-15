@@ -9,7 +9,7 @@
         # secrets and keys in the log
         # CI_DEBUG_TRACE: "true"
 
-.conf:env:
+.conf:android:env:
     extends: .base
 
     variables:
@@ -24,15 +24,15 @@
         # technique to avoid downloading NDK from internet during build
         DOWNLOAD_NDK: "false"
 
-.conf:runner:tags:
+.conf:android:runner:tags:
     tags:
         - rtc-mac
 
-.conf:debug:
+.conf:android:debug:
     variables:
         CONFIGURATION: "Debug"
 
-.conf:release:
+.conf:android:release:
     variables:
         CONFIGURATION: "Release"
 
@@ -45,9 +45,7 @@
     - echo $RELEASE_STORE_FILE
 
 
-.build:do:
-    stage: build
-
+.build:android:do:
     script:
         - *before_script_android
         - cd android
@@ -57,7 +55,7 @@
 
     interruptible: true
 
-.test:do:
+.test:android:do:
     stage: Test Dist Sample Apps
 
     script:

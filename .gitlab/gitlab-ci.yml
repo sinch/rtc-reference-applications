@@ -5,6 +5,7 @@ include:
 
     # OS builds
     - local: .gitlab/os-android.yml
+    - local: .gitlab/os-ios.yml
     - local: .gitlab/release.yml
 
 
@@ -13,46 +14,65 @@ include:
 # CI_GRADLE_PROPERTIES_PATH is set in runner config
 default:
   before_script:
-    - cp -v $CI_GRADLE_PROPERTIES_PATH .
-    - cp -rf -v $CI_REF_APP_GOOGLE_SERVICE_PATH ./android/app
-    - cp -rf -v $CI_REF_APP_CONFIG_PATH ./android/app/src/main/assets
+    - ""
 
 stages:
     - Lint Javascript
     - Cut Release
-    - build
+    - Build
     # Add test stage when build system will be ready for it
     - Test Dist Sample Apps
 
 ############################################## pipeline jobs
 
-build:device:release:
+build:android:device:release:
+    stage: Build
+    
+    before_script:
+        - cp -v $CI_GRADLE_PROPERTIES_PATH .
+        - cp -rf -v $CI_REF_APP_GOOGLE_SERVICE_PATH ./android/app
+        - cp -rf -v $CI_REF_APP_CONFIG_PATH ./android/app/src/main/assets
+        
     extends:
-        - .conf:env
-        - .conf:release
-        - .conf:artifacts
-        - .conf:runner:tags
+        - .conf:android:env
+        - .conf:android:release
+        - .conf:android:artifacts
+        - .conf:android:runner:tags
         - .conf:rule:default
-        - .build:do
+        - .build:android:do
+        
+build:ios:device:release:
+    stage: Build
+    
+    before_script:
+        - ./scripts/ci_unlock_appledev_keychain.sh
+        - cd ios/
+        - pwd
+    
+    extends:
+        - .conf:ios:runner:tags
+        - .lint:ios:do
+        - .build:ios:do
 
-test:dist:samples:
+test:android:dist:samples:
     extends:
-        - .conf:env
-        - .conf:release
-        - .conf:runner:tags
+        - .conf:android:env
+        - .conf:android:release
+        - .conf:android:runner:tags
         - .conf:rule:default
-        - .test:do
+        - .test:android:do
 
     dependencies:
-        - build:device:release
+        - build:android:device:release
 
 lint:javascript:
     stage: Lint Javascript
+    
     tags:
         - rtc-mac-docker
+    
     image: node:16-slim
-    before_script:
-        - ""
+
     script:
         - cd javascript
         - npm ci
