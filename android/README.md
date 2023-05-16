@@ -5,7 +5,7 @@ Reference Applications for the Android Client.
 # Set up
 
 #### 1. Create configuration file
-To communicate with Sinch API you must include your application specific authorization settings (key and secret). In order to do this, check config.json file located in app/src/main/assets folder and fill it with these values copied from Sinch portal website of your application: 
+To communicate with Sinch API you must include your application specific authorization settings (key and secret). In order to do this, check config.json file located in app/src/main/assets folder and fill it with these values copied from Sinch Dashboard website of your application: 
 
 ![config.json](docs/img/conf_loc.png).
 
@@ -25,8 +25,8 @@ Basic structure of the file looks as follows:
 Parameters description:
 
 * name - Name of the environment as displayed in the settings screen.
-* appKey - Application key copied from your Sinch portal webpage of the application.
-* appSecret - Application secret copied from your Sinch portal webpage of the application.
+* appKey - Application key copied from your Sinch Dashboard webpage of the application.
+* appSecret - Application secret copied from your Sinch Dashboard webpage of the application.
 * environment - Base URL used to make REST calls against Sinch API (E.g. ocra.api.sinch.com).
 * cli - Caller identifier used while making PSTN calls. This property is optional however it won't be possible to make App-To-Phone calls if not defined (the option won't be listed).
 
