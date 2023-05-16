@@ -2,6 +2,7 @@ package com.sinch.rtc.vvc.reference.app.domain.calls
 
 import android.Manifest
 import android.content.Context
+import android.os.Build
 import com.sinch.rtc.vvc.reference.app.R
 
 enum class CallType {
@@ -23,19 +24,24 @@ fun CallType.newCallLabel(context: Context): String {
 }
 
 val CallType.requiredPermissions: List<String>
-    get() = when (this) {
-        CallType.AppToPhone -> listOf(
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.BLUETOOTH
-        )
-        CallType.AppToAppAudio -> listOf(
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.BLUETOOTH
-        )
-        CallType.AppToAppVideo -> listOf(
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.CAMERA,
-            Manifest.permission.BLUETOOTH
-        )
-        else -> emptyList()
+    get() {
+        // Needed as Automatic Audio Routing (AAR) is enabled by default
+        val bluetoothPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            Manifest.permission.BLUETOOTH_CONNECT else Manifest.permission.BLUETOOTH
+        return when (this) {
+            CallType.AppToPhone -> listOf(
+                Manifest.permission.RECORD_AUDIO,
+                bluetoothPermission,
+            )
+            CallType.AppToAppAudio -> listOf(
+                Manifest.permission.RECORD_AUDIO,
+                bluetoothPermission
+            )
+            CallType.AppToAppVideo -> listOf(
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.CAMERA,
+                bluetoothPermission
+            )
+            else -> emptyList()
+        }
     }

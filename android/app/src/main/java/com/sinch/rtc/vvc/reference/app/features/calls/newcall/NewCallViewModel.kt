@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import com.sinch.rtc.vvc.reference.app.domain.AppConfig
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
@@ -46,9 +46,7 @@ class NewCallViewModel(
     val callItem: LiveData<CallItem> get() = callItemMutable
 
     val isProceedEnabled: LiveData<Boolean> =
-        Transformations.map(callItem) {
-            destinationValidator?.isCalleeValid(it.destination) ?: true
-        }
+        callItem.map { destinationValidator?.isCalleeValid(it.destination) ?: true }
 
     val loggedInUserLiveData get() = userDao.getLoggedInUserLiveData()
 

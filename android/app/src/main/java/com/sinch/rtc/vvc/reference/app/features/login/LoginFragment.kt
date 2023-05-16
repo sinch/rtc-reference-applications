@@ -1,5 +1,7 @@
 package com.sinch.rtc.vvc.reference.app.features.login
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -12,6 +14,7 @@ import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentLoginBinding
 import com.sinch.rtc.vvc.reference.app.utils.base.fragment.ViewBindingFragment
+import com.sinch.rtc.vvc.reference.app.utils.extensions.areAllPermissionsGranted
 import com.sinch.rtc.vvc.reference.app.utils.extensions.makeMultiline
 
 class LoginFragment : ViewBindingFragment<FragmentLoginBinding>(R.layout.fragment_login) {
@@ -41,6 +44,7 @@ class LoginFragment : ViewBindingFragment<FragmentLoginBinding>(R.layout.fragmen
         viewModel.navigationEvents.observe(viewLifecycleOwner) {
             handleNavigationEvent(it)
         }
+        requestBasePermissions()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -55,6 +59,18 @@ class LoginFragment : ViewBindingFragment<FragmentLoginBinding>(R.layout.fragmen
             }
             else -> super.onOptionsItemSelected(item)
         }
+
+    private fun requestBasePermissions() {
+        val permissions = mutableListOf(Manifest.permission.READ_PHONE_STATE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            permissions.add(Manifest.permission.POST_NOTIFICATIONS)
+        }
+        requestPermissions(permissions) {
+            if (!it.areAllPermissionsGranted) {
+                showError(getString(R.string.permissions_missing_error))
+            }
+        }
+    }
 
     private fun handleNavigationEvent(navigationEvent: LoginNavigationEvent) {
         when (navigationEvent) {

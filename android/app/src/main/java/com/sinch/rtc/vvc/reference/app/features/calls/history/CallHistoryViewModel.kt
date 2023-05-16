@@ -3,7 +3,7 @@ package com.sinch.rtc.vvc.reference.app.features.calls.history
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.insertAndGetWithGeneratedId
@@ -29,7 +29,7 @@ class CallHistoryViewModel(
         SingleLiveEvent()
 
     val historyData: LiveData<List<BaseItem<*>>>
-        get() = Transformations.map(callItemsHistory) {
+        get() = callItemsHistory.map {
             generateHeaderedCallItemsList(it)
         }
 

@@ -115,7 +115,7 @@ class SettingsViewModel(
         Log.d(TAG, "Push token unregistered")
     }
 
-    override fun onPushTokenRegistrationFailed(error: SinchError?) {
+    override fun onPushTokenRegistrationFailed(error: SinchError) {
         Log.d(TAG, "Push token unregistration failed with error $error")
     }
 
@@ -123,7 +123,7 @@ class SettingsViewModel(
         Log.d(TAG, "Push token unregistered")
     }
 
-    override fun onPushTokenUnregistrationFailed(error: SinchError?) {
+    override fun onPushTokenUnregistrationFailed(error: SinchError) {
         Log.d(TAG, "Push token unregistration failed with error $error")
     }
 
@@ -140,7 +140,7 @@ class SettingsViewModel(
             .environmentHost(sharedPrefsManager.usedConfig.environment)
             .pushConfiguration(
                 PushConfiguration.fcmPushConfigurationBuilder()
-                    .senderID(FirebaseApp.getInstance().options.gcmSenderId)
+                    .senderID(FirebaseApp.getInstance().options.gcmSenderId.orEmpty())
                     .registrationToken(sharedPrefsManager.fcmRegistrationToken)
                     .build()
             )

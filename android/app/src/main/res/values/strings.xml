@@ -89,4 +89,6 @@
     <string name="remote_paused">Remote video paused</string>
     <string name="remote_video_resumed">Remote video resumed</string>
     <string name="video_permissions_explanation">In order to send your video you need to accept CAMERA permissions.</string>
+    <string name="permissions_missing_error">Permissions were not granted. Basic functionality may not work as
+        expected.</string>
 </resources>

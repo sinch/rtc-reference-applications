@@ -78,11 +78,11 @@ class ScreenshotCoroutineSaver(
 
     private fun frameAsYuvImage(): YuvImage = VideoUtils.I420toNV21Frame(videoFrame).run {
         YuvImage(
-            yuvPlanes()[0].array(),
+            yuvPlanes[0].array(),
             ImageFormat.NV21,
-            width(),
-            height(),
-            yuvStrides()
+            width,
+            height,
+            yuvStrides
         )
     }
 

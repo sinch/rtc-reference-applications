@@ -20,8 +20,8 @@ data class VideoCallProperties(
         isRemotePaused: Boolean,
         isTorchEnabled: Boolean
     ) : this(
-        videoController.remoteView,
-        videoController.localView,
+        videoController.remoteView ?: error("Unexpected null when referencing remoteView"),
+        videoController.localView ?: error("Unexpected null when referencing localView"),
         videoController.isFrontCameraUsedForCapture,
         isLocalOnTop = isLocalOnTop,
         isVideoPaused = isPaused,

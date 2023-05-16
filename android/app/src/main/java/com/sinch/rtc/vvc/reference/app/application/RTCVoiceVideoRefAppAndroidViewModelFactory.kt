@@ -31,7 +31,7 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
     ViewModelProvider.AndroidViewModelFactory(application) {
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val roomDatabase = RTCVoiceVideoAppDatabase.getDatabase(application)
         val prefsManager = SharedPrefsManager(application)
         return when (modelClass) {

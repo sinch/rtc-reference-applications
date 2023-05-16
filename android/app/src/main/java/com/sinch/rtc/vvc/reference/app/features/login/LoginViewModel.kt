@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import com.google.firebase.FirebaseApp
 import com.sinch.android.rtc.*
 import com.sinch.rtc.vvc.reference.app.R
@@ -38,13 +38,12 @@ class LoginViewModel(
     val navigationEvents: SingleLiveEvent<LoginNavigationEvent> = SingleLiveEvent()
 
     val isLoginButtonEnabled: LiveData<Boolean>
-        get() =
-            Transformations.map(viewModelState) { viewState ->
-                return@map when (viewState) {
-                    Idle -> true
-                    else -> false
-                }
+        get() = viewModelState.map {
+            when (it) {
+                Idle -> true
+                else -> false
             }
+        }
 
     companion object {
         const val TAG = "LoginViewModel"
@@ -69,7 +68,7 @@ class LoginViewModel(
             .environmentHost(appConfig.environment)
             .pushConfiguration(
                 PushConfiguration.fcmPushConfigurationBuilder()
-                    .senderID(FirebaseApp.getInstance().options.gcmSenderId)
+                    .senderID(FirebaseApp.getInstance().options.gcmSenderId.orEmpty())
                     .registrationToken(prefsManager.fcmRegistrationToken)
                     .build()
             )
@@ -111,14 +110,14 @@ class LoginViewModel(
         }
     }
 
-    override fun onUserRegistrationFailed(error: SinchError?) {
+    override fun onUserRegistrationFailed(error: SinchError) {
         Log.d(TAG, "onUserRegistrationFailed $error")
-        resetToIdleWithErrorMessage("${error?.message.orEmpty()}\nExtras: ${error?.extras}")
+        resetToIdleWithErrorMessage("${error.message}\nExtras: ${error.extras}")
     }
 
-    override fun onPushTokenRegistrationFailed(error: SinchError?) {
+    override fun onPushTokenRegistrationFailed(error: SinchError) {
         Log.d(TAG, "onPushTokenRegistrationFailed $error")
-        resetToIdleWithErrorMessage("${error?.message.orEmpty()}\nExtras: ${error?.extras}")
+        resetToIdleWithErrorMessage("${error.message}\nExtras: ${error.extras}")
     }
 
     private fun ifLoggingIn(f: (loggingState: Logging) -> Unit) {

@@ -102,7 +102,7 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
             .userId(loggedInUser.id)
             .applicationKey(appConfig.appKey)
             .pushConfiguration(PushConfiguration.fcmPushConfigurationBuilder()
-                .senderID(FirebaseApp.getInstance().options.gcmSenderId)
+                .senderID(FirebaseApp.getInstance().options.gcmSenderId.orEmpty())
                 .registrationToken(prefsManager.fcmRegistrationToken)
                 .build()
             )
@@ -114,12 +114,12 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
             }
     }
 
-    override fun onCredentialsRequired(clientRegistration: ClientRegistration?) {
+    override fun onCredentialsRequired(clientRegistration: ClientRegistration) {
         Log.d(TAG, "onCredentialsRequired $clientRegistration")
         val loggedInUser = userDao.loadLoggedInUser()
         if (loggedInUser != null) {
             jwtFetcher.acquireJWT(appConfig.appKey, loggedInUser.id) { jwt ->
-                clientRegistration?.register(jwt)
+                clientRegistration.register(jwt)
             }
         }
     }
@@ -128,8 +128,8 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
         Log.d(TAG, "onUserRegistered called")
     }
 
-    override fun onUserRegistrationFailed(p0: SinchError?) {
-        Log.d(TAG, "onUserRegistrationFailed $p0")
+    override fun onUserRegistrationFailed(error: SinchError) {
+        Log.d(TAG, "onUserRegistrationFailed $error")
     }
 
     override fun onPushTokenRegistered() {
@@ -140,31 +140,28 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
         Log.d(TAG, "onPushTokenUnregistered")
     }
 
-    override fun onPushTokenUnregistrationFailed(p0: SinchError?) {
-        Log.d(TAG, "onPushTokenUnregistrationFailed $p0")
+    override fun onPushTokenUnregistrationFailed(error: SinchError) {
+        Log.d(TAG, "onPushTokenUnregistrationFailed $error")
     }
 
-    override fun onPushTokenRegistrationFailed(p0: SinchError?) {
-        Log.d(TAG, "onPushTokenRegistrationFailed $p0")
+    override fun onPushTokenRegistrationFailed(error: SinchError) {
+        Log.d(TAG, "onPushTokenRegistrationFailed $error")
     }
 
-    override fun onClientStarted(p0: SinchClient?) {
+    override fun onClientStarted(client: SinchClient) {
         Log.d(TAG, "onClientStarted")
     }
 
-    override fun onClientFailed(p0: SinchClient?, p1: SinchError?) {
-        Log.d(TAG, "onClientFailed $p1")
+    override fun onClientFailed(client: SinchClient, error: SinchError) {
+        Log.d(TAG, "onClientFailed $error")
     }
 
-    override fun onLogMessage(p0: Int, p1: String?, p2: String?) {
-        Log.d(TAG, "onLogMessage $p1 $p2")
+    override fun onLogMessage(level: Int, area: String, message: String) {
+        Log.d(TAG, "onLogMessage $area $message")
     }
 
-    override fun onIncomingCall(p0: CallController?, call: Call?) {
+    override fun onIncomingCall(callController: CallController, call: Call) {
         Log.d(TAG, "onIncomingCall $call")
-        if (call == null) {
-            return
-        }
         val mainActivityIntent = Intent(this, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             putExtra(
@@ -247,7 +244,7 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
             this,
             id,
             source,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
     private fun createNotificationChannelIfNeeded() {

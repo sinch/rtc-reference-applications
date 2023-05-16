@@ -39,7 +39,7 @@ data class CallItem(
         call.details.establishedTime.valueOrNullIfNotSet,
         call.details.endedTime.valueOrNullIfNotSet,
         call.details.endCause,
-        if (call.details.error != null) call.details.error.message else null,
+        call.details.error?.message,
         userId = user.id,
     )
 
@@ -50,7 +50,7 @@ data class CallItem(
             establishedDate = details.establishedTime.valueOrNullIfNotSet,
             endDate = details.endedTime.valueOrNullIfNotSet,
             endCause = details.endCause,
-            errorMessage = if (details.error != null) details.error.message else this.errorMessage
+            errorMessage = details.error?.message
         )
     }
 

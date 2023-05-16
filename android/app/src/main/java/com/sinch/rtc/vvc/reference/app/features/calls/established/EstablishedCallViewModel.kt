@@ -69,7 +69,7 @@ class EstablishedCallViewModel(
         }
     private var lastVideoFrameTimestamp: Long? = null
 
-    val callDurationFormatted: LiveData<String> = Transformations.map(callDurationMutable) {
+    val callDurationFormatted: LiveData<String> = callDurationMutable.map {
         DateUtils.formatElapsedTime(it.toLong())
     }
 
@@ -86,7 +86,7 @@ class EstablishedCallViewModel(
     init {
         sinchCall =
             sinchClient.callController.getCall(sinchCallId)
-                .apply {
+                ?.apply {
                     addCallListener(this@EstablishedCallViewModel)
                 }
         sinchCall?.takeIf { it.details.isVideoOffered }?.let {
@@ -152,9 +152,7 @@ class EstablishedCallViewModel(
             messageEvents.postValue(app.getString(R.string.only_rear_camera_torch))
         }
         isTorchOn = isOn && !isFrontCameraUsed
-        if (sinchClient.videoController != null) {
-            sinchClient.videoController.setTorchMode(isTorchOn)
-        }
+        sinchClient.videoController.setTorchMode(isTorchOn)
         updateVideoProperties()
     }
 
@@ -178,16 +176,16 @@ class EstablishedCallViewModel(
         updateVideoProperties()
     }
 
-    override fun onCallProgressing(call: Call?) {
+    override fun onCallProgressing(call: Call) {
         Log.d(TAG, "onCallProgressing $call")
     }
 
-    override fun onCallEstablished(call: Call?) {
+    override fun onCallEstablished(call: Call) {
         callItem.updateBasedOnSinchCall(call, callDao)
         Log.d(TAG, "onCallEstablished $call")
     }
 
-    override fun onCallEnded(call: Call?) {
+    override fun onCallEnded(call: Call) {
         Log.d(TAG, "onCallEnded $call")
         callItem.updateBasedOnSinchCall(call, callDao)
         navigationEvents.postValue(Back)
@@ -286,16 +284,12 @@ class EstablishedCallViewModel(
         }
     }
 
-    override fun onFrame(callId: String?, videoFrame: VideoFrame?) {
+    override fun onFrame(callId: String, frame: VideoFrame) {
         lastVideoFrameTimestamp = Date().time
         GlobalScope.launch(Dispatchers.Main) {
             if (captureState.value == Triggered) {
-                if (videoFrame != null && callId != null) {
-                    frameCaptureStateMutable.value = Capturing
-                    launchScopedFrameCapture(callId, videoFrame)
-                } else {
-                    frameCaptureStateMutable.value = Idle
-                }
+                frameCaptureStateMutable.value = Capturing
+                launchScopedFrameCapture(callId, frame)
             }
             if (isRemoteVideoPaused) {
                 messageEvents.postValue(getString(R.string.remote_video_resumed))

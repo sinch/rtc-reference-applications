@@ -48,9 +48,9 @@ class IncomingCallViewModel(
 
     init {
         Log.d(TAG, "IncomingCallViewModel initialised with $callId")
-        call = sinchClient.callController.getCall(callId).apply {
+        call = sinchClient.callController.getCall(callId)?.apply {
             addCallListener(this@IncomingCallViewModel)
-        }
+        } ?: error("Call with id $callId not found")
         callPropertiesMutable.postValue(CallProperties(call.remoteUserId))
         user?.let {
             val generatedCallItem = CallItem(call = call, user = it).let { item ->
@@ -81,19 +81,19 @@ class IncomingCallViewModel(
         }
     }
 
-    override fun onCallProgressing(call: Call?) {
+    override fun onCallProgressing(call: Call) {
         Log.d(TAG, "onCallProgressing for $call")
     }
 
-    override fun onCallEstablished(call: Call?) {
+    override fun onCallEstablished(call: Call) {
         Log.d(TAG, "onCallProgressing for $call")
         callItem?.updateBasedOnSinchCall(call, callDao)
     }
 
-    override fun onCallEnded(call: Call?) {
-        Log.d(TAG, "Call ended with end cause ${call?.details?.endCause}")
+    override fun onCallEnded(call: Call) {
+        Log.d(TAG, "Call ended with end cause ${call.details.endCause}")
         callItem?.updateBasedOnSinchCall(call, callDao)
-        if (call?.details?.endCause != CallEndCause.DENIED) { //Not initiated by the user
+        if (call.details.endCause != CallEndCause.DENIED) { //Not initiated by the user
             navigationEvents.postValue(Back)
         }
     }

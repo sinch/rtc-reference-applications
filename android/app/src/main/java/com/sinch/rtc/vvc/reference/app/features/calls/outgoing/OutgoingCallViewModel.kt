@@ -77,21 +77,19 @@ class OutgoingCallViewModel(
         }
     }
 
-    override fun onCallProgressing(call: Call?) {
+    override fun onCallProgressing(call: Call) {
         isCallProgressingMutable.value = true
         Log.d(TAG, "onCallProgressing for $call")
     }
 
-    override fun onCallEstablished(call: Call?) {
+    override fun onCallEstablished(call: Call) {
         Log.d(TAG, "onCallEstablished for $call")
         callItem.updateBasedOnSinchCall(call, callDao)
         isCallProgressingMutable.value = false
-        if (call != null) {
-            navigationEvents.postValue(EstablishedCall(this.callItem, call.callId))
-        }
+        navigationEvents.postValue(EstablishedCall(this.callItem, call.callId))
     }
 
-    override fun onCallEnded(call: Call?) {
+    override fun onCallEnded(call: Call) {
         Log.d(TAG, "onCallEnded for $call")
         callItem.updateBasedOnSinchCall(call, callDao)
         finishCurrentCall()
