@@ -4,6 +4,11 @@ import UIKit
 
 final class VideoCallViewController: UIViewController {
     
+    private enum Constant {
+        
+        static let cornerRadius: CGFloat = 6
+    }
+    
     @IBOutlet private var remoteUserName: UILabel!
     
     // Container for Sinch Video Controller to present remote user.
@@ -22,13 +27,37 @@ final class VideoCallViewController: UIViewController {
     
     @IBOutlet private var callTime: UILabel!
     
-    @IBOutlet private var muteButton: UIButton!
-    @IBOutlet private var speakerButton: UIButton!
-    @IBOutlet private var pauseButton: UIButton!
+    @IBOutlet private var muteButton: UIButton! {
+        didSet {
+            muteButton.layer.cornerRadius = Constant.cornerRadius
+        }
+    }
+    
+    @IBOutlet private var speakerButton: UIButton! {
+        didSet {
+            speakerButton.layer.cornerRadius = Constant.cornerRadius
+        }
+    }
+    
+    @IBOutlet private var pauseButton: UIButton! {
+        didSet {
+            pauseButton.layer.cornerRadius = Constant.cornerRadius
+        }
+    }
+    
+    @IBOutlet private var cameraButton: UIButton! {
+        didSet {
+            cameraButton.layer.cornerRadius = Constant.cornerRadius
+        }
+    }
     
     @IBOutlet private var buttonsStack: UIStackView!
     
-    @IBOutlet private var hangupButton: UIButton!
+    @IBOutlet private var hangupButton: UIButton! {
+        didSet {
+            hangupButton.setup(with: .hangup)
+        }
+    }
     
     // To end call, should be passed to VideoCallViewController.
     var call: SinchCall?

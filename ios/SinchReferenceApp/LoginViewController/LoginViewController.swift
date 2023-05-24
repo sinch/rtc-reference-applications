@@ -37,7 +37,11 @@ final class LoginViewController: UIViewController {
         }
     }
     
-    @IBOutlet private var loginButton: UIButton!
+    @IBOutlet private var loginButton: UIButton! {
+        didSet {
+            loginButton.setup(with: .login)
+        }
+    }
     
     private var hasValidSinchAppConfiguration: Bool {
         APPLICATION_KEY != "<APPLICATION KEY>" && APPLICATION_SECRET != "<APPLICATION SECRET>"

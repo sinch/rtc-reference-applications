@@ -62,7 +62,13 @@ final class SinchClientMediator: NSObject {
     private override init() {
         super.init()
         
-        let providerConfiguration = CXProviderConfiguration()
+        let providerConfiguration: CXProviderConfiguration
+        
+        if #available(iOS 14.0, *) {
+            providerConfiguration = CXProviderConfiguration()
+        } else {
+            providerConfiguration = CXProviderConfiguration(localizedName: "sinch_ref_app")
+        }
         // Identification of user for each call, .generic means that its based on uuid value.
         providerConfiguration.supportedHandleTypes = [.generic]
         // Value that indicates if call supports video.

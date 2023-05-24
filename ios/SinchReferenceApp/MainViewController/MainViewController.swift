@@ -62,6 +62,12 @@ final class MainViewController: UIViewController {
         }
     }
     
+    @IBOutlet private var callButton: UIButton! {
+        didSet {
+            callButton.setup(with: .call)
+        }
+    }
+    
     var userName: String?
     
     var cli: String = ""

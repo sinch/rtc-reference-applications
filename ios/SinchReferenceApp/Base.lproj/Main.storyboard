@@ -40,11 +40,12 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="EdQ-qt-pTM"/>
                                 </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="LOGIN">
-                                    <fontDescription key="titleFontDescription" type="system" pointSize="18"/>
-                                    <color key="baseBackgroundColor" systemColor="systemYellowColor"/>
-                                </buttonConfiguration>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="LOGIN">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="login:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hHZ-bE-wOT"/>
                                 </connections>
@@ -74,7 +75,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Note: " textAlignment="natural" lineBreakMode="clip" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="r4V-WP-epW">
-                                <rect key="frame" x="48" y="523" width="297" height="19.333333333333371"/>
+                                <rect key="frame" x="48" y="523" width="297" height="20.333333333333371"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -145,12 +146,10 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="kL0-q6-pGf"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                 <color key="tintColor" red="0.92128556969999997" green="0.49971959780000003" blue="0.42942682519999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" title="LOGOUT"/>
-                                <buttonConfiguration key="configuration" style="plain" title="LOGOUT">
-                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="14"/>
-                                </buttonConfiguration>
                                 <connections>
                                     <action selector="logout:" destination="fWq-ow-bYo" eventType="touchUpInside" id="jxK-k0-f2U"/>
                                 </connections>
@@ -160,11 +159,12 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="hzE-S3-1pv"/>
                                 </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" image="phone" catalog="system" imagePlacement="trailing" title="CALL" imagePadding="8">
-                                    <fontDescription key="titleFontDescription" type="system" pointSize="18"/>
-                                    <color key="baseBackgroundColor" red="0.39064448679899444" green="0.76854461984536082" blue="0.58036011292356904" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                </buttonConfiguration>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="8" maxY="0.0"/>
+                                <state key="normal" title="CALL" image="phone" catalog="system">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="call:" destination="fWq-ow-bYo" eventType="touchUpInside" id="F60-Dr-EAi"/>
                                 </connections>
@@ -268,6 +268,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="callButton" destination="FcG-eS-aLn" id="Yql-DZ-aUX"/>
                         <outlet property="noteLabel" destination="hY2-D1-jmb" id="cZS-Vs-lbb"/>
                         <outlet property="phoneLabel" destination="q6z-hg-IPq" id="vEe-Ig-eXg"/>
                         <outlet property="phoneTextField" destination="bIs-Ek-qKA" id="1Xu-bV-9Ab"/>
@@ -288,16 +289,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gl6-ea-6n6">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gl6-ea-6n6">
                                 <rect key="frame" x="24" y="758" width="345" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="QtT-Fl-iOd"/>
                                 </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" image="phone.down" catalog="system" imagePlacement="trailing" title="HANGUP" imagePadding="8">
-                                    <fontDescription key="titleFontDescription" type="system" pointSize="18"/>
-                                    <color key="baseBackgroundColor" red="0.92128556969999997" green="0.49971959780000003" blue="0.42942682519999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                </buttonConfiguration>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="8" maxY="0.0"/>
+                                <state key="normal" title="HANGUP" image="phone.down" catalog="system">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="hangup:" destination="AUR-Us-XQP" eventType="touchUpInside" id="CEZ-45-3iF"/>
                                 </connections>
@@ -319,7 +321,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="phone.and.waveform" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="2A7-ne-IjQ">
-                                <rect key="frame" x="96.666666666666686" y="164.66666666666666" width="200" height="118.33333333333329"/>
+                                <rect key="frame" x="96.666666666666686" y="164.66666666666666" width="200" height="118.33333333333334"/>
                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="120" id="9Os-9x-3Ny"/>
@@ -403,16 +405,17 @@
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tOS-Rk-mNr">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tOS-Rk-mNr">
                                 <rect key="frame" x="24" y="758" width="345" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="1UX-Hc-efu"/>
                                 </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" image="phone.down" catalog="system" imagePlacement="trailing" title="HANGUP" imagePadding="8">
-                                    <fontDescription key="titleFontDescription" type="system" pointSize="18"/>
-                                    <color key="baseBackgroundColor" red="0.92128556969999997" green="0.49971959780000003" blue="0.42942682519999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                </buttonConfiguration>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="8" maxY="0.0"/>
+                                <state key="normal" title="HANGUP" image="phone.down" catalog="system">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="hangup:" destination="gvz-6g-qP9" eventType="touchUpInside" id="6NI-Z9-eUm"/>
                                 </connections>
@@ -422,56 +425,56 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZRp-dI-gnK">
                                         <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                        <color key="backgroundColor" red="0.92156863209999995" green="0.85490196939999996" blue="0.4941176176" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="9kB-62-bxc"/>
                                             <constraint firstAttribute="width" constant="44" id="jUv-rJ-GKF"/>
                                         </constraints>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" image="pause.rectangle" catalog="system">
-                                            <color key="baseBackgroundColor" red="0.92156863209999995" green="0.85336236604078852" blue="0.49377201790102743" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        </buttonConfiguration>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" image="pause.rectangle" catalog="system"/>
                                         <connections>
                                             <action selector="togglePause:" destination="gvz-6g-qP9" eventType="touchUpInside" id="oAr-TP-TqJ"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4vr-GW-3cl">
                                         <rect key="frame" x="100.33333333333333" y="0.0" width="43.999999999999986" height="44"/>
+                                        <color key="backgroundColor" red="0.53333336109999996" green="0.46274507050000002" blue="0.86274516580000005" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="6Hg-gc-5Am"/>
                                             <constraint firstAttribute="width" constant="44" id="X4X-FH-jT8"/>
                                         </constraints>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" image="mic" catalog="system">
-                                            <color key="baseBackgroundColor" red="0.53287372249999998" green="0.4667076496" blue="0.85923405279999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        </buttonConfiguration>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" image="mic" catalog="system"/>
                                         <connections>
                                             <action selector="toggleMute:" destination="gvz-6g-qP9" eventType="touchUpInside" id="l8p-Cg-gBN"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yGk-fy-AyG">
                                         <rect key="frame" x="200.66666666666666" y="0.0" width="44" height="44"/>
+                                        <color key="backgroundColor" red="0.95032619200000001" green="0.70798353319999996" blue="0.48878503099999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="44" id="Aqs-xH-sFR"/>
                                             <constraint firstAttribute="height" constant="44" id="CMV-l7-hxq"/>
                                         </constraints>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" image="speaker" catalog="system">
-                                            <color key="baseBackgroundColor" red="0.95032619201030932" green="0.70798353321341212" blue="0.48878503103839893" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        </buttonConfiguration>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" image="speaker" catalog="system"/>
                                         <connections>
                                             <action selector="toggleSpeaker:" destination="gvz-6g-qP9" eventType="touchUpInside" id="bAo-f2-uxc"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IEf-jA-hPX">
                                         <rect key="frame" x="301" y="0.0" width="44" height="44"/>
+                                        <color key="backgroundColor" red="0.53475800829999998" green="0.72347433569999997" blue="0.92156863209999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="93K-rJ-5XQ"/>
                                             <constraint firstAttribute="width" constant="44" id="gem-Vg-Cd3"/>
                                         </constraints>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" image="arrow.triangle.2.circlepath.camera" catalog="system">
-                                            <color key="baseBackgroundColor" red="0.53475800833995835" green="0.72347433571431008" blue="0.92156863209999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        </buttonConfiguration>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" image="arrow.triangle.2.circlepath.camera" catalog="system"/>
                                         <connections>
                                             <action selector="switchCamera:" destination="gvz-6g-qP9" eventType="touchUpInside" id="s7b-EP-m3z"/>
                                         </connections>
@@ -511,6 +514,7 @@
                     <connections>
                         <outlet property="buttonsStack" destination="bSY-l5-5um" id="QfN-MB-BaV"/>
                         <outlet property="callTime" destination="au6-kV-DlM" id="TDN-oP-UTe"/>
+                        <outlet property="cameraButton" destination="IEf-jA-hPX" id="yW5-Ve-dKl"/>
                         <outlet property="hangupButton" destination="tOS-Rk-mNr" id="Dw4-fI-jJd"/>
                         <outlet property="localVideoView" destination="74I-Zd-KLW" id="er1-6E-L2w"/>
                         <outlet property="muteButton" destination="4vr-GW-3cl" id="cjJ-zf-yIa"/>
@@ -539,9 +543,6 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemYellowColor">
-            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

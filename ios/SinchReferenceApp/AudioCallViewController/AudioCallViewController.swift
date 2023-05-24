@@ -6,7 +6,11 @@ final class AudioCallViewController: UIViewController {
     
     @IBOutlet private var callInfoLabel: UILabel!
     
-    @IBOutlet private var hangupButton: UIButton!
+    @IBOutlet private var hangupButton: UIButton! {
+        didSet {
+            hangupButton.setup(with: .hangup)
+        }
+    }
     
     // To end call, should be passed to AudioCallViewController.
     var call: SinchCall?
