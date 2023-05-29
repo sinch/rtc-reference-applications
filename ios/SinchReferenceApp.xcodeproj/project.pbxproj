@@ -60,7 +60,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				AEA849C529D572E400715A9E /* SinchRTC.xcframework in Embed Frameworks */,
-				AE6A6AC82A14BF9B00A10DDB /* SinchRTC.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -197,7 +196,6 @@
 			isa = PBXGroup;
 			children = (
 				AEA849C329D572E400715A9E /* SinchRTC.xcframework */,
-				AE6A6AC62A14BF9A00A10DDB /* SinchRTC.xcframework */,
 				AE52FEDB29B0A8B10052D62B /* SystemConfiguration.framework */,
 				AEE9CDBA299CE00E00F860C3 /* Metal.framework */,
 				AEE9CDB8299CE00600F860C3 /* QuartzCore.framework */,
@@ -300,8 +298,8 @@
 				AEE9CD66299CD36E00F860C3 /* Sources */,
 				AEE9CD67299CD36E00F860C3 /* Frameworks */,
 				AEE9CD68299CD36E00F860C3 /* Resources */,
-				AEEE418A29C450BB006E6F60 /* Embed Frameworks */,
 				AE6A6AC92A14BF9C00A10DDB /* Embed Frameworks */,
+				AEACFE082A1F408D007A5870 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -360,6 +358,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		AEACFE082A1F408D007A5870 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$SRCROOT/swiftlint_if_available.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		AEE9CD66299CD36E00F860C3 /* Sources */ = {

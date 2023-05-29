@@ -11,7 +11,6 @@ disabled_rules:
   - trailing_whitespace
   - void_function_in_ternary
 opt_in_rules:
-  - anyobject_protocol
   - closure_spacing
   - collection_alignment
   - convenience_type
