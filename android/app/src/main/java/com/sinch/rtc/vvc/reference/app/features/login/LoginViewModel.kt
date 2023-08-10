@@ -8,7 +8,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import com.google.firebase.FirebaseApp
-import com.sinch.android.rtc.*
+import com.google.firebase.messaging.FirebaseMessaging
+import com.sinch.android.rtc.ClientRegistration
+import com.sinch.android.rtc.PushConfiguration
+import com.sinch.android.rtc.PushTokenRegistrationCallback
+import com.sinch.android.rtc.SinchError
+import com.sinch.android.rtc.UserController
+import com.sinch.android.rtc.UserRegistrationCallback
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
@@ -19,7 +25,7 @@ import com.sinch.rtc.vvc.reference.app.storage.prefs.SharedPrefsManager
 import com.sinch.rtc.vvc.reference.app.utils.jwt.JWTFetcher
 import com.sinch.rtc.vvc.reference.app.utils.jwt.getString
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
-import java.util.*
+import java.util.Date
 
 class LoginViewModel(
     application: Application,
@@ -61,6 +67,21 @@ class LoginViewModel(
             isUserRegistered = false,
             isPushTokenRegistered = false
         )
+        if (prefsManager.fcmRegistrationToken.isEmpty()) {
+            FirebaseMessaging.getInstance().token.addOnCompleteListener {
+                if (it.isSuccessful) {
+                    prefsManager.fcmRegistrationToken = it.result.orEmpty()
+                    createUC(username)
+                } else {
+                    resetToIdleWithErrorMessage(getString(R.string.fcm_not_available))
+                }
+            }
+        } else {
+            createUC(username)
+        }
+    }
+
+    private fun createUC(username: String) {
         UserController.builder()
             .context(getApplication())
             .applicationKey(appConfig.appKey)

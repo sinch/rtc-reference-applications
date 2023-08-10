@@ -13,7 +13,9 @@ class RTCVoiceVideoReferenceApp : Application() {
     override fun onCreate() {
         super.onCreate()
         FirebaseMessaging.getInstance().token.addOnCompleteListener {
-            prefsManager.fcmRegistrationToken = it.result.orEmpty()
+            if (it.isSuccessful) {
+                prefsManager.fcmRegistrationToken = it.result.orEmpty()
+            }
         }
     }
 

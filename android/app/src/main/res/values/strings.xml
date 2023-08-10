@@ -35,6 +35,8 @@
     <string name="username_hint">Username</string>
     <string name="play_services_not_available_error_message">Play services not available</string>
     <string name="logging_timeout_error_message">Timeout error while logging in</string>
+    <string name="fcm_not_available">Error while getting FCM registration token. Make sure you\'re online and
+        try again.</string>
 
     <!-- Settings screen -->
     <string name="logout">Logout</string>
