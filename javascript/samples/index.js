@@ -40,10 +40,10 @@ export const toggleSecretVisibility = (id, visibilityElementId) => () => {
 
 keyVisibilityElem.addEventListener(
   "click",
-  toggleSecretVisibility("key", "keyVisibility")
+  toggleSecretVisibility("key", "keyVisibility"),
 );
 
 secretVisibilityElem.addEventListener(
   "click",
-  toggleSecretVisibility("secret", "secretVisibility")
+  toggleSecretVisibility("secret", "secretVisibility"),
 );

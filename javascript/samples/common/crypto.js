@@ -17,7 +17,7 @@ export default class Crypto {
     return crypto.subtle.sign(
       this.algorithm,
       key,
-      this.convertUTF8ToArrayBuffer(data)
+      this.convertUTF8ToArrayBuffer(data),
     );
   }
 
@@ -28,7 +28,7 @@ export default class Crypto {
   static convertArrayBufferToHex(data) {
     return Array.from(new Uint8Array(data), (byte) =>
       // eslint-disable-next-line no-bitwise
-      `0${(byte & 0xff).toString(16)}`.slice(-2)
+      `0${(byte & 0xff).toString(16)}`.slice(-2),
     ).join("");
   }
 

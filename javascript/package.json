@@ -5,12 +5,12 @@
   "author": "Sinch",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^8.14.0",
+    "eslint": "^8.46.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "^2.26.0",
-    "lint-staged": "^11.2.6",
-    "prettier": "2.4.1"
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.28.0",
+    "lint-staged": "^13.2.3",
+    "prettier": "3.0.1"
   },
   "lint-staged": {
     "*.js": "eslint --fix --cache",
@@ -22,7 +22,7 @@
     "lint": "prettier --check . && eslint '**/*.js'"
   },
   "engines": {
-    "npm": ">=8.0.0",
+    "npm": ">=8.11.0",
     "node": ">=16.0.0"
   }
 }

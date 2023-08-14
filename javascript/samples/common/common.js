@@ -24,7 +24,7 @@ export const setupLogin = async (applicationKey, applicationSecret, userId) => {
   const jwtToken = await new JWT(
     applicationKey,
     applicationSecret,
-    userId
+    userId,
   ).toJwt();
   sessionStorage.setItem(JWT_TOKEN_KEY, jwtToken);
   sessionStorage.setItem(APPLICATION_KEY, applicationKey);

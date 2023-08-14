@@ -54,7 +54,7 @@ export default class JWT {
   async signToken(headers, payload, signingKey) {
     const signature = await Crypto.hmacSHA256(
       `${headers}.${payload}`,
-      signingKey
+      signingKey,
     );
     return this.makeURLSafe(Crypto.toBase64(new Uint8Array(signature)));
   }
@@ -63,18 +63,18 @@ export default class JWT {
     const date = this.formatDate(this.iat);
     const signingKey = await Crypto.hmacSHA256(
       date,
-      Crypto.fromBase64(this.base64Secret)
+      Crypto.fromBase64(this.base64Secret),
     );
     const encodedHeaders = this.convertObjectToBase64(
-      this.sortObject(this.headers())
+      this.sortObject(this.headers()),
     );
     const encodedPayload = this.convertObjectToBase64(
-      this.sortObject(this.payload())
+      this.sortObject(this.payload()),
     );
     const signature = await this.signToken(
       encodedHeaders,
       encodedPayload,
-      signingKey
+      signingKey,
     );
     return `${encodedHeaders}.${encodedPayload}.${signature}`;
   }

@@ -11,6 +11,6 @@ this.addEventListener("push", (event) => {
             data: body,
           });
         });
-      })
+      }),
   );
 });
