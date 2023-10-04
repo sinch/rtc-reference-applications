@@ -13,6 +13,7 @@ class SharedPrefsManager(private val appContext: Application) {
         private const val APP_KEY = "app_key"
         private const val APP_SECRET_KEY = "app_secret"
         private const val ENV_KEY = "environment"
+        private const val CLI_KEY = "cli"
         private const val IS_CUSTOM_ENV_KEY = "is_custom_key"
         private const val USED_DEF_NAME_KEY = "def_pos_key"
         private const val FCM_REG_TOKEN_KEY = "fcm_token"
@@ -30,7 +31,7 @@ class SharedPrefsManager(private val appContext: Application) {
                     customAppKey,
                     customAppSecret,
                     customEnvironment,
-                    "",
+                    customCli,
                     true
                 )
             } else {
@@ -45,6 +46,7 @@ class SharedPrefsManager(private val appContext: Application) {
                 customAppKey = value.appKey
                 customAppSecret = value.appSecret
                 customEnvironment = value.environment
+                customCli = value.cli.orEmpty()
             } else {
                 usedDefaultConfigName = value.name
             }
@@ -72,6 +74,12 @@ class SharedPrefsManager(private val appContext: Application) {
         get() = preferences[APP_SECRET_KEY, ""]
         set(value) {
             preferences[APP_SECRET_KEY] = value
+        }
+
+    private var customCli: String
+        get() = preferences[CLI_KEY, ""]
+        set(value) {
+            preferences[CLI_KEY] = value
         }
 
     private var customEnvironment: String
