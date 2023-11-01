@@ -41,6 +41,7 @@ export default class VoiceCallSinchClientWrapper {
 
         this.ui.onClientStarted(sinchClient);
       },
+
       onCredentialsRequired: (sinchClient, clientRegistration) => {
         getJwtToken()
           .then(clientRegistration.register)
@@ -49,6 +50,7 @@ export default class VoiceCallSinchClientWrapper {
             console.error(error);
           });
       },
+
       onClientFailed: (sinchClient, error) => {
         console.log("Sinch - Start client failed");
         console.error(error);
