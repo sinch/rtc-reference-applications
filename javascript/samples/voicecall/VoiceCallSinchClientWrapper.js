@@ -49,7 +49,6 @@ export default class VoiceCallSinchClientWrapper {
             console.error(error);
           });
       },
-
       onClientFailed: (sinchClient, error) => {
         console.log("Sinch - Start client failed");
         console.error(error);
