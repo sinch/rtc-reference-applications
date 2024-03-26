@@ -77,7 +77,7 @@ class EstablishedCallViewModel(
         SingleLiveEvent()
     val messageEvents: SingleLiveEvent<String> = SingleLiveEvent()
 
-    val videoPermissionsRequestEvent = SingleLiveEvent<Unit>()
+    val videoPermissionsRequestEvent = SingleLiveEvent<Unit?>()
     val audioCallProperties: LiveData<AudioCallProperties> = audioCallPropertiesMutable
     val videoCallProperties: LiveData<VideoCallProperties?> = videoCallPropertiesMutable
     val callProperties: LiveData<CallProperties> = callPropertiesMutable
