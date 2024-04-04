@@ -21,6 +21,7 @@ stages:
     - Cut Release
     - Build
     # Add test stage when build system will be ready for it
+    - Update SDK version
     - Test Dist Sample Apps
 
 ############################################## pipeline jobs
@@ -51,6 +52,7 @@ build:ios:device:release:
     
     extends:
         - .conf:ios:runner:tags
+        - .conf:rule:default
         - .lint:ios:do
         - .build:ios:do
 
@@ -67,6 +69,9 @@ test:android:dist:samples:
 
 lint:javascript:
     stage: Lint Javascript
+
+    extends:
+        - .conf:rule:default
     
     tags:
         - rtc-mac-docker
@@ -77,3 +82,21 @@ lint:javascript:
         - cd javascript
         - npm ci
         - npm run lint
+
+
+# Multi project job
+
+update:sdk:version:android:
+    stage: Update SDK version
+    extends:
+        - .conf:rule:android:update:sdk
+    tags:
+        - rtc-mac
+    script:
+        - ./scripts/ci_update_android_version.sh $SDK_VERSION $SDK_REVISION
+    needs:
+        - project: sinch/sinch-projects/voice/vvc-client-sdk/android-sdk
+          job: ${ARTIFACT_JOB_NAME}
+          ref: ${PARENT_REF}
+          artifacts: true
+          
