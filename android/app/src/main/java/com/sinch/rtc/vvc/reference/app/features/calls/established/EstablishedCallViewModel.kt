@@ -100,6 +100,7 @@ class EstablishedCallViewModel(
                 ) != PackageManager.PERMISSION_GRANTED
             )
         }
+        currentAudioState = AudioState.AAR
         sinchClient.audioController.setMuted(false)
         updateAudioProperties()
         updateVideoProperties()
@@ -180,7 +181,6 @@ class EstablishedCallViewModel(
     }
 
     override fun onCallEstablished(call: Call) {
-        currentAudioState = AudioState.AAR
         callItem.updateBasedOnSinchCall(call, callDao)
         Log.d(TAG, "onCallEstablished $call")
     }
