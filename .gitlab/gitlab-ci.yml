@@ -99,4 +99,18 @@ update:sdk:version:android:
           job: ${ARTIFACT_JOB_NAME}
           ref: ${PARENT_REF}
           artifacts: true
+
+update:sdk:version:ios:
+    stage: Update SDK version
+    extends:
+        - .conf:rule:ios:update:sdk
+    tags:
+        - rtc-mac
+    script:
+        - ./scripts/ci_update_ios_version.sh "$SDK_VERSION%2b$SDK_REVISION"
+    needs:
+        - project: sinch/sinch-projects/voice/vvc-client-sdk/ios-sdk
+          job: ${ARTIFACT_JOB_NAME}
+          ref: ${PARENT_REF}
+          artifacts: true
           
