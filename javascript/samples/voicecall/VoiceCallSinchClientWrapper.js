@@ -16,8 +16,9 @@ export default class VoiceCallSinchClientWrapper {
       .build();
 
     sinchClient.addListener(this.#sinchClientListener());
-    sinchClient.setSupportManagedPush();
-    sinchClient.start();
+    sinchClient.setSupportManagedPush().then(() => {
+      sinchClient.start();
+    });
 
     this.sinchClient = sinchClient;
   }

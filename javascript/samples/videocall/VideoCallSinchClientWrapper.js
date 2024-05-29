@@ -22,8 +22,9 @@ export default class VideoCallSinchClientWrapper {
       .environmentHost(API_URL)
       .build();
     this.sinchClient.addListener(this.#sinchClientListener());
-    this.sinchClient.setSupportManagedPush();
-    this.sinchClient.start();
+    this.sinchClient.setSupportManagedPush().then(() => {
+      this.sinchClient.start();
+    });
   }
 
   async makeCall(callee) {
