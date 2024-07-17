@@ -82,6 +82,11 @@ class OutgoingCallViewModel(
         Log.d(TAG, "onCallProgressing for $call")
     }
 
+    override fun onCallAnswered(call: Call) {
+        super.onCallAnswered(call)
+        Log.d(TAG, "onCallAnswered for $call")
+    }
+
     override fun onCallEstablished(call: Call) {
         Log.d(TAG, "onCallEstablished for $call")
         callItem.updateBasedOnSinchCall(call, callDao)
