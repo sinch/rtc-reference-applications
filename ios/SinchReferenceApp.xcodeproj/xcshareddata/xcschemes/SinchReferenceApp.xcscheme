@@ -10,7 +10,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Download SinchRTC SDK"
-               scriptText = "cd $SRCROOT&#10;./SinchReferenceApp/fetch_xcframework_if_needed.sh&#10;">
+               scriptText = "cd $SRCROOT&#10;./fetch_xcframework_if_needed.sh&#10;">
                <EnvironmentBuildable>
                   <BuildableReference
                      BuildableIdentifier = "primary"

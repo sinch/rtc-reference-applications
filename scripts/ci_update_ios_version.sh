@@ -10,7 +10,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "${SCRIPT_DIR}/ci_update_in_pipeline.include.sh"
 
 NEW_VERSION="$1"
-UPDATE_SCRIPT="$SCRIPT_DIR/../ios/SinchReferenceApp/fetch_xcframework_if_needed.sh"
+UPDATE_SCRIPT="$SCRIPT_DIR/../ios/fetch_xcframework_if_needed.sh"
 
 sed -i '' "/^readonly SDK_VERSION/c\\
 readonly SDK_VERSION=\"$NEW_VERSION\"\\

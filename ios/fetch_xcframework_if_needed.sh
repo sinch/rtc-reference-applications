@@ -2,13 +2,13 @@
 
 set -euo pipefail
 
-readonly SDK_VERSION="5.21.15%2b24d6a258"
+readonly SDK_VERSION="5.31.18%2b735a0f88"
 
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 readonly SDK_SHORT_VERSION=$(echo $SDK_VERSION | cut -d% -f1)
 readonly SDK_URL="https://download.sinch.com/ios/$SDK_SHORT_VERSION/SinchRTC-iOS-$SDK_VERSION.tar.bz2"
-readonly XCFRAMEWORK_PATH="$SCRIPT_DIR/../SinchRTC.xcframework"
-readonly VERSION_FILE_PATH="$SCRIPT_DIR/../version.txt"
+readonly XCFRAMEWORK_PATH="$SCRIPT_DIR/SinchRTC.xcframework"
+readonly VERSION_FILE_PATH="$SCRIPT_DIR/version.txt"
 
 log() {
   # Redirect to stderr to get the output in XCode build log.
