@@ -16,7 +16,12 @@ import com.sinch.rtc.vvc.reference.app.storage.converters.VideoScalingTypeConver
 
 
 @Database(entities = [User::class, CallItem::class], version = 1, exportSchema = false)
-@TypeConverters(CallTypeConverter::class, DateConverter::class, VideoScalingTypeConverter::class, EndCauseConverter::class)
+@TypeConverters(
+    CallTypeConverter::class,
+    DateConverter::class,
+    VideoScalingTypeConverter::class,
+    EndCauseConverter::class
+)
 abstract class RTCVoiceVideoAppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao

@@ -9,6 +9,8 @@ import com.sinch.android.rtc.MissingPermissionException
 import com.sinch.android.rtc.calling.Call
 import com.sinch.android.rtc.calling.CallController
 import com.sinch.android.rtc.calling.CallListener
+import com.sinch.android.rtc.calling.CallState
+import com.sinch.rtc.vvc.reference.app.application.service.NewCallHook
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.requiredPermissions
@@ -21,6 +23,7 @@ import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 
 class OutgoingCallViewModel(
     private val callController: CallController,
+    private val newCallHook: NewCallHook,
     private val prefsManager: SharedPrefsManager,
     private val callItem: CallItem,
     private val callDao: CallDao,
@@ -28,12 +31,12 @@ class OutgoingCallViewModel(
 ) :
     AndroidViewModel(application), CallListener {
 
-    private val isCallProgressingMutable: MutableLiveData<Boolean> = MutableLiveData(false)
+    private val callStateMutable: MutableLiveData<CallState> = MutableLiveData()
 
     val navigationEvents: SingleLiveEvent<OutgoingCallNavigationEvent> = SingleLiveEvent()
     val permissionsRequiredEvent: SingleLiveEvent<List<String>> = SingleLiveEvent()
 
-    val isCallProgressing: LiveData<Boolean> get() = isCallProgressingMutable
+    val callState: LiveData<CallState> get() = callStateMutable
     val callItemLiveData: LiveData<CallItem> get() = MutableLiveData(callItem)
 
     private var sinchCall: Call? = null //We have to store it as user can cancel the call first
@@ -75,27 +78,39 @@ class OutgoingCallViewModel(
         } catch (e: MissingPermissionException) {
             permissionsRequiredEvent.postValue(callItem.type.requiredPermissions)
         }
+        sinchCall?.let {
+            newCallHook.onNewSinchCall(it)
+            issueCallStateUpdate(it)
+        }
     }
 
     override fun onCallProgressing(call: Call) {
-        isCallProgressingMutable.value = true
+        issueCallStateUpdate(call)
         Log.d(TAG, "onCallProgressing for $call")
+    }
+
+    override fun onCallRinging(call: Call) {
+        super.onCallRinging(call)
+        issueCallStateUpdate(call)
+        Log.d(TAG, "onCallAnswered for $call")
     }
 
     override fun onCallAnswered(call: Call) {
         super.onCallAnswered(call)
+        issueCallStateUpdate(call)
         Log.d(TAG, "onCallAnswered for $call")
     }
 
     override fun onCallEstablished(call: Call) {
         Log.d(TAG, "onCallEstablished for $call")
+        issueCallStateUpdate(call)
         callItem.updateBasedOnSinchCall(call, callDao)
-        isCallProgressingMutable.value = false
         navigationEvents.postValue(EstablishedCall(this.callItem, call.callId))
     }
 
     override fun onCallEnded(call: Call) {
         Log.d(TAG, "onCallEnded for $call")
+        issueCallStateUpdate(call)
         callItem.updateBasedOnSinchCall(call, callDao)
         finishCurrentCall()
         navigationEvents.postValue(Back)
@@ -106,8 +121,11 @@ class OutgoingCallViewModel(
         sinchCall?.removeCallListener(this)
     }
 
+    private fun issueCallStateUpdate(call: Call) {
+        callStateMutable.postValue(call.state)
+    }
+
     private fun finishCurrentCall() {
-        isCallProgressingMutable.value = false
         sinchCall?.hangup()
     }
 

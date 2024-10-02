@@ -17,7 +17,7 @@ import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.Destinat
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.PSTNDestinationValidator
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.SipDestinationValidator
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
-import java.util.*
+import java.util.Date
 
 class NewCallViewModel(
     initialCallItem: CallItem?,

@@ -17,4 +17,6 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 
+    <style name="AlertDialogQQWarning" parent="Theme.AppCompat.Light.Dialog.Alert"></style>
+
 </resources>

@@ -1,6 +1,6 @@
 package com.sinch.rtc.vvc.reference.app.utils.extensions
 
-import java.util.*
+import java.util.Date
 
 val Date.isSet: Boolean get() = time != 0L
 

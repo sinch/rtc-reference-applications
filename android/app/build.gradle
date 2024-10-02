@@ -23,7 +23,7 @@ def requiredConfigFileParamsMissingMessage = "You are building Sinch Android Ref
 
 def googleServicesJsonFilePath = "./google-services.json"
 def googleServicesJsonMissingMessage = "You are building Sinch Android Reference Sample Application project that uses Firebase Cloud Messaging for delivering push notifications.\n" +
-        "In order for push notification to work you must generate and include your application specific (with correspondent \"package_name\") google-services.json file.\n"+
+        "In order for push notification to work you must generate and include your application specific (with correspondent \"package_name\") google-services.json file.\n" +
         "Follow the Firebase Cloud Messaging manual here https://firebase.google.com/docs/android/setup to get one.\n" +
         "For more information regarding Sinch Managed Push Notifications refer to https://developers.sinch.com/docs/voice-android-cloud-push-notifications#2-provision-the-application-with-the-support-code"
 
@@ -35,11 +35,11 @@ task runMakeSync(type: Exec) {
 
 task runMakeSyncIfNeeded() {
     def libs = fileTree("libs").filter { it.isFile() }.files.name
-    def isRTCSDKAlreadySynced = libs.findAll { it.contains("sinch-android-rtc")}
+    def isRTCSDKAlreadySynced = libs.findAll { it.contains("sinch-android-rtc") }
     if (!isRTCSDKAlreadySynced) {
         finalizedBy(runMakeSync)
     } else {
-        println ("Sync skipped. VVC SDK already present.")
+        println("Sync skipped. VVC SDK already present.")
     }
 }
 

@@ -8,8 +8,8 @@ data class AudioCallProperties(
     val audioState: AudioState
 ) {
     constructor(audioController: AudioController, audioState: AudioState) :
-            this(
-                isMuted = audioController.isMute,
-                audioState = audioState
-            )
+        this(
+            isMuted = audioController.isMute,
+            audioState = audioState
+        )
 }

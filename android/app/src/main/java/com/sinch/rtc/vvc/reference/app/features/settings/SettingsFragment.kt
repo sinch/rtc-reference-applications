@@ -107,6 +107,7 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
                         binding.localVideoScalingSpinner -> viewModel.onLocalScalingChanged(
                             chosenValue
                         )
+
                         binding.remoteVideoScalingSpinner -> viewModel.onRemoteScalingChanged(
                             chosenValue
                         )

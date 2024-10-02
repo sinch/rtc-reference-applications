@@ -33,15 +33,18 @@ val CallType.requiredPermissions: List<String>
                 Manifest.permission.RECORD_AUDIO,
                 bluetoothPermission,
             )
+
             CallType.AppToAppAudio -> listOf(
                 Manifest.permission.RECORD_AUDIO,
                 bluetoothPermission
             )
+
             CallType.AppToAppVideo -> listOf(
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.CAMERA,
                 bluetoothPermission
             )
+
             else -> emptyList()
         }
     }

@@ -17,13 +17,13 @@ import androidx.core.content.FileProvider
 import com.sinch.android.rtc.video.VideoFrame
 import com.sinch.android.rtc.video.VideoUtils
 import com.sinch.rtc.vvc.reference.app.R
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
 
 class ScreenshotCoroutineSaver(
     private val context: Context,

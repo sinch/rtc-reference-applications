@@ -1,15 +1,19 @@
 package com.sinch.rtc.vvc.reference.app.features.calls.outgoing
 
+import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.sinch.android.rtc.calling.CallState
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.RTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentOutgoingCallBinding
 import com.sinch.rtc.vvc.reference.app.utils.base.fragment.MainActivityFragment
+import com.sinch.rtc.vvc.reference.app.utils.extensions.UriHelper
 
 class OutgoingCallFragment :
     MainActivityFragment<FragmentOutgoingCallBinding>(R.layout.fragment_outgoing_call) {
@@ -23,12 +27,22 @@ class OutgoingCallFragment :
         RTCVoiceVideoRefAppAndroidViewModelFactory(
             requireActivity().application,
             args,
-            mainActivityViewModel.sinchClient
+            mainActivityViewModel.sinchClientServiceBinder
         )
     }
 
     private val progressingCallTonePlayer: MediaPlayer by lazy {
-        MediaPlayer.create(requireContext(), R.raw.progress_out).apply { isLooping = true }
+        MediaPlayer().apply {
+            setDataSource(requireContext(), UriHelper.uriForResource(requireContext(), R.raw.progress_out))
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build()
+            )
+            isLooping = true
+            prepare()
+        }
     }
 
     override fun setupBinding(root: View): FragmentOutgoingCallBinding =
@@ -39,17 +53,29 @@ class OutgoingCallFragment :
         binding.cancelButton.setOnClickListener {
             viewModel.onCancelButtonPressed()
         }
+        binding.stateTextView.startAnimation(
+            AnimationUtils.loadAnimation(context, R.anim.blink)
+        )
         viewModel.navigationEvents.observe(viewLifecycleOwner) {
             handleNavigationEvent(it)
         }
         viewModel.permissionsRequiredEvent.observe(viewLifecycleOwner) {
             handlePermissionsRequired(it)
         }
-        viewModel.isCallProgressing.observe(viewLifecycleOwner) { isProgressing ->
-            if (isProgressing) {
+        viewModel.callState.observe(viewLifecycleOwner) { callState ->
+            if (callState == CallState.RINGING) {
                 progressingCallTonePlayer.start()
             } else if (progressingCallTonePlayer.isPlaying) {
                 progressingCallTonePlayer.stop()
+            }
+            val stateText = when (callState) {
+                CallState.INITIATING, CallState.PROGRESSING -> R.string.initiating
+                CallState.RINGING -> R.string.calling
+                CallState.ANSWERED -> R.string.connecting
+                else -> null
+            }
+            if (stateText != null) {
+                binding.stateTextView.setText(stateText)
             }
         }
         viewModel.callItemLiveData.observe(viewLifecycleOwner) {
@@ -90,6 +116,7 @@ class OutgoingCallFragment :
                     )
                 )
             }
+
             Back -> findNavController().popBackStack()
         }
     }

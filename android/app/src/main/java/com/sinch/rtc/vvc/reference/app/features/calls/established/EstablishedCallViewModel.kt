@@ -1,17 +1,23 @@
 package com.sinch.rtc.vvc.reference.app.features.calls.established
 
 import android.Manifest
-import android.app.*
+import android.app.Application
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
 import android.text.format.DateUtils
 import android.util.Log
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
 import com.sinch.android.rtc.SinchClient
 import com.sinch.android.rtc.calling.Call
 import com.sinch.android.rtc.calling.CallListener
+import com.sinch.android.rtc.callquality.warnings.CallQualityWarningEvent
+import com.sinch.android.rtc.callquality.warnings.CallQualityWarningEventListener
 import com.sinch.android.rtc.video.RemoteVideoFrameListener
 import com.sinch.android.rtc.video.VideoFrame
 import com.sinch.rtc.vvc.reference.app.R
@@ -22,14 +28,25 @@ import com.sinch.rtc.vvc.reference.app.domain.calls.properties.AudioCallProperti
 import com.sinch.rtc.vvc.reference.app.domain.calls.properties.CallProperties
 import com.sinch.rtc.vvc.reference.app.domain.calls.properties.VideoCallProperties
 import com.sinch.rtc.vvc.reference.app.domain.user.User
-import com.sinch.rtc.vvc.reference.app.features.calls.established.screenshot.*
-import com.sinch.rtc.vvc.reference.app.utils.extensions.*
+import com.sinch.rtc.vvc.reference.app.features.calls.established.screenshot.Capturing
+import com.sinch.rtc.vvc.reference.app.features.calls.established.screenshot.Error
+import com.sinch.rtc.vvc.reference.app.features.calls.established.screenshot.FrameCaptureState
+import com.sinch.rtc.vvc.reference.app.features.calls.established.screenshot.Idle
+import com.sinch.rtc.vvc.reference.app.features.calls.established.screenshot.ScreenshotCoroutineSaver
+import com.sinch.rtc.vvc.reference.app.features.calls.established.screenshot.Triggered
+import com.sinch.rtc.vvc.reference.app.utils.extensions.PermissionRequestResult
+import com.sinch.rtc.vvc.reference.app.utils.extensions.areAllPermissionsGranted
+import com.sinch.rtc.vvc.reference.app.utils.extensions.isFrontCameraUsedForCapture
+import com.sinch.rtc.vvc.reference.app.utils.extensions.setAutomaticRoutingEnabled
+import com.sinch.rtc.vvc.reference.app.utils.extensions.setMuted
+import com.sinch.rtc.vvc.reference.app.utils.extensions.setSpeakerEnabled
+import com.sinch.rtc.vvc.reference.app.utils.extensions.updateBasedOnSinchCall
 import com.sinch.rtc.vvc.reference.app.utils.jwt.getString
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
+import java.util.Date
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
 
 class EstablishedCallViewModel(
     private val sinchClient: SinchClient,
@@ -39,7 +56,7 @@ class EstablishedCallViewModel(
     private val callItem: CallItem,
     private val app: Application
 ) :
-    AndroidViewModel(app), CallListener, RemoteVideoFrameListener {
+    AndroidViewModel(app), CallListener, RemoteVideoFrameListener, CallQualityWarningEventListener {
 
     companion object {
         const val TAG = "EstablishCallViewModel"
@@ -51,6 +68,7 @@ class EstablishedCallViewModel(
     private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     private var sinchCall: Call? = null //We have to store it as user can cancel the call first
+    private val qualityWarningEventsMutable: MutableLiveData<CallQualityWarningEvent> = MutableLiveData()
     private val callPropertiesMutable: MutableLiveData<CallProperties> = MutableLiveData()
     private val audioCallPropertiesMutable: MutableLiveData<AudioCallProperties> = MutableLiveData()
     private val videoCallPropertiesMutable: MutableLiveData<VideoCallProperties?> =
@@ -80,6 +98,7 @@ class EstablishedCallViewModel(
     val videoPermissionsRequestEvent = SingleLiveEvent<Unit?>()
     val audioCallProperties: LiveData<AudioCallProperties> = audioCallPropertiesMutable
     val videoCallProperties: LiveData<VideoCallProperties?> = videoCallPropertiesMutable
+    val qualityWarningEvents: LiveData<CallQualityWarningEvent> = qualityWarningEventsMutable
     val callProperties: LiveData<CallProperties> = callPropertiesMutable
     val captureState: LiveData<FrameCaptureState> = frameCaptureStateMutable
 
@@ -88,6 +107,7 @@ class EstablishedCallViewModel(
             sinchClient.callController.getCall(sinchCallId)
                 ?.apply {
                     addCallListener(this@EstablishedCallViewModel)
+                    qualityController.addCallQualityWarningEventListener(this@EstablishedCallViewModel)
                 }
         sinchCall?.takeIf { it.details.isVideoOffered }?.let {
             sinchClient.videoController.setResizeBehaviour(loggedInUser.remoteScalingType)
@@ -191,8 +211,13 @@ class EstablishedCallViewModel(
         navigationEvents.postValue(Back)
     }
 
+    override fun onCallQualityWarningEvent(callQualityWarningEvent: CallQualityWarningEvent) {
+        qualityWarningEventsMutable.postValue(callQualityWarningEvent)
+    }
+
     override fun onCleared() {
         super.onCleared()
+        sinchCall?.qualityController?.removeCallQualityWarningEventListener(this)
         sinchCall?.hangup()
         sinchCall?.removeCallListener(this)
         sinchCall?.takeIf { it.details.isVideoOffered }?.let {
@@ -216,7 +241,7 @@ class EstablishedCallViewModel(
         val checkCallTimeRunnable = object : Runnable {
             override fun run() {
                 checkCallTime()
-                if(sinchCall?.details?.isVideoOffered == true) {
+                if (sinchCall?.details?.isVideoOffered == true) {
                     checkLastFrameTimestamp()
                 }
                 mainThreadHandler.postDelayed(this, delayMS)

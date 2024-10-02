@@ -1,19 +1,24 @@
 package com.sinch.rtc.vvc.reference.app.features.calls.incoming
 
+import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.sinch.android.rtc.calling.CallState
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.RTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentIncomingCallBinding
 import com.sinch.rtc.vvc.reference.app.utils.base.fragment.MainActivityFragment
+import com.sinch.rtc.vvc.reference.app.utils.extensions.UriHelper
 import com.sinch.rtc.vvc.reference.app.utils.extensions.safeStop
+
 
 class IncomingCallFragment :
     MainActivityFragment<FragmentIncomingCallBinding>(R.layout.fragment_incoming_call) {
@@ -27,12 +32,22 @@ class IncomingCallFragment :
         RTCVoiceVideoRefAppAndroidViewModelFactory(
             requireActivity().application,
             args,
-            sinchClient = mainActivityViewModel.sinchClient
+            binder = mainActivityViewModel.sinchClientServiceBinder
         )
     }
 
     private val progressingCallTonePlayer: MediaPlayer by lazy {
-        MediaPlayer.create(requireContext(), R.raw.progress_tone).apply { isLooping = true }
+        MediaPlayer().apply {
+            setDataSource(requireContext(), UriHelper.uriForResource(requireContext(), R.raw.progress_tone))
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build()
+            )
+            isLooping = true
+            prepare()
+        }
     }
 
     override fun onCreateView(
@@ -48,6 +63,9 @@ class IncomingCallFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.stateTextView.startAnimation(
+            AnimationUtils.loadAnimation(context, R.anim.blink)
+        )
         attachListeners()
         observeViewModel()
     }
@@ -77,12 +95,23 @@ class IncomingCallFragment :
             acceptButton.setOnClickListener { viewModel.onCallAccepted() }
             declineButton.setOnClickListener { onBackPressed() }
         }
-        viewModel.isCallProgressing.observe(viewLifecycleOwner) { isProgressing ->
-            Log.d(TAG, "Call is progressing $isProgressing")
-            if (isProgressing) {
+        viewModel.callState.observe(viewLifecycleOwner) { callState ->
+            Log.d(TAG, "Call state $callState")
+            val wasAnsweredAlready =
+                listOf(CallState.ANSWERED, CallState.ESTABLISHED, CallState.ENDED).contains(callState)
+            if (!wasAnsweredAlready) {
                 progressingCallTonePlayer.start()
             } else {
                 progressingCallTonePlayer.safeStop()
+            }
+            binding.acceptButton.isEnabled = !wasAnsweredAlready
+            val stateText = when (callState) {
+                CallState.INITIATING, CallState.RINGING, CallState.PROGRESSING -> R.string.calling
+                CallState.ANSWERED -> R.string.connecting
+                else -> null
+            }
+            if (stateText != null) {
+                binding.stateTextView.setText(stateText)
             }
         }
     }
@@ -105,6 +134,7 @@ class IncomingCallFragment :
                     navigationEvent.sinchCallId
                 )
             )
+
             Back -> onBackPressed()
         }
     }

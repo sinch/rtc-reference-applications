@@ -18,6 +18,7 @@ import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.ActivityMainBinding
 import com.sinch.rtc.vvc.reference.app.features.calls.incoming.IncomingCallInitialData
+import com.sinch.rtc.vvc.reference.app.features.calls.summary.CallSummaryDialogFragment
 import com.sinch.rtc.vvc.reference.app.utils.base.activity.ViewBindingActivity
 
 class MainActivity : ViewBindingActivity<ActivityMainBinding>() {
@@ -55,6 +56,20 @@ class MainActivity : ViewBindingActivity<ActivityMainBinding>() {
         viewModel.onViewCreated()
         observeNavigationEvents()
         parseIntent()
+        viewModel.serviceBound.observe(this) {
+            setupCallSummaryDialog()
+        }
+    }
+
+    private fun setupCallSummaryDialog() {
+        viewModel.callEndedEvents?.observeData(this) {
+            CallSummaryDialogFragment().apply {
+                call = it
+            }.show(
+                supportFragmentManager, CallSummaryDialogFragment::class.java
+                    .simpleName
+            )
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -79,6 +94,7 @@ class MainActivity : ViewBindingActivity<ActivityMainBinding>() {
                 navHostFragment.navController.navigate(R.id.settingsFragment)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
 
@@ -125,9 +141,11 @@ class MainActivity : ViewBindingActivity<ActivityMainBinding>() {
                     finish()
                     navHostFragment.navController.navigate(R.id.to_logged_out_flow)
                 }
+
                 Dashboard -> {
                     setupNavigation()
                 }
+
                 is IncomingCall -> {
                     setupNavigation()
                     val extraOptions = if (it.pop) {

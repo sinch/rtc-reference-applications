@@ -27,7 +27,7 @@ class NewCallFragment : MainActivityFragment<FragmentNewCallBinding>(R.layout.fr
         RTCVoiceVideoRefAppAndroidViewModelFactory(
             requireActivity().application,
             args,
-            sinchClient = mainActivityViewModel.sinchClient
+            binder = mainActivityViewModel.sinchClientServiceBinder
         )
     }
 

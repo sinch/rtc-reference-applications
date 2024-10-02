@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="@id/guideline20" />
 
     <TextView
-        android:id="@+id/callingTextView"
+        android:id="@+id/stateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"

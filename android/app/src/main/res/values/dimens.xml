@@ -4,5 +4,5 @@
     <dimen name="margin_small">8dp</dimen>
     <dimen name="toggle_button_size">50dp</dimen>
     <dimen name="text_size_incoming_callee">30sp</dimen>
-    <dimen name="text_size_incoming_label">16sp</dimen>
+    <dimen name="text_size_incoming_label">26sp</dimen>
 </resources>

@@ -2,6 +2,7 @@ package com.sinch.rtc.vvc.reference.app.utils.extensions
 
 import android.content.Context
 import android.media.MediaPlayer
+import android.net.Uri
 import com.sinch.gson.Gson
 import com.sinch.gson.JsonSyntaxException
 import com.sinch.rtc.vvc.reference.app.domain.AppConfig
@@ -28,7 +29,7 @@ val Context.defaultConfigs: List<AppConfig>
         } catch (e: FileNotFoundException) {
             throw RuntimeException(
                 "Config file not present. Put config.json file inside assets " +
-                        "folder first then re-run the application."
+                    "folder first then re-run the application."
             )
         }
     }
@@ -44,4 +45,9 @@ fun MediaPlayer.safeStop() {
         stop()
     } catch (ignored: Exception) {
     }
+}
+
+object UriHelper {
+    fun uriForResource(context: Context, resId: Int): Uri =
+        Uri.parse("android.resource://" + context.packageName + "/" + resId)
 }

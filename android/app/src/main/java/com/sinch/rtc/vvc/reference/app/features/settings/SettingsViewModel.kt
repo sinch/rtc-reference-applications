@@ -7,7 +7,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.FirebaseApp
-import com.sinch.android.rtc.*
+import com.sinch.android.rtc.PushConfiguration
+import com.sinch.android.rtc.PushTokenRegistrationCallback
+import com.sinch.android.rtc.PushTokenUnregistrationCallback
+import com.sinch.android.rtc.SinchClient
+import com.sinch.android.rtc.SinchError
+import com.sinch.android.rtc.UserController
 import com.sinch.android.rtc.video.VideoScalingType
 import com.sinch.rtc.vvc.reference.app.application.service.SinchClientService
 import com.sinch.rtc.vvc.reference.app.domain.AppConfig

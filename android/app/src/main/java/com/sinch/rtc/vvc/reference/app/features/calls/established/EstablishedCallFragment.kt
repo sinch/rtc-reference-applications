@@ -3,10 +3,13 @@ package com.sinch.rtc.vvc.reference.app.features.calls.established
 import android.Manifest
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
+import com.sinch.android.rtc.callquality.warnings.CallQualityWarningEvent
+import com.sinch.android.rtc.callquality.warnings.CallQualityWarningEventType
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.RTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentEstablishedCallBinding
@@ -16,6 +19,8 @@ import com.sinch.rtc.vvc.reference.app.features.calls.established.screenshot.Idl
 import com.sinch.rtc.vvc.reference.app.utils.base.fragment.MainActivityFragment
 import com.sinch.rtc.vvc.reference.app.utils.extensions.addVideoViewChild
 import com.sinch.rtc.vvc.reference.app.utils.extensions.makeMultiline
+import java.util.Timer
+import java.util.TimerTask
 
 class EstablishedCallFragment :
     MainActivityFragment<FragmentEstablishedCallBinding>(R.layout.fragment_established_call) {
@@ -25,9 +30,14 @@ class EstablishedCallFragment :
         RTCVoiceVideoRefAppAndroidViewModelFactory(
             requireActivity().application,
             args,
-            mainActivityViewModel.sinchClient
+            mainActivityViewModel.sinchClientServiceBinder
         )
     }
+
+    private var qualityWarningDialog: AlertDialog? = null
+    private var timer: Timer? = null
+    private var dismissDialogTask: TimerTask? = null
+    private var qualityWarningQueue = mutableListOf<CallQualityWarningEvent>()
 
     override fun setupBinding(root: View): FragmentEstablishedCallBinding =
         FragmentEstablishedCallBinding.bind(root)
@@ -37,6 +47,14 @@ class EstablishedCallFragment :
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
         attachBindings()
+        timer = Timer()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        qualityWarningDialog?.dismiss()
+        timer?.cancel()
+        timer = null
     }
 
     override fun onResume() {
@@ -131,6 +149,38 @@ class EstablishedCallFragment :
                 adjustVideoOnlyUI(videoCallProperties)
             }
         }
+        viewModel.qualityWarningEvents.observe(viewLifecycleOwner) {
+            handleCallQualityWarningEvent(it)
+        }
+    }
+
+    private fun handleCallQualityWarningEvent(qualityWarningEvent: CallQualityWarningEvent) {
+        qualityWarningQueue.add(qualityWarningEvent)
+        handleNextCallQualityWarning()
+    }
+
+    private fun handleNextCallQualityWarning() {
+        if (qualityWarningDialog?.isShowing == true) {
+            return
+        }
+        val context = context ?: return
+        val qualityWarningEvent = qualityWarningQueue.removeFirstOrNull() ?: return
+        val isTrigger = qualityWarningEvent.type == CallQualityWarningEventType.Trigger
+        qualityWarningDialog = AlertDialog.Builder(context)
+            .setTitle(if (isTrigger) R.string.warning_trigger else R.string.warning_recover)
+            .setMessage(getString(R.string.warning_name, qualityWarningEvent.name))
+            .setIcon(if (isTrigger) R.drawable.baseline_thumb_down_24 else R.drawable.baseline_thumb_up_24)
+            .show()
+        qualityWarningDialog?.setOnDismissListener {
+            dismissDialogTask?.cancel()
+            handleNextCallQualityWarning()
+        }
+        dismissDialogTask = object : TimerTask() {
+            override fun run() {
+                qualityWarningDialog?.dismiss()
+            }
+        }
+        timer?.schedule(dismissDialogTask, DISMISS_DIALOG_DELAY_MS)
     }
 
     private fun adjustVideoOnlyUI(videoCallProperties: VideoCallProperties) {
@@ -171,6 +221,10 @@ class EstablishedCallFragment :
                 anchorView = binding.callSettingsLayout
             }
             .makeMultiline().show()
+    }
+
+    companion object {
+        private const val DISMISS_DIALOG_DELAY_MS = 2000L
     }
 
 }

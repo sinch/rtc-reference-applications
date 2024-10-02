@@ -13,7 +13,7 @@ import com.sinch.rtc.vvc.reference.app.features.calls.history.list.DateHeaderIte
 import com.sinch.rtc.vvc.reference.app.utils.date.DateFormats
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 import com.sinch.rtc.vvc.reference.app.utils.sectionedrecycler.BaseItem
-import java.util.*
+import java.util.Date
 
 class CallHistoryViewModel(
     val app: Application,

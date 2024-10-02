@@ -14,9 +14,9 @@ import com.sinch.rtc.vvc.reference.app.utils.extensions.appendLineIfValuePresent
 import com.sinch.rtc.vvc.reference.app.utils.extensions.expectedType
 import com.sinch.rtc.vvc.reference.app.utils.extensions.isSet
 import com.sinch.rtc.vvc.reference.app.utils.extensions.valueOrNullIfNotSet
-import kotlinx.parcelize.Parcelize
 import java.text.DateFormat
-import java.util.*
+import java.util.Date
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity(tableName = Constants.CALL_HISTORY_ITEMS_TABLE_NAME)

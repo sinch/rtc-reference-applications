@@ -31,7 +31,8 @@ class FcmListenerService : FirebaseMessagingService() {
                     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                         if (service is SinchClientService.SinchClientServiceBinder) {
                             service.sinchClient?.relayRemotePushNotification(
-                                SinchPush.queryPushNotificationPayload(applicationContext, remoteMessage.data))
+                                SinchPush.queryPushNotificationPayload(applicationContext, remoteMessage.data)
+                            )
                         }
                         unbindService(this)
                     }
@@ -55,7 +56,7 @@ class FcmListenerService : FirebaseMessagingService() {
         ) {
             Log.e(
                 TAG, "You are receiving video call without granted required CAMERA permissions. " +
-                        "Automatic establishing a connection in that case will be fixed ASAP (to resemble App-to-Audio flow.)"
+                    "Automatic establishing a connection in that case will be fixed ASAP (to resemble App-to-Audio flow.)"
             )
             return true
         }

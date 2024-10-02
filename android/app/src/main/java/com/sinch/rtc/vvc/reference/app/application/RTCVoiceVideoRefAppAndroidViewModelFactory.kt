@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavArgs
-import com.sinch.android.rtc.SinchClient
+import com.sinch.rtc.vvc.reference.app.application.service.SinchClientService
 import com.sinch.rtc.vvc.reference.app.features.calls.established.EstablishedCallFragmentArgs
 import com.sinch.rtc.vvc.reference.app.features.calls.established.EstablishedCallViewModel
 import com.sinch.rtc.vvc.reference.app.features.calls.history.CallHistoryViewModel
@@ -26,7 +26,7 @@ typealias NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory = RTCVoiceVideoRefApp
 class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
     private val application: Application,
     private val args: Args? = null,
-    private val sinchClient: SinchClient? = null,
+    private val binder: SinchClientService.SinchClientServiceBinder? = null,
 ) :
     ViewModelProvider.AndroidViewModelFactory(application) {
 
@@ -44,12 +44,14 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                     roomDatabase.callDao()
                 ) as T
             }
+
             MainViewModel::class.java -> {
                 MainViewModel(
                     application,
                     roomDatabase.userDao()
                 ) as T
             }
+
             CallHistoryViewModel::class.java -> {
                 CallHistoryViewModel(
                     application,
@@ -57,15 +59,17 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                     roomDatabase.callDao()
                 ) as T
             }
+
             SettingsViewModel::class.java -> {
                 SettingsViewModel(
                     application,
                     roomDatabase.userDao(),
                     roomDatabase.callDao(),
                     prefsManager,
-                    sinchClient
+                    binder?.sinchClient
                 ) as T
             }
+
             NewCallViewModel::class.java -> {
                 NewCallViewModel(
                     (args as NewCallFragmentArgs).initialCallItem,
@@ -75,20 +79,23 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                     roomDatabase.callDao()
                 ) as T
             }
+
             OutgoingCallViewModel::class.java -> {
                 val arguments = (args as OutgoingCallFragmentArgs)
                 OutgoingCallViewModel(
-                    sinchClient?.callController!!,
+                    binder!!.sinchClient?.callController!!,
+                    binder.newCallHook,
                     prefsManager,
                     arguments.callItemData,
                     roomDatabase.callDao(),
                     application
                 ) as T
             }
+
             EstablishedCallViewModel::class.java -> {
                 val arguments = (args as EstablishedCallFragmentArgs)
                 EstablishedCallViewModel(
-                    sinchClient!!,
+                    binder!!.sinchClient!!,
                     roomDatabase.userDao().loadLoggedInUser()!!,
                     arguments.sinchCallId,
                     roomDatabase.callDao(),
@@ -96,10 +103,11 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                     application
                 ) as T
             }
+
             IncomingCallViewModel::class.java -> {
                 val arguments = (args) as IncomingCallFragmentArgs
                 IncomingCallViewModel(
-                    sinchClient!!,
+                    binder!!.sinchClient!!,
                     arguments.initialAction,
                     arguments.callId,
                     application,
@@ -107,6 +115,7 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                     roomDatabase.userDao().loadLoggedInUser()
                 ) as T
             }
+
             else -> super.create(modelClass)
         }
     }

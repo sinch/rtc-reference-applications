@@ -59,11 +59,11 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
-    <!-- Outgoing call screen -->
+    <!-- Calling screen -->
     <string name="cancel">Cancel</string>
-
-    <!-- Incoming call screen -->
-    <string name="calling">calling</string>
+    <string name="calling">Calling…</string>
+    <string name="initiating">Initiating…</string>
+    <string name="connecting">Connecting…</string>
 
     <!-- Notificaitons -->
     <string name="notification_chanel_name">Sinch</string>
@@ -93,4 +93,25 @@
     <string name="video_permissions_explanation">In order to send your video you need to accept CAMERA permissions.</string>
     <string name="permissions_missing_error">Permissions were not granted. Basic functionality may not work as
         expected.</string>
+    <string name="warning_trigger">Call quality warning triggered!</string>
+    <string name="warning_recover">Call quality warning recovered!</string>
+    <string name="warning_name">Warning name: %s</string>
+
+    <!-- Finished call screen -->
+
+    <string name="call_summary">Call summary</string>
+    <string name="remote_user_id">Remote user id:</string>
+    <string name="duration_seconds">Duration (s):</string>
+    <string name="end_cause_summary">End cause:</string>
+    <string name="error">Error:</string>
+    <string name="started_time">Started time:</string>
+    <string name="progressed_time">Progressed time:</string>
+    <string name="rung_time">Rung time:</string>
+    <string name="answered_time">Answered time:</string>
+    <string name="established_time">Established time:</string>
+    <string name="ended_time">Ended time:</string>
+    <string name="error_none">None</string>
+    <string name="direction">Direction:</string>
+    <string name="direction_incoming">Incoming</string>
+    <string name="direction_outgoing">Outgoing</string>
 </resources>

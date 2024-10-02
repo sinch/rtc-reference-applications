@@ -1,7 +1,12 @@
 package com.sinch.rtc.vvc.reference.app.application.service
 
-import android.app.*
+import android.app.ActivityManager
 import android.app.ActivityManager.RunningAppProcessInfo
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -12,7 +17,11 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.FirebaseApp
-import com.sinch.android.rtc.*
+import com.sinch.android.rtc.ClientRegistration
+import com.sinch.android.rtc.PushConfiguration
+import com.sinch.android.rtc.SinchClient
+import com.sinch.android.rtc.SinchClientListener
+import com.sinch.android.rtc.SinchError
 import com.sinch.android.rtc.calling.Call
 import com.sinch.android.rtc.calling.CallController
 import com.sinch.android.rtc.calling.CallControllerListener
@@ -24,9 +33,10 @@ import com.sinch.rtc.vvc.reference.app.storage.RTCVoiceVideoAppDatabase
 import com.sinch.rtc.vvc.reference.app.storage.prefs.SharedPrefsManager
 import com.sinch.rtc.vvc.reference.app.utils.jwt.FakeJWTFetcher
 import com.sinch.rtc.vvc.reference.app.utils.jwt.JWTFetcher
+import com.sinch.rtc.vvc.reference.app.utils.mvvm.ConsumableEventsLiveData
 import java.io.File
 
-class SinchClientService : Service(), SinchClientListener, CallControllerListener {
+class SinchClientService : Service(), SinchClientListener, CallControllerListener, NewCallHook {
 
     companion object {
         const val TAG = "SinchClientService"
@@ -46,12 +56,23 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
     private val notificationSoundUri: Uri by lazy {
         Uri.parse(
             ContentResolver.SCHEME_ANDROID_RESOURCE
-                    + File.pathSeparator + File.separator + File.separator
-                    + packageName
-                    + File.separator
-                    + R.raw.progress_tone
+                + File.pathSeparator + File.separator + File.separator
+                + packageName
+                + File.separator
+                + R.raw.progress_tone
         )
     }
+
+    /**
+     * Use [ConsumableEvent] abstraction layer for call ended events in order to:
+     *
+     * - Allow presenting the [CallSummaryDialogFragment] on top of any visible UI element, no matter which
+     *   one is currently visible.
+     * - Be notified about call ended events even if app UI is presented after the call has ended.
+     * - Make sure only single listener gets notified about the event to avoid duplicating presenting same dialog.
+     */
+    private val callEndedEvents: ConsumableEventsLiveData<Call> = ConsumableEventsLiveData()
+    private val callEndedConsumableEventsListener = CallEndedConsumableEventsListener(callEndedEvents)
 
     private val prefsManager: SharedPrefsManager by lazy {
         SharedPrefsManager(appContext = application)
@@ -91,7 +112,7 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
     private fun registerSinchClientIfNecessary() {
         val loggedInUser = userDao.loadLoggedInUser()
         if (loggedInUser == null || (sinchClientInstance != null &&
-                    sinchClientInstance?.isStarted == true)
+                sinchClientInstance?.isStarted == true)
         ) {
             return
         }
@@ -101,10 +122,11 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
             .environmentHost(appConfig.environment)
             .userId(loggedInUser.id)
             .applicationKey(appConfig.appKey)
-            .pushConfiguration(PushConfiguration.fcmPushConfigurationBuilder()
-                .senderID(FirebaseApp.getInstance().options.gcmSenderId.orEmpty())
-                .registrationToken(prefsManager.fcmRegistrationToken)
-                .build()
+            .pushConfiguration(
+                PushConfiguration.fcmPushConfigurationBuilder()
+                    .senderID(FirebaseApp.getInstance().options.gcmSenderId.orEmpty())
+                    .registrationToken(prefsManager.fcmRegistrationToken)
+                    .build()
             )
             .build()
             .apply {
@@ -181,6 +203,11 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
         } else {
             startActivity(mainActivityIntent)
         }
+        call.addCallListener(callEndedConsumableEventsListener)
+    }
+
+    override fun onNewSinchCall(call: Call) {
+        call.addCallListener(callEndedConsumableEventsListener)
     }
 
     private fun createNotification(call: Call, baseIntent: Intent): Notification {
@@ -198,12 +225,6 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
                     baseIntent,
                     NOTIFICATION_PENDING_INTENT_ID
                 )
-            )
-            .setFullScreenIntent(
-                createNotificationPendingIntent(
-                    baseIntent,
-                    NOTIFICATION_PENDING_INTENT_ID + 1
-                ), true
             )
             .addAction(
                 R.drawable.button_accept,
@@ -275,6 +296,8 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
 
     inner class SinchClientServiceBinder : Binder() {
         val sinchClient: SinchClient? get() = sinchClientInstance
+        val callEndedEvents: ConsumableEventsLiveData<Call> get() = this@SinchClientService.callEndedEvents
+        val newCallHook: NewCallHook get() = this@SinchClientService
     }
 
 }

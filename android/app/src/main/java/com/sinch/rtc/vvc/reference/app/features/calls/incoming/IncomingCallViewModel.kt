@@ -9,6 +9,7 @@ import com.sinch.android.rtc.SinchClient
 import com.sinch.android.rtc.calling.Call
 import com.sinch.android.rtc.calling.CallEndCause
 import com.sinch.android.rtc.calling.CallListener
+import com.sinch.android.rtc.calling.CallState
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.insertAndGetWithGeneratedId
@@ -16,7 +17,6 @@ import com.sinch.rtc.vvc.reference.app.domain.calls.properties.CallProperties
 import com.sinch.rtc.vvc.reference.app.domain.calls.requiredPermissions
 import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.utils.extensions.PermissionRequestResult
-import com.sinch.rtc.vvc.reference.app.utils.extensions.areAllPermissionsGranted
 import com.sinch.rtc.vvc.reference.app.utils.extensions.areAudioPermissionsGranted
 import com.sinch.rtc.vvc.reference.app.utils.extensions.updateBasedOnSinchCall
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
@@ -33,13 +33,13 @@ class IncomingCallViewModel(
     private val call: Call
     private var callItem: CallItem? = null
 
-    private val isCallProgressingMutable: MutableLiveData<Boolean> = MutableLiveData(true)
+    private val callStateMutable: MutableLiveData<CallState> = MutableLiveData()
     private val callPropertiesMutable: MutableLiveData<CallProperties> = MutableLiveData()
     private val permissionsRequiredEvents: SingleLiveEvent<List<String>> = SingleLiveEvent()
 
     val navigationEvents: SingleLiveEvent<IncomingCallNavigationEvent> = SingleLiveEvent()
     val callProperties: LiveData<CallProperties> = callPropertiesMutable
-    val isCallProgressing: LiveData<Boolean> get() = isCallProgressingMutable
+    val callState: LiveData<CallState> get() = callStateMutable
     val permissionsEvents: LiveData<List<String>> get() = permissionsRequiredEvents
 
     companion object {
@@ -51,6 +51,7 @@ class IncomingCallViewModel(
         call = sinchClient.callController.getCall(callId)?.apply {
             addCallListener(this@IncomingCallViewModel)
         } ?: error("Call with id $callId not found")
+        issueCallStateUpdate(call)
         callPropertiesMutable.postValue(CallProperties(call.remoteUserId))
         user?.let {
             val generatedCallItem = CallItem(call = call, user = it).let { item ->
@@ -71,10 +72,9 @@ class IncomingCallViewModel(
 
     fun onPermissionsResult(permissionRequestResult: PermissionRequestResult) {
         if (permissionRequestResult.areAudioPermissionsGranted) {
+            // Don't wait for onCallAnswered callback, adjust UI as soon as possible
+            callStateMutable.postValue(CallState.ANSWERED)
             call.answer()
-            callItem?.let {
-                navigationEvents.value = EstablishedCall(it, callId)
-            }
         } else {
             declineCall()
             navigationEvents.value = Back
@@ -83,15 +83,26 @@ class IncomingCallViewModel(
 
     override fun onCallProgressing(call: Call) {
         Log.d(TAG, "onCallProgressing for $call")
+        issueCallStateUpdate(call)
+    }
+
+    override fun onCallAnswered(call: Call) {
+        Log.d(TAG, "onCallAnswered for $call")
+        issueCallStateUpdate(call)
     }
 
     override fun onCallEstablished(call: Call) {
-        Log.d(TAG, "onCallProgressing for $call")
+        Log.d(TAG, "onCallEstablished for $call")
+        issueCallStateUpdate(call)
         callItem?.updateBasedOnSinchCall(call, callDao)
+        callItem?.let {
+            navigationEvents.value = EstablishedCall(it, callId)
+        }
     }
 
     override fun onCallEnded(call: Call) {
         Log.d(TAG, "Call ended with end cause ${call.details.endCause}")
+        issueCallStateUpdate(call)
         callItem?.updateBasedOnSinchCall(call, callDao)
         if (call.details.endCause != CallEndCause.DENIED) { //Not initiated by the user
             navigationEvents.postValue(Back)
@@ -104,7 +115,6 @@ class IncomingCallViewModel(
     }
 
     private fun acceptCall() {
-        isCallProgressingMutable.postValue(false)
         callItem?.type?.requiredPermissions.let {
             permissionsRequiredEvents.value = it
         }
@@ -112,7 +122,6 @@ class IncomingCallViewModel(
 
     private fun declineCall() {
         call.hangup()
-        isCallProgressingMutable.postValue(false)
     }
 
     private fun handleImmediateResponse() {
@@ -121,5 +130,9 @@ class IncomingCallViewModel(
             IncomingCallInitialAction.DECLINE -> navigationEvents.value = Back
             IncomingCallInitialAction.NONE -> return
         }
+    }
+
+    private fun issueCallStateUpdate(call: Call) {
+        callStateMutable.postValue(call.state)
     }
 }

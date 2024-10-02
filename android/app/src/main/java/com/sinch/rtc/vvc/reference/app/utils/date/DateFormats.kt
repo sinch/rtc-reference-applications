@@ -1,7 +1,8 @@
 package com.sinch.rtc.vvc.reference.app.utils.date
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 object DateFormats {
 
