@@ -1,4 +1,4 @@
-# rtc-js-sdk-reference
+# In-app Voice and Video Reference Application for JavaScript
 
 ## Usage
 

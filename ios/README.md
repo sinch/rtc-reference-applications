@@ -1,4 +1,4 @@
-# RTC VVC Reference Application for iOS
+# In-app Voice and Video Reference Application for iOS
 
 Reference Applications for the iOS Client.
 
