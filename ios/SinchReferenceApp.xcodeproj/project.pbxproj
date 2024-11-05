@@ -7,8 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AE0BDD052CDA0781002FCBB3 /* Date+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0BDD042CDA0781002FCBB3 /* Date+String.swift */; };
+		AE0BDD082CDA082C002FCBB3 /* CallCompletionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0BDD062CDA082C002FCBB3 /* CallCompletionDelegate.swift */; };
+		AE0BDD0D2CDA085D002FCBB3 /* CallQualityEventBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0BDD0B2CDA085D002FCBB3 /* CallQualityEventBanner.swift */; };
+		AE0BDD0F2CDA0CC6002FCBB3 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0BDD0E2CDA0CC6002FCBB3 /* MainViewController.swift */; };
 		AE3FB6EA29B8AF970068C5E8 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AE3FB6E929B8AF970068C5E8 /* .swiftlint.yml */; };
 		AE52FEDC29B0A8B20052D62B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE52FEDB29B0A8B10052D62B /* SystemConfiguration.framework */; };
+		AE5B480B2CDA0E5C0014C305 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AE5B48092CDA0E5C0014C305 /* Main.storyboard */; };
 		AE6A6ACB2A14CDA300A10DDB /* UIButton+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6A6ACA2A14CDA300A10DDB /* UIButton+Configuration.swift */; };
 		AEA8491329CDD59000715A9E /* SinchClientMediator+SinchClientDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA8491229CDD59000715A9E /* SinchClientMediator+SinchClientDelegate.swift */; };
 		AEA8491529CDD5BC00715A9E /* SinchClientMediator+CXProviderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA8491429CDD5BC00715A9E /* SinchClientMediator+CXProviderDelegate.swift */; };
@@ -18,7 +23,6 @@
 		AEA849C529D572E400715A9E /* SinchRTC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AEA849C329D572E400715A9E /* SinchRTC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AEE9CD6E299CD36E00F860C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CD6D299CD36E00F860C3 /* AppDelegate.swift */; };
 		AEE9CD72299CD36E00F860C3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CD71299CD36E00F860C3 /* LoginViewController.swift */; };
-		AEE9CD75299CD36E00F860C3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AEE9CD73299CD36E00F860C3 /* Main.storyboard */; };
 		AEE9CD77299CD36F00F860C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AEE9CD76299CD36F00F860C3 /* Assets.xcassets */; };
 		AEE9CD7A299CD36F00F860C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AEE9CD78299CD36F00F860C3 /* LaunchScreen.storyboard */; };
 		AEE9CDA3299CDD5200F860C3 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDA2299CDD3200F860C3 /* libc++.tbd */; };
@@ -39,7 +43,6 @@
 		AEE9CDCB299E1BD100F860C3 /* ringback.wav in Resources */ = {isa = PBXBuildFile; fileRef = AEE9CDC9299E1BD100F860C3 /* ringback.wav */; };
 		AEE9CDD2299E283500F860C3 /* SinchClientMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDD1299E283500F860C3 /* SinchClientMediator.swift */; };
 		AEE9CDD4299E32D600F860C3 /* SinchJWT.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDD3299E32D600F860C3 /* SinchJWT.swift */; };
-		AEE9CDD6299E392D00F860C3 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDD5299E392D00F860C3 /* MainViewController.swift */; };
 		AEE9CDD8299E398500F860C3 /* AudioCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDD7299E398500F860C3 /* AudioCallViewController.swift */; };
 		AEE9CDDA299E565700F860C3 /* CallRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDD9299E565700F860C3 /* CallRegistry.swift */; };
 		AEE9CDDC299E566D00F860C3 /* Synchronized.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDDB299E566D00F860C3 /* Synchronized.swift */; };
@@ -67,8 +70,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AE0BDD042CDA0781002FCBB3 /* Date+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+String.swift"; sourceTree = "<group>"; };
+		AE0BDD062CDA082C002FCBB3 /* CallCompletionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallCompletionDelegate.swift; sourceTree = "<group>"; };
+		AE0BDD0B2CDA085D002FCBB3 /* CallQualityEventBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallQualityEventBanner.swift; sourceTree = "<group>"; };
+		AE0BDD0E2CDA0CC6002FCBB3 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		AE3FB6E929B8AF970068C5E8 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		AE52FEDB29B0A8B10052D62B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		AE5B480A2CDA0E5C0014C305 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		AE6A6ACA2A14CDA300A10DDB /* UIButton+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Configuration.swift"; sourceTree = "<group>"; };
 		AEA8491229CDD59000715A9E /* SinchClientMediator+SinchClientDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SinchClientMediator+SinchClientDelegate.swift"; sourceTree = "<group>"; };
 		AEA8491429CDD5BC00715A9E /* SinchClientMediator+CXProviderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SinchClientMediator+CXProviderDelegate.swift"; sourceTree = "<group>"; };
@@ -79,7 +87,6 @@
 		AEE9CD6A299CD36E00F860C3 /* SinchReferenceApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SinchReferenceApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEE9CD6D299CD36E00F860C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AEE9CD71299CD36E00F860C3 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		AEE9CD74299CD36E00F860C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		AEE9CD76299CD36F00F860C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AEE9CD79299CD36F00F860C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AEE9CD7B299CD36F00F860C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -102,7 +109,6 @@
 		AEE9CDCF299E1CAB00F860C3 /* development.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = development.entitlements; sourceTree = "<group>"; };
 		AEE9CDD1299E283500F860C3 /* SinchClientMediator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinchClientMediator.swift; sourceTree = "<group>"; };
 		AEE9CDD3299E32D600F860C3 /* SinchJWT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SinchJWT.swift; sourceTree = "<group>"; };
-		AEE9CDD5299E392D00F860C3 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		AEE9CDD7299E398500F860C3 /* AudioCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCallViewController.swift; sourceTree = "<group>"; };
 		AEE9CDD9299E565700F860C3 /* CallRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallRegistry.swift; sourceTree = "<group>"; };
 		AEE9CDDB299E566D00F860C3 /* Synchronized.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Synchronized.swift; sourceTree = "<group>"; };
@@ -140,6 +146,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AE0BDD072CDA082C002FCBB3 /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				AE0BDD062CDA082C002FCBB3 /* CallCompletionDelegate.swift */,
+			);
+			path = Delegates;
+			sourceTree = "<group>";
+		};
+		AE0BDD0C2CDA085D002FCBB3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AE0BDD0B2CDA085D002FCBB3 /* CallQualityEventBanner.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		AEA8491129CDD56E00715A9E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -173,15 +195,17 @@
 			isa = PBXGroup;
 			children = (
 				AEE9CDDE299F85AD00F860C3 /* Extensions */,
-				AEE9CDCE299E1C6500F860C3 /* AudioCallViewController */,
-				AEF5B29229ADFDD9002B3D57 /* VideoCallViewController */,
-				AEE9CDCD299E1C5700F860C3 /* MainViewController */,
-				AEE9CDCC299E1BFE00F860C3 /* LoginViewController */,
 				AEE9CDD0299E280E00F860C3 /* Mediator */,
+				AE0BDD072CDA082C002FCBB3 /* Delegates */,
+				AE0BDD0C2CDA085D002FCBB3 /* Views */,
+				AEE9CD71299CD36E00F860C3 /* LoginViewController.swift */,
+				AE0BDD0E2CDA0CC6002FCBB3 /* MainViewController.swift */,
+				AEE9CDD7299E398500F860C3 /* AudioCallViewController.swift */,
+				AEF5B29529AE0366002B3D57 /* VideoCallViewController.swift */,
 				AEE9CDBC299CEF8100F860C3 /* Config.swift */,
 				AEE9CDE129A3B65800F860C3 /* Ringtone.swift */,
 				AEE9CD6D299CD36E00F860C3 /* AppDelegate.swift */,
-				AEE9CD73299CD36E00F860C3 /* Main.storyboard */,
+				AE5B48092CDA0E5C0014C305 /* Main.storyboard */,
 				AEE9CD7B299CD36F00F860C3 /* Info.plist */,
 				AEE9CD76299CD36F00F860C3 /* Assets.xcassets */,
 				AEE9CD78299CD36F00F860C3 /* LaunchScreen.storyboard */,
@@ -223,30 +247,6 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		AEE9CDCC299E1BFE00F860C3 /* LoginViewController */ = {
-			isa = PBXGroup;
-			children = (
-				AEE9CD71299CD36E00F860C3 /* LoginViewController.swift */,
-			);
-			path = LoginViewController;
-			sourceTree = "<group>";
-		};
-		AEE9CDCD299E1C5700F860C3 /* MainViewController */ = {
-			isa = PBXGroup;
-			children = (
-				AEE9CDD5299E392D00F860C3 /* MainViewController.swift */,
-			);
-			path = MainViewController;
-			sourceTree = "<group>";
-		};
-		AEE9CDCE299E1C6500F860C3 /* AudioCallViewController */ = {
-			isa = PBXGroup;
-			children = (
-				AEE9CDD7299E398500F860C3 /* AudioCallViewController.swift */,
-			);
-			path = AudioCallViewController;
-			sourceTree = "<group>";
-		};
 		AEE9CDD0299E280E00F860C3 /* Mediator */ = {
 			isa = PBXGroup;
 			children = (
@@ -276,16 +276,9 @@
 				AEF5B29029ADF510002B3D57 /* UIViewController+Alert.swift */,
 				AEFCE52829A8B45900A85564 /* Int+TimePresentation.swift */,
 				AE6A6ACA2A14CDA300A10DDB /* UIButton+Configuration.swift */,
+				AE0BDD042CDA0781002FCBB3 /* Date+String.swift */,
 			);
 			path = Extensions;
-			sourceTree = "<group>";
-		};
-		AEF5B29229ADFDD9002B3D57 /* VideoCallViewController */ = {
-			isa = PBXGroup;
-			children = (
-				AEF5B29529AE0366002B3D57 /* VideoCallViewController.swift */,
-			);
-			path = VideoCallViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -351,9 +344,9 @@
 				AE3FB6EA29B8AF970068C5E8 /* .swiftlint.yml in Resources */,
 				AEE9CDCA299E1BD100F860C3 /* incoming.wav in Resources */,
 				AEE9CD7A299CD36F00F860C3 /* LaunchScreen.storyboard in Resources */,
+				AE5B480B2CDA0E5C0014C305 /* Main.storyboard in Resources */,
 				AEE9CDCB299E1BD100F860C3 /* ringback.wav in Resources */,
 				AEE9CD77299CD36F00F860C3 /* Assets.xcassets in Resources */,
-				AEE9CD75299CD36E00F860C3 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,13 +386,15 @@
 				AEE9CDD4299E32D600F860C3 /* SinchJWT.swift in Sources */,
 				AEFCE52929A8B45900A85564 /* Int+TimePresentation.swift in Sources */,
 				AEE9CDE229A3B65800F860C3 /* Ringtone.swift in Sources */,
+				AE0BDD082CDA082C002FCBB3 /* CallCompletionDelegate.swift in Sources */,
 				AEF5B29629AE0366002B3D57 /* VideoCallViewController.swift in Sources */,
 				AEA8491329CDD59000715A9E /* SinchClientMediator+SinchClientDelegate.swift in Sources */,
 				AEE9CDDA299E565700F860C3 /* CallRegistry.swift in Sources */,
 				AEA8491A29CDD62200715A9E /* SinchClientMediator+SinchCallDelegate.swift in Sources */,
 				AEFCE52D29A8CA7700A85564 /* Identifiable.swift in Sources */,
+				AE0BDD0F2CDA0CC6002FCBB3 /* MainViewController.swift in Sources */,
 				AEE9CDD2299E283500F860C3 /* SinchClientMediator.swift in Sources */,
-				AEE9CDD6299E392D00F860C3 /* MainViewController.swift in Sources */,
+				AE0BDD0D2CDA085D002FCBB3 /* CallQualityEventBanner.swift in Sources */,
 				AEE9CDDC299E566D00F860C3 /* Synchronized.swift in Sources */,
 				AEE9CD6E299CD36E00F860C3 /* AppDelegate.swift in Sources */,
 				AEA8491C29CDD64B00715A9E /* SinchClientMediator+SinchAudioControllerDelegate.swift in Sources */,
@@ -407,16 +402,17 @@
 				AEA8491729CDD5FD00715A9E /* SinchClientMediator+SinchCallClientDelegate.swift in Sources */,
 				AEE9CDD8299E398500F860C3 /* AudioCallViewController.swift in Sources */,
 				AEF5B29129ADF510002B3D57 /* UIViewController+Alert.swift in Sources */,
+				AE0BDD052CDA0781002FCBB3 /* Date+String.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		AEE9CD73299CD36E00F860C3 /* Main.storyboard */ = {
+		AE5B48092CDA0E5C0014C305 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				AEE9CD74299CD36E00F860C3 /* Base */,
+				AE5B480A2CDA0E5C0014C305 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
