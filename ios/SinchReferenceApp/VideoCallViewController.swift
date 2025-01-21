@@ -90,8 +90,8 @@ final class VideoCallViewController: UIViewController {
     guard let call = call else { return }
 
     paused
-    ? call.resumeVideo()
-    : call.pauseVideo()
+      ? call.resumeVideo()
+      : call.pauseVideo()
 
     paused = !paused
 
@@ -101,8 +101,8 @@ final class VideoCallViewController: UIViewController {
 
   @IBAction private func toggleMute(_ sender: Any) {
     muted
-    ? SinchClientMediator.instance.sinchClient?.audioController.unmute()
-    : SinchClientMediator.instance.sinchClient?.audioController.mute()
+      ? SinchClientMediator.instance.sinchClient?.audioController.unmute()
+      : SinchClientMediator.instance.sinchClient?.audioController.mute()
 
     muted = !muted
 
@@ -112,8 +112,8 @@ final class VideoCallViewController: UIViewController {
 
   @IBAction private func toggleSpeaker(_ sender: Any) {
     speakerEnabled
-    ? SinchClientMediator.instance.sinchClient?.audioController.disableSpeaker()
-    : SinchClientMediator.instance.sinchClient?.audioController.enableSpeaker()
+      ? SinchClientMediator.instance.sinchClient?.audioController.disableSpeaker()
+      : SinchClientMediator.instance.sinchClient?.audioController.enableSpeaker()
 
     speakerEnabled = !speakerEnabled
 

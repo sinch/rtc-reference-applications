@@ -11,13 +11,13 @@ final class LoginViewController: UIViewController {
         return
       }
 
-#if !targetEnvironment(simulator)
+      #if !targetEnvironment(simulator)
       loginInfoLabel.isHidden = false
       loginInfoLabel.text = """
       You can still receive incoming calls as \"\(userName)\"
       (push profile is still on Sinch servers)
       """
-#endif
+      #endif
     }
   }
 
@@ -53,7 +53,7 @@ final class LoginViewController: UIViewController {
 
       noteLabel.text = """
       \u{2022} For App2App(audio, video) calls just provide user name
-      
+
       \u{2022} For App2PSTN calls, provide both user name and CLI number
       """
     }

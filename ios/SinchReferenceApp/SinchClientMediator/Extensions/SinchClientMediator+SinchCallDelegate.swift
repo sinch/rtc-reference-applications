@@ -115,20 +115,20 @@ extension SinchRTC.SinchCallDetails.EndCause {
 
   var reason: CXCallEndedReason {
     switch self {
-    case .error:
-      return .failed
+      case .error:
+        return .failed
       // .hangUp mapping is not really correct, as it is the end cause also when the local peer ended the call.
       // .inactive mapping is not really correct, as it is triggered by the local peer.
-    case .denied, .hungUp, .inactive:
-      return .remoteEnded
-    case .timeout, .canceled, .noAnswer:
-      return .unanswered
-    case .otherDeviceAnswered:
-      return .answeredElsewhere
-    case .voipCallDetected, .gsmCallDetected:
-      return .failed
-    default:
-      return .failed
+      case .denied, .hungUp, .inactive:
+        return .remoteEnded
+      case .timeout, .canceled, .noAnswer:
+        return .unanswered
+      case .otherDeviceAnswered:
+        return .answeredElsewhere
+      case .voipCallDetected, .gsmCallDetected:
+        return .failed
+      default:
+        return .failed
     }
   }
 }

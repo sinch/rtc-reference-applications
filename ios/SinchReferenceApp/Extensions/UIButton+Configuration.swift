@@ -51,8 +51,8 @@ extension UIButton {
   func setupInsetsButton(with configuration: SinchButtonConfiguration) {
     self.layer.cornerRadius = Constant.cornerRadius
     self.layer.backgroundColor = self.isEnabled
-    ? configuration.backgroundColor.cgColor
-    : Constant.disabledBackgroundColor.cgColor
+      ? configuration.backgroundColor.cgColor
+      : Constant.disabledBackgroundColor.cgColor
 
     self.titleLabel?.font = .systemFont(ofSize: Constant.textSize)
     self.setTitleColor(configuration.textColor, for: .normal)
@@ -62,8 +62,8 @@ extension UIButton {
 
     self.setImage(image, for: .normal)
     self.imageView?.tintColor = self.isEnabled
-    ? Constant.defaultAssetColor
-    : Constant.disabledAssetColor
+      ? Constant.defaultAssetColor
+      : Constant.disabledAssetColor
 
     self.semanticContentAttribute = .forceRightToLeft
 

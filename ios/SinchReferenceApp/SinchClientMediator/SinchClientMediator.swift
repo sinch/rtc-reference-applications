@@ -303,7 +303,6 @@ extension SinchClientMediator {
     // Reporting the call to CallKit.
     provider.reportNewIncomingCall(with: callKitId, update: update, completion: { [weak self] (error: Error?) in
       guard let self = self else { return }
-
       if error != nil {
         // If we get an error here from the OS,
         // it is possibly the callee's phone has
@@ -311,8 +310,17 @@ extension SinchClientMediator {
         // check CXErrorCodeIncomingCallError in CXError.h
         self.hangupCallOnError(with: callNotification.callId)
       }
-
+      let hasActiveCallKitCalls = !self.callRegistry.activeSinchCalls.isEmpty
       completion(error)
+      // As per Apple docs we are forced to call `CXProvider.reportNewIncomingCall` whenever a new VoIP push arrives.
+      // However Sinch SDK can handle only a single active call at a time (relaying any new incoming call push,
+      // when there's already ongoing call will cause the new
+      // call to be automatically denied and `SinchCallClientDelegate.didReceiveIncomingCall` will not be called).
+      // In order to prevent CallKit UI from showing the new call data, we need to mark it as ended as soon as
+      // completion block is invoked.
+      if hasActiveCallKitCalls {
+        provider.reportCall(with: callKitId, endedAt: nil, reason: .declinedElsewhere)
+      }
     })
   }
 

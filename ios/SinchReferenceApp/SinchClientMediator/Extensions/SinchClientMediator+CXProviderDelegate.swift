@@ -41,32 +41,32 @@ extension SinchClientMediator: CXProviderDelegate {
 
     // To perform different calls (audio, video, phone), different methods should be invoked depending on call type.
     switch callType {
-    case .audio:
-      callResult = callClient.callUser(withId: recipientIdentifier)
-    case .video:
-      callResult = callClient.videoCallToUser(withId: recipientIdentifier)
-    case .phone:
-      // To perform calls, CLI should be set and calling number provided.
-      callResult = callClient.callPhoneNumber(recipientIdentifier)
+      case .audio:
+        callResult = callClient.callUser(withId: recipientIdentifier)
+      case .video:
+        callResult = callClient.videoCallToUser(withId: recipientIdentifier)
+      case .phone:
+        // To perform calls, CLI should be set and calling number provided.
+        callResult = callClient.callPhoneNumber(recipientIdentifier)
     }
 
     switch callResult {
-    case .success(let call):
-      callRegistry.addSinchCall(call)
-      callRegistry.map(callKitId: action.callUUID, toSinchCallId: call.callId)
+      case .success(let call):
+        callRegistry.addSinchCall(call)
+        callRegistry.map(callKitId: action.callUUID, toSinchCallId: call.callId)
 
-      // Assigning the delegate of the newly created SinchCall.
-      // To track call establishment, progress and ending.
-      call.delegate = self
+        // Assigning the delegate of the newly created SinchCall.
+        // To track call establishment, progress and ending.
+        call.delegate = self
 
-      action.fulfill()
-    case .failure(let error):
-      os_log("Unable to make a call: %s",
-             log: .sinchOSLog(for: SinchClientMediator.identifier),
-             type: .error,
-             error.localizedDescription)
+        action.fulfill()
+      case .failure(let error):
+        os_log("Unable to make a call: %s",
+               log: .sinchOSLog(for: SinchClientMediator.identifier),
+               type: .error,
+               error.localizedDescription)
 
-      action.fail()
+        action.fail()
     }
 
     callStartedCallback?(callResult)

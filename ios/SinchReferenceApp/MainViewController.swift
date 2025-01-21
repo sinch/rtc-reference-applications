@@ -56,7 +56,7 @@ final class MainViewController: UIViewController {
       noteLabel.lineBreakMode = .byClipping
       noteLabel.text = cli.isEmpty ? "" : """
       \u{2022} To make App2App(audio, video) calls just provide recipient name
-      
+
       \u{2022} To make App2PSTN calls, just provide recipient number
       """
     }
@@ -91,28 +91,28 @@ final class MainViewController: UIViewController {
     }
 
     let audioCallAction = !recipient.isEmpty
-    ? UIAlertAction(title: "Audio App-to-App", style: .default, handler: { [weak self] _ in
-      guard let self = self else { return }
+      ? UIAlertAction(title: "Audio App-to-App", style: .default, handler: { [weak self] _ in
+        guard let self = self else { return }
 
-      self.prepareAudioCallViewController(to: recipient, callType: .audio)
-    })
-    : nil
+        self.prepareAudioCallViewController(to: recipient, callType: .audio)
+      })
+      : nil
 
     let videoCallAction = !recipient.isEmpty
-    ? UIAlertAction(title: "Video App-to-App", style: .default, handler: { [weak self] _ in
-      guard let self = self else { return }
+      ? UIAlertAction(title: "Video App-to-App", style: .default, handler: { [weak self] _ in
+        guard let self = self else { return }
 
-      self.prepareVideoCallViewController(to: recipient)
-    })
-    : nil
+        self.prepareVideoCallViewController(to: recipient)
+      })
+      : nil
 
     let pstnCallAction = !phoneNumber.isEmpty
-    ? UIAlertAction(title: "Phone Call", style: .default, handler: { [weak self] _ in
-      guard let self = self else { return }
+      ? UIAlertAction(title: "Phone Call", style: .default, handler: { [weak self] _ in
+        guard let self = self else { return }
 
-      self.prepareAudioCallViewController(to: phoneNumber, callType: .phone)
-    })
-    : nil
+        self.prepareAudioCallViewController(to: phoneNumber, callType: .phone)
+      })
+      : nil
 
     let cancel = UIAlertAction(title: "Cancel", style: .cancel)
 
@@ -153,21 +153,21 @@ final class MainViewController: UIViewController {
 
       switch result {
         // On success transfers to call view controller.
-      case .success(let call):
-        let audioCallViewController: AudioCallViewController = self.prepareViewController(identifier: "call")
-        audioCallViewController.callCompletionDelegate = self
+        case .success(let call):
+          let audioCallViewController: AudioCallViewController = self.prepareViewController(identifier: "call")
+          audioCallViewController.callCompletionDelegate = self
 
-        // Pass call to be able to finish it.
-        audioCallViewController.call = call
+          // Pass call to be able to finish it.
+          audioCallViewController.call = call
 
-        self.recipientNameTextField.resignFirstResponder()
-        self.present(audioCallViewController, animated: true)
-      case .failure(let error):
-        os_log("Audio Call failed failed: %{public}@",
-               log: .sinchOSLog(for: MainViewController.identifier),
-               type: .error,
-               error.localizedDescription)
-        self.prepareErrorAlert(with: error.localizedDescription)
+          self.recipientNameTextField.resignFirstResponder()
+          self.present(audioCallViewController, animated: true)
+        case .failure(let error):
+          os_log("Audio Call failed failed: %{public}@",
+                 log: .sinchOSLog(for: MainViewController.identifier),
+                 type: .error,
+                 error.localizedDescription)
+          self.prepareErrorAlert(with: error.localizedDescription)
       }
     }
   }
@@ -178,26 +178,26 @@ final class MainViewController: UIViewController {
       .call(destination: recipient,
             type: .video,
             with: { [weak self] (result: Result<SinchCall, Error>) in
-        guard let self = self else { return }
+              guard let self = self else { return }
 
-        switch result {
-        case .success(let call):
-          // On success transfers to video call view controller.
-          let videoCallViewController: VideoCallViewController = self.prepareViewController(identifier: "videoCall")
+              switch result {
+                case .success(let call):
+                  // On success transfers to video call view controller.
+                  let videoCallViewController: VideoCallViewController = self.prepareViewController(identifier: "videoCall")
 
-          videoCallViewController.call = call
-          videoCallViewController.callCompletionDelegate = self
+                  videoCallViewController.call = call
+                  videoCallViewController.callCompletionDelegate = self
 
-          self.recipientNameTextField.resignFirstResponder()
-          self.present(videoCallViewController, animated: true)
-        case .failure(let error):
-          os_log("Video Call failed failed: %{public}@",
-                 log: .sinchOSLog(for: MainViewController.identifier),
-                 type: .error,
-                 error.localizedDescription)
-          self.prepareErrorAlert(with: error.localizedDescription)
-        }
-      })
+                  self.recipientNameTextField.resignFirstResponder()
+                  self.present(videoCallViewController, animated: true)
+                case .failure(let error):
+                  os_log("Video Call failed failed: %{public}@",
+                         log: .sinchOSLog(for: MainViewController.identifier),
+                         type: .error,
+                         error.localizedDescription)
+                  self.prepareErrorAlert(with: error.localizedDescription)
+              }
+            })
   }
 
   @objc private func hideKeyboard() {

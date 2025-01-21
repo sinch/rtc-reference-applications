@@ -64,8 +64,8 @@ final class AudioCallViewController: UIViewController {
 
   @IBAction private func toggleSpeaker(_ sender: Any) {
     speakerEnabled
-    ? SinchClientMediator.instance.sinchClient?.audioController.disableSpeaker()
-    : SinchClientMediator.instance.sinchClient?.audioController.enableSpeaker()
+      ? SinchClientMediator.instance.sinchClient?.audioController.disableSpeaker()
+      : SinchClientMediator.instance.sinchClient?.audioController.enableSpeaker()
 
     speakerEnabled = !speakerEnabled
 

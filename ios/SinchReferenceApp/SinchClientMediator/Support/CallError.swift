@@ -10,8 +10,8 @@ extension CallError: LocalizedError {
 
   var errorDescription: String? {
     switch self {
-    case .noClient: return "SinchClient was not assigned."
-    case .noCallType(let callId): return "Call type for call id: \(callId) was not set."
+      case .noClient: return "SinchClient was not assigned."
+      case .noCallType(let callId): return "Call type for call id: \(callId) was not set."
     }
   }
 }

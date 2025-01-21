@@ -102,8 +102,8 @@ extension AppDelegate: SinchClientMediatorDelegate {
 
     // If it is video call, depending on call type presents different viewControllers: audio or video.
     let presentingViewController = call.details.isVideoOffered
-    ? prepareVideoCallViewController(for: call, presentedController: presentedViewController)
-    : prepareAudioCallViewController(for: call, presentedController: presentedViewController)
+      ? prepareVideoCallViewController(for: call, presentedController: presentedViewController)
+      : prepareAudioCallViewController(for: call, presentedController: presentedViewController)
 
     guard let presentingViewController = presentingViewController else { return }
 
@@ -167,10 +167,10 @@ extension LogSeverity {
 
   var osLogType: OSLogType {
     switch self {
-    case .info, .warning: return .default
-    case .critical: return .fault
-    case .trace: return .debug
-    default: return .default
+      case .info, .warning: return .default
+      case .critical: return .fault
+      case .trace: return .debug
+      default: return .default
     }
   }
 }
