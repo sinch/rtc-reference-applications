@@ -55,7 +55,13 @@ export default class SipCallSinchClientWrapper {
     currentCall.addListener({
       // eslint-disable-next-line no-unused-vars
       onCallProgressing: (call) => {
-        this.ui.onCallProgressing();
+        this.ui.onCallProgressing(call);
+      },
+      onCallRinging: (call) => {
+        this.ui.onCallRinging(call);
+      },
+      onCallAnswered: (call) => {
+        this.ui.onCallAnswered(call);
       },
       onCallEstablished: (call) => {
         this.ui.onCallEstablished(call);

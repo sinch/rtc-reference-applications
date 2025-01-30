@@ -64,6 +64,12 @@ export default class VoiceCallSinchClientWrapper {
       onCallProgressing: (call) => {
         this.ui.onCallProgressing(call);
       },
+      onCallRinging: (call) => {
+        this.ui.onCallRinging(call);
+      },
+      onCallAnswered: (call) => {
+        this.ui.onCallAnswered(call);
+      },
       onCallEstablished: (call) => {
         this.ui.onCallEstablished(call);
       },

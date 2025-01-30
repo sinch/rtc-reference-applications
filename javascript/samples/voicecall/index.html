@@ -116,7 +116,7 @@
     </div>
     <footer class="footer">
       <div id="version"></div>
-      <span>&copy; Powered by Sinch-RTC 2021</span>
+      <span>&copy; Powered by Sinch <span id="year"></span></span>
     </footer>
     <script type="module" src="index.js"></script>
     <script type="text/javascript">
@@ -124,6 +124,9 @@
         const elems = document.querySelectorAll(".collapsible");
         const instances = M.Collapsible.init(elems, {});
       });
+    </script>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
     </script>
   </body>
 </html>

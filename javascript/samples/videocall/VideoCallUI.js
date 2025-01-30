@@ -68,15 +68,25 @@ export default class VideoCallUI {
     this.setStatus(`Call progressing ${call.remoteUserId}`);
   }
 
-  onCallEstablished(call) {
-    this.setStatus(`Call established with ${call.remoteUserId}`);
+  onCallRinging(call) {
+    this.setStatus(`Call ringing ${call.remoteUserId}`);
+  }
+
+  onCallAnswered(call) {
+    this.setStatus(
+      `Call answered ${call.remoteUserId}. Establishing connection...`,
+    );
     this.pauseRingtone();
-    setVisibility("videos-container", SHOW);
-    setVisibility("calldestination", HIDE);
     setState("call", DISABLE);
     setState("answer", DISABLE);
     setState("hangup", ENABLE);
     setAnswerPulse(IDLE);
+  }
+
+  onCallEstablished(call) {
+    this.setStatus(`Call established with ${call.remoteUserId}`);
+    setVisibility("videos-container", SHOW);
+    setVisibility("calldestination", HIDE);
   }
 
   onCallEnded(call) {
@@ -134,7 +144,10 @@ export default class VideoCallUI {
   handleAnswerClick(call) {
     const answerElement = document.getElementById("answer");
     answerElement.removeEventListener("click", this.handleAnswer);
-    this.handleAnswer = () => call.answer();
+    this.handleAnswer = () => {
+      setState("answer", DISABLE);
+      call.answer();
+    };
     answerElement.addEventListener("click", this.handleAnswer);
   }
 

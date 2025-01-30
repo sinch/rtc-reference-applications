@@ -27,20 +27,30 @@ export default class NumberCallUI {
     });
   }
 
-  onCallProgressing() {
-    this.setStatus("Call Progressing...");
+  onCallProgressing(call) {
+    this.setStatus(`Call progressing ${call.remoteUserId}`);
     this.ringToneAudio = ringtone(OUTGOING_RINGTONE);
     this.ringToneAudio.play();
   }
 
-  onCallEstablished(call) {
-    this.playAudio(call);
-    this.setStatus(`Call Established with ${call.remoteUserId}`);
+  onCallRinging(call) {
+    this.setStatus(`Call ringing ${call.remoteUserId}`);
+  }
+
+  onCallAnswered(call) {
+    this.setStatus(
+      `Call answered ${call.remoteUserId}. Establishing connection...`,
+    );
     this.ringToneAudio?.pause();
   }
 
-  onCallEnded() {
-    this.setStatus("Call Disconnected");
+  onCallEstablished(call) {
+    this.playAudio(call);
+    this.setStatus(`Call established with ${call.remoteUserId}`);
+  }
+
+  onCallEnded(call) {
+    this.setStatus(`Call ended ${call.remoteUserId}`);
     setText("call", "Call");
     this.ringToneAudio?.pause();
     this.resetCurrentCall();
