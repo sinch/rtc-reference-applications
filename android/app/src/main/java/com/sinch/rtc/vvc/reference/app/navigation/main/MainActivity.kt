@@ -148,17 +148,11 @@ class MainActivity : ViewBindingActivity<ActivityMainBinding>() {
 
                 is IncomingCall -> {
                     setupNavigation()
-                    val extraOptions = if (it.pop) {
-                        NavOptions.Builder().setPopUpTo(R.id.newCallFragment, true).build()
-                    } else {
-                        NavOptions.Builder().build()
-                    }
                     navHostFragment.navController.navigate(
                         MainNavGraphDirections.toIncomingCall(
                             it.callId,
                             it.initialAction,
-                        ), extraOptions
-                    )
+                        ))
                 }
             }
         }

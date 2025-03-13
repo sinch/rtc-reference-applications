@@ -6,6 +6,4 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class IncomingCallInitialData(
     val callId: String,
-    val initialAction: IncomingCallInitialAction,
-    val initiatedWhileInForeground: Boolean
-) : Parcelable
+    val initialAction: IncomingCallInitialAction) : Parcelable

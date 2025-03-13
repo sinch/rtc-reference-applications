@@ -91,8 +91,7 @@ class MainViewModel(
             navigationEvents.postValue(
                 IncomingCall(
                     it.callId,
-                    it.initialAction,
-                    !it.initiatedWhileInForeground
+                    it.initialAction
                 )
             )
         }

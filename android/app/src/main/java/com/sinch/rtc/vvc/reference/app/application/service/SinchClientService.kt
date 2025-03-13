@@ -46,8 +46,6 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
     }
 
     private val notificationManager: NotificationManager get() = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    private val isInForeground: Boolean get() = checkIfInForeground()
-    private val systemVersionDisallowsExplicitActivityStart: Boolean get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
     private val jwtFetcher: JWTFetcher by lazy {
         FakeJWTFetcher(prefsManager)
@@ -188,21 +186,17 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             putExtra(
                 MainActivity.INITIAL_INCOMING_CALL_DATA,
-                IncomingCallInitialData(call.callId, IncomingCallInitialAction.NONE, isInForeground)
+                IncomingCallInitialData(call.callId, IncomingCallInitialAction.NONE)
             )
         }
 
-        if (systemVersionDisallowsExplicitActivityStart && !isInForeground) {
-            createNotification(call, mainActivityIntent).let {
-                notificationManager.notify(
-                    NOTIFICATION_ID,
-                    it
-                )
-            }
-            call.addCallListener(NotificationCancellationListener(notificationManager))
-        } else {
-            startActivity(mainActivityIntent)
+        createNotification(call, mainActivityIntent).let {
+            notificationManager.notify(
+                NOTIFICATION_ID,
+                it
+            )
         }
+        call.addCallListener(NotificationCancellationListener(notificationManager))
         call.addCallListener(callEndedConsumableEventsListener)
     }
 
@@ -234,9 +228,7 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
                         MainActivity.INITIAL_INCOMING_CALL_DATA,
                         IncomingCallInitialData(
                             call.callId,
-                            IncomingCallInitialAction.ANSWER,
-                            false
-                        )
+                            IncomingCallInitialAction.ANSWER)
                     )
                 }, NOTIFICATION_PENDING_INTENT_ID + 2)
             )
@@ -248,9 +240,7 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
                         MainActivity.INITIAL_INCOMING_CALL_DATA,
                         IncomingCallInitialData(
                             call.callId,
-                            IncomingCallInitialAction.DECLINE,
-                            false
-                        )
+                            IncomingCallInitialAction.DECLINE)
                     )
                 }, NOTIFICATION_PENDING_INTENT_ID + 3)
             )
