@@ -69,6 +69,9 @@ export default class SipCallSinchClientWrapper {
       onCallEnded: (call) => {
         this.ui.onCallEnded(call);
       },
+      onCallQualityWarningEvent: (call, callQualityWarningEvent) => {
+        this.ui.onCallQualityWarningEvent(call, callQualityWarningEvent);
+      },
     });
   }
 }

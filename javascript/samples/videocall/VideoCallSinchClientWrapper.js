@@ -80,6 +80,9 @@ export default class VideoCallSinchClientWrapper {
       onCallEnded: (call) => {
         this.ui.onCallEnded(call);
       },
+      onCallQualityWarningEvent: (call, callQualityWarningEvent) => {
+        this.ui.onCallQualityWarningEvent(call, callQualityWarningEvent);
+      },
     });
   }
 }

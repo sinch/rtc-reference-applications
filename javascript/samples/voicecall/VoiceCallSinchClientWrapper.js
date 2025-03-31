@@ -76,6 +76,9 @@ export default class VoiceCallSinchClientWrapper {
       onCallEnded: (call) => {
         this.ui.onCallEnded(call);
       },
+      onCallQualityWarningEvent: (call, callQualityWarningEvent) => {
+        this.ui.onCallQualityWarningEvent(call, callQualityWarningEvent);
+      },
     });
   }
 }

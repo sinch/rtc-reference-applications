@@ -12,6 +12,7 @@ import {
   setVisibility,
   SHOW,
   setText,
+  showCallQualityWarningEventNotification,
 } from "../common/common.js";
 
 export default class VideoCallUI {
@@ -100,6 +101,10 @@ export default class VideoCallUI {
     setAnswerPulse(IDLE);
     this.removeVideoStream("outgoing-video");
     this.removeVideoStream("incoming-video");
+  }
+
+  onCallQualityWarningEvent(_call, callQualityWarningEvent) {
+    showCallQualityWarningEventNotification(callQualityWarningEvent);
   }
 
   playStream(stream, direction, mute = true, emptyContainer = true) {

@@ -1,4 +1,9 @@
-import { OUTGOING_RINGTONE, ringtone, setText } from "../common/common.js";
+import {
+  OUTGOING_RINGTONE,
+  ringtone,
+  setText,
+  showCallQualityWarningEventNotification,
+} from "../common/common.js";
 
 export default class SipCallUI {
   constructor() {
@@ -37,6 +42,10 @@ export default class SipCallUI {
     setText("call", "Call");
     this.ringToneAudio?.pause();
     this.resetCurrentCall();
+  }
+
+  onCallQualityWarningEvent(_call, callQualityWarningEvent) {
+    showCallQualityWarningEventNotification(callQualityWarningEvent);
   }
 
   getInput(field, button, resolve) {

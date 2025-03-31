@@ -103,3 +103,56 @@ export const setAnswerPulse = (state) => {
 export const setText = (id, text) => {
   document.getElementById(id).innerHTML = text;
 };
+
+export const showNotification = ({ message, isSuccess }) => {
+  const container = document.getElementById("notification-container");
+  if (!container) {
+    console.error("Notification container not found");
+    return;
+  }
+
+  const notification = document.createElement("div");
+  notification.textContent = message;
+  notification.classList.add("notification");
+
+  if (isSuccess) {
+    notification.classList.add("notification-success");
+  } else {
+    notification.classList.add("notification-error");
+  }
+
+  container.appendChild(notification);
+
+  const dismissDurationMs = 300;
+  const notificationVisibleDurationMs = 3000;
+  setTimeout(() => {
+    notification.style.opacity = "0";
+    setTimeout(() => notification.remove(), dismissDurationMs);
+  }, notificationVisibleDurationMs);
+};
+
+export const buildCallQualityWarningMessage = (callQualityWarningEvent) => {
+  let message = "Call quality warning ";
+
+  if (callQualityWarningEvent.type === "Trigger") {
+    message += `triggered: ${callQualityWarningEvent.name}.`;
+  } else {
+    message += `recovered: ${callQualityWarningEvent.name}.`;
+  }
+
+  if (callQualityWarningEvent.mediaStreamType === "Audio") {
+    message += " Associated media stream: Audio";
+  } else if (callQualityWarningEvent.mediaStreamType === "Video") {
+    message += " Associated media stream: Video";
+  }
+  return message;
+};
+
+export const showCallQualityWarningEventNotification = (
+  callQualityWarningEvent,
+) => {
+  showNotification({
+    message: buildCallQualityWarningMessage(callQualityWarningEvent),
+    isSuccess: callQualityWarningEvent.type === "Recover",
+  });
+};

@@ -11,6 +11,7 @@ import {
   setVisibility,
   SHOW,
   setText,
+  showCallQualityWarningEventNotification,
 } from "../common/common.js";
 
 export default class VoiceCallUI {
@@ -84,6 +85,10 @@ export default class VoiceCallUI {
     setState("call", ENABLE);
     setState("answer", DISABLE);
     setAnswerPulse(IDLE);
+  }
+
+  onCallQualityWarningEvent(_call, callQualityWarningEvent) {
+    showCallQualityWarningEventNotification(callQualityWarningEvent);
   }
 
   playStream(stream) {

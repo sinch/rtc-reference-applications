@@ -5,6 +5,7 @@ import {
   setVisibility,
   HIDE,
   SHOW,
+  showCallQualityWarningEventNotification,
 } from "../common/common.js";
 
 export default class NumberCallUI {
@@ -54,6 +55,10 @@ export default class NumberCallUI {
     setText("call", "Call");
     this.ringToneAudio?.pause();
     this.resetCurrentCall();
+  }
+
+  onCallQualityWarningEvent(_call, callQualityWarningEvent) {
+    showCallQualityWarningEventNotification(callQualityWarningEvent);
   }
 
   playAudio(call) {
