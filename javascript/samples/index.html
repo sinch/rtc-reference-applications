@@ -5,6 +5,12 @@
     <meta content="utf-8" http-equiv="encoding" />
     <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     <title>Sinch calling demo</title>
+    <link rel="manifest" href="manifest.json" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./common/style/favicon-180x180.png"
+    />
     <!--Import Google Icon Font-->
     <link rel="icon" type="image/png" href="./common/style/favicon-32x32.png" />
     <link
@@ -28,7 +34,14 @@
           alt="Sinch"
       /></a>
     </div>
-    <div class="row">
+    <div
+      id="errorContainer"
+      class="error-container card-panel red white-text"
+      style="display: none"
+    >
+      <span id="errorMessage"></span>
+    </div>
+    <div class="row" id="loginForm" style="display: block">
       <div class="col s12"></div>
       <div class="col s12 m2"></div>
       <div class="col s12 m8">

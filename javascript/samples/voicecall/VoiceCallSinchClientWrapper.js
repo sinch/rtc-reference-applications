@@ -1,4 +1,5 @@
 import {
+  canAutoStart,
   getJwtToken,
   getUserId,
   getApplicationKey,
@@ -17,7 +18,7 @@ export default class VoiceCallSinchClientWrapper {
 
     sinchClient.addListener(this.#sinchClientListener());
     sinchClient.setSupportManagedPush().then(() => {
-      sinchClient.start();
+      this.attemptAutoStart();
     });
 
     this.sinchClient = sinchClient;
@@ -27,6 +28,19 @@ export default class VoiceCallSinchClientWrapper {
     const call = await this.sinchClient.callClient.callUser(callee);
     this.ui.onOutboundCall(call);
     this.#callListeners(call);
+  }
+
+  async attemptAutoStart() {
+    if (await canAutoStart()) {
+      this.sinchClient.start();
+    } else {
+      this.ui.setManualStartButtonVisible(true);
+    }
+  }
+
+  startManually() {
+    this.sinchClient.start();
+    this.ui.setManualStartButtonVisible(false);
   }
 
   #sinchClientListener() {

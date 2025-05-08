@@ -1,4 +1,5 @@
 import {
+  canAutoStart,
   getJwtToken,
   getApplicationKey,
   getUserId,
@@ -23,7 +24,7 @@ export default class VideoCallSinchClientWrapper {
       .build();
     this.sinchClient.addListener(this.#sinchClientListener());
     this.sinchClient.setSupportManagedPush().then(() => {
-      this.sinchClient.start();
+      this.attemptAutoStart();
     });
   }
 
@@ -31,6 +32,19 @@ export default class VideoCallSinchClientWrapper {
     const call = await this.sinchClient.callClient.callUserVideo(callee);
     this.ui.onOutboundCall(call);
     this.#callListeners(call);
+  }
+
+  async attemptAutoStart() {
+    if (await canAutoStart()) {
+      this.sinchClient.start();
+    } else {
+      this.ui.setManualStartButtonVisible(true);
+    }
+  }
+
+  startManually() {
+    this.sinchClient.start();
+    this.ui.setManualStartButtonVisible(false);
   }
 
   #sinchClientListener() {

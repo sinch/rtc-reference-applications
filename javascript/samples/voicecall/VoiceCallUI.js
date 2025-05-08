@@ -19,6 +19,7 @@ export default class VoiceCallUI {
     this.sinchPhone = sinchPhone;
     this.audio = new Audio();
     this.handleMakeCallClick();
+    this.handleManualStartClick();
     setText("version", `Sinch - Version:  ${Sinch.version}`);
   }
 
@@ -107,6 +108,12 @@ export default class VoiceCallUI {
       .addEventListener("click", () => this.makeCall());
   }
 
+  handleManualStartClick() {
+    document
+      .getElementById("startclientbutton")
+      .addEventListener("click", () => this.sinchPhone.startManually());
+  }
+
   handleHangupClick(call) {
     const hangupElement = document.getElementById("hangup");
     hangupElement.removeEventListener("click", this.handleHangup);
@@ -135,5 +142,10 @@ export default class VoiceCallUI {
 
   pauseRingtone() {
     this.ringToneAudio?.pause();
+  }
+
+  setManualStartButtonVisible(isVisible) {
+    const startClientButton = document.getElementById("startclientbutton");
+    startClientButton.style.display = isVisible ? "block" : "none";
   }
 }

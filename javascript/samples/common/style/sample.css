@@ -68,7 +68,7 @@ fieldset {
 
 .status {
   width: 100%;
-  padding: 5px 0 5px 20px;
+  padding: 5px 20px 5px 20px;
   background-color: #ffd740;
   display: flex;
   justify-content: space-between;
@@ -94,24 +94,36 @@ fieldset {
 }
 
 .videos-container {
-  height: 480px;
-  width: 640px;
+  width: 100%;
+  max-width: 1500px;
+  height: auto;
+  max-height: 1000px;
   display: none;
   background-color: grey;
   overflow: auto;
+  position: relative;
+  margin: 0;
 }
 
 .incoming-video {
   width: 100%;
-  max-width: 640px;
-  position: absolute;
+  height: auto;
+  display: block;
+  position: static;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  left: 0;
 }
 
 .outgoing-video {
-  padding: 2% 2% 0 2%;
   width: 30%;
-  position: relative;
-  float: left;
+  max-width: 180px;
+  position: absolute;
+  top: 2%;
+  left: 2%;
+  z-index: 10;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .dialer-container {
@@ -163,4 +175,8 @@ fieldset {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.error-container {
+  margin: 20px;
 }

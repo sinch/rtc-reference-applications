@@ -1,4 +1,8 @@
-import { setupLogin } from "./common/common.js";
+import {
+  setupLogin,
+  isIOSBrowserNotInStandaloneMode,
+  isPushPermissionStatusDenied,
+} from "./common/common.js";
 
 const keyVisibilityElem = document.getElementById("keyVisibility");
 const secretVisibilityElem = document.getElementById("secretVisibility");
@@ -6,6 +10,9 @@ const videoCallBtn = document.getElementById("videocall");
 const voiceCallBtn = document.getElementById("voicecall");
 const numberCallBtn = document.getElementById("numbercall");
 const sipCallBtn = document.getElementById("sipcall");
+const erroContainer = document.getElementById("errorContainer");
+const errorMessage = document.getElementById("errorMessage");
+const loginForm = document.getElementById("loginForm");
 
 export const demo = function (event) {
   event.preventDefault();
@@ -18,6 +25,12 @@ export const demo = function (event) {
       window.location.href = `${type}/index.html`;
     }
   });
+};
+
+const showError = (message) => {
+  erroContainer.style.display = "block";
+  loginForm.style.display = "none";
+  errorMessage.innerHTML = message;
 };
 
 [videoCallBtn, voiceCallBtn, numberCallBtn, sipCallBtn].forEach((btn) => {
@@ -47,3 +60,15 @@ secretVisibilityElem.addEventListener(
   "click",
   toggleSecretVisibility("secret", "secretVisibility"),
 );
+
+if (isIOSBrowserNotInStandaloneMode()) {
+  showError(
+    "The application is not running in standalone mode. Please open this page in Safari browser and add to home screen to run the app.",
+  );
+}
+
+if (await isPushPermissionStatusDenied()) {
+  showError(
+    "Push notifications are denied. Please enable push notifications in the browser settings.",
+  );
+}

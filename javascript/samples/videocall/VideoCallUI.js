@@ -19,6 +19,7 @@ export default class VideoCallUI {
   constructor(sinchClientWrapper) {
     this.sinchClientWrapper = sinchClientWrapper;
     this.handleMakeCallClick();
+    this.handleManualStartClick();
     setState("call", DISABLE);
     setState("answer", DISABLE);
     setState("hangup", DISABLE);
@@ -111,10 +112,13 @@ export default class VideoCallUI {
     const videoElement = document.createElement("video");
     videoElement.setAttribute("id", `${direction}-video`);
     videoElement.setAttribute("class", `${direction}-video`);
+    videoElement.playsInline = true;
     videoElement.srcObject = stream;
     videoElement.autoplay = true;
     videoElement.playsinline = true;
     videoElement.muted = mute;
+    videoElement.setAttribute("playsinline", ""); // Standard attribute
+    videoElement.setAttribute("webkit-playsinline", "");
 
     const container = document.getElementById("videos-container");
     if (emptyContainer) {
@@ -137,6 +141,12 @@ export default class VideoCallUI {
     document
       .getElementById("call")
       .addEventListener("click", () => this.makeCall());
+  }
+
+  handleManualStartClick() {
+    document
+      .getElementById("startclientbutton")
+      .addEventListener("click", () => this.sinchClientWrapper.startManually());
   }
 
   handleHangupClick(call) {
@@ -178,5 +188,10 @@ export default class VideoCallUI {
 
   pauseRingtone() {
     this.ringToneAudio?.pause();
+  }
+
+  setManualStartButtonVisible(isVisible) {
+    const startClientButton = document.getElementById("startclientbutton");
+    startClientButton.style.display = isVisible ? "block" : "none";
   }
 }

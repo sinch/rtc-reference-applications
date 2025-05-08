@@ -14,6 +14,10 @@ export const JWT_TOKEN_KEY = `${STORAGE_KEY_BASE}jwttoken`;
 export const APPLICATION_KEY = `${STORAGE_KEY_BASE}applicationkey`;
 export const USER_ID_KEY = `${STORAGE_KEY_BASE}userid`;
 
+const PERMISSION_STATUS_PROMPT = "prompt";
+const PERMISSION_STATUS_DENIED = "denied";
+const PERMISSION_STATUS_GRANTED = "granted";
+
 /**
  * The recommended way to implement this authentication scheme is that the Application Secret
  * should be kept securely on your server-side backend, the signed token should be created and
@@ -26,13 +30,13 @@ export const setupLogin = async (applicationKey, applicationSecret, userId) => {
     applicationSecret,
     userId,
   ).toJwt();
-  sessionStorage.setItem(JWT_TOKEN_KEY, jwtToken);
-  sessionStorage.setItem(APPLICATION_KEY, applicationKey);
-  sessionStorage.setItem(USER_ID_KEY, userId);
+  localStorage.setItem(JWT_TOKEN_KEY, jwtToken);
+  localStorage.setItem(APPLICATION_KEY, applicationKey);
+  localStorage.setItem(USER_ID_KEY, userId);
 };
 
 export const getJwtToken = async () => {
-  const jwtToken = sessionStorage.getItem(JWT_TOKEN_KEY);
+  const jwtToken = localStorage.getItem(JWT_TOKEN_KEY);
   if (!jwtToken) {
     throw new Error("JWTToken doesn't exist");
   }
@@ -40,7 +44,7 @@ export const getJwtToken = async () => {
 };
 
 export const getApplicationKey = () => {
-  const applicationKey = sessionStorage.getItem(APPLICATION_KEY);
+  const applicationKey = localStorage.getItem(APPLICATION_KEY);
   if (!applicationKey) {
     throw new Error("ApplicationKey doesn't exist");
   }
@@ -48,7 +52,7 @@ export const getApplicationKey = () => {
 };
 
 export const getUserId = () => {
-  const userId = sessionStorage.getItem(USER_ID_KEY);
+  const userId = localStorage.getItem(USER_ID_KEY);
   if (!userId) {
     throw new Error("UserId doesn't exist");
   }
@@ -156,3 +160,62 @@ export const showCallQualityWarningEventNotification = (
     isSuccess: callQualityWarningEvent.type === "Recover",
   });
 };
+
+export const isIOSBrowserNotInStandaloneMode = () => {
+  const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true;
+  return isIOS && !isStandalone;
+};
+
+async function getPushPermissionStatus() {
+  if (navigator.permissions) {
+    try {
+      const status = await navigator.permissions.query({
+        name: "push",
+        userVisibleOnly: true,
+      });
+
+      return status.state;
+    } catch (err) {
+      console.warn(
+        "Permissions check using `navigator.permissions` API for push failed:",
+        err,
+      );
+    }
+  }
+  return typeof Notification !== "undefined"
+    ? Notification.permission
+    : "unknown";
+}
+
+export async function isPushPermissionStatusPrompt() {
+  const status = await getPushPermissionStatus();
+  return status === PERMISSION_STATUS_PROMPT;
+}
+
+export async function isPushPermissionStatusDenied() {
+  const status = await getPushPermissionStatus();
+  return status === PERMISSION_STATUS_DENIED;
+}
+
+/**
+ * Verifies whether the Sinch client can be automatically started.
+ *
+ * During Sinch client initialization, the browser may prompt the user for push notification permissions
+ * if they haven't been granted yet. In some browsers, this can result in the error:
+ * `Push notification prompting can only be done from a user gesture.`
+ *
+ * @returns True if the Sinch client can be automatically started; false otherwise.
+ */
+export async function canAutoStart() {
+  const status = await getPushPermissionStatus();
+  if (status === PERMISSION_STATUS_GRANTED) {
+    return true;
+  }
+
+  const ua = window.navigator.userAgent.toLowerCase();
+  // Chrome user agent contains "chrome" but so does Edge and Opera
+  const isChrome =
+    ua.includes("chrome") && !ua.includes("edg") && !ua.includes("opr");
+  return isChrome;
+}
