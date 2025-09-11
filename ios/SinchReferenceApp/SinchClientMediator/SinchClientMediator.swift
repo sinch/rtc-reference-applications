@@ -1,13 +1,13 @@
 import AVFoundation
-import CallKit
 import Foundation
 import OSLog
 import SinchRTC
 import UIKit
 
+typealias CallType = SinchClientMediator.CallType
+
 protocol SinchClientMediatorObserver: SinchCallDelegate {}
 
-// Create SinchClientMediatorDelegate to handle incoming calls.
 protocol SinchClientMediatorDelegate: AnyObject {
 
   func handleIncomingCall(_ call: SinchCall)
@@ -23,23 +23,14 @@ protocol LogoutDelegate: AnyObject {
   func didLogout()
 }
 
-// Create SinchClientMediator to be a wrapper and delegate for SinchClient.
 final class SinchClientMediator: NSObject {
 
-  enum CallType {
+  enum CallType: String {
 
     case audio
     case video
     case phone
   }
-
-  static let instance = SinchClientMediator()
-
-  // Use cases:
-  // * preserve login details
-  // * propagate username to view controllers
-  private(set) static var userIdKey = "com.sinch.userId"
-  private(set) static var cliKey = "com.sinch.cli"
 
   var clientStartedCallback: ClientStartedCallback!
 
@@ -47,20 +38,14 @@ final class SinchClientMediator: NSObject {
 
   var callStartedCallback: CallStartedCallback!
 
-  // An object interacts with calls by performing actions and observing calls.
-  // Request the creation of new CallKit calls.
-  private let callController = CXCallController()
-
-  // Represents telephony provider.
-  // Request the creation of new CallKit calls.
-  private(set) var provider: CXProvider!
+  private(set) var communicationKit: CommunicationKit = .callKit
+  private(set) var communicationService: CommunicationService?
 
   // Maps Sinch's call Ids to CallKit's call Id.
   let callRegistry = CallRegistry()
 
   var observers: [SinchClientMediatorObserver?] = []
 
-  // Create instance of delegate
   weak var delegate: SinchClientMediatorDelegate?
 
   weak var reloginDelegate: ReloginDelegate?
@@ -72,28 +57,6 @@ final class SinchClientMediator: NSObject {
     callRegistry.activeSinchCalls.first {
       [.initiating, .progressing, .ringing, .answered, .established].contains($0.state)
     }
-  }
-
-  // To report and handle actions for outgoing and incoming calls,
-  // should setup client delegate, and configure CallKit provider.
-  override private init() {
-    super.init()
-
-    let providerConfiguration: CXProviderConfiguration
-
-    if #available(iOS 14.0, *) {
-      providerConfiguration = CXProviderConfiguration()
-    } else {
-      providerConfiguration = CXProviderConfiguration(localizedName: "sinch_ref_app")
-    }
-    // Identification of user for each call, .generic means that its based on uuid value.
-    providerConfiguration.supportedHandleTypes = [.generic]
-    // Value that indicates if call supports video.
-    providerConfiguration.supportsVideo = true
-    providerConfiguration.ringtoneSound = Ringtone.incoming
-
-    self.provider = CXProvider(configuration: providerConfiguration)
-    self.provider.setDelegate(self, queue: nil)
   }
 
   // Creating and starting a client for particular user.
@@ -127,12 +90,10 @@ final class SinchClientMediator: NSObject {
     // https://developers.sinch.com/docs/in-app-calling/ios/sinch-client/#starting-the-sinclient
     sinchClient.callClient.delegate = self
 
-    // Conform the delegate to perform actions when mic was mute / unmute and speaker enabled / disabled.
     sinchClient.audioController.delegate = self
     sinchClient.start()
 
-    UserDefaults.standard.setValue(sinchClient.userId, forKey: SinchClientMediator.userIdKey)
-    UserDefaults.standard.setValue(cli, forKey: SinchClientMediator.cliKey)
+    UserInfo.save(userId: sinchClient.userId, cli: cli)
   }
 
   // This method is to be sure that client will be created
@@ -149,15 +110,17 @@ final class SinchClientMediator: NSObject {
   private func createClientIfNeededOnIncomingCall() {
     guard sinchClient == nil else { return }
 
-    guard let userId = UserDefaults.standard.string(forKey: SinchClientMediator.userIdKey) else {
+    let userInfo = UserInfo.load()
+
+    guard !userInfo.userId.isEmpty else {
       os_log("Failed to restore user from UserDefaults to create new SinchClient",
              log: .sinchOSLog(for: SinchClientMediator.identifier))
       return
     }
 
-    let cli = UserDefaults.standard.string(forKey: SinchClientMediator.cliKey) ?? ""
+    self.setupCommunication(with: CommunicationKit.load())
 
-    createAndStartClient(with: userId, cli: cli) { [weak self] error in
+    createAndStartClient(with: userInfo.userId, cli: userInfo.cli) { [weak self] error in
       guard let self = self else { return }
 
       if let error = error {
@@ -168,7 +131,7 @@ final class SinchClientMediator: NSObject {
       } else {
         os_log("SinchClient started successfully for user: %{public}@, version: %{public}@",
                log: .sinchOSLog(for: SinchClientMediator.identifier),
-               userId,
+               userInfo.userId,
                SinchRTC.version())
 
         self.reloginDelegate?.didCreateClientOnIncomingCall(for: self.sinchClient)
@@ -176,22 +139,31 @@ final class SinchClientMediator: NSObject {
     }
   }
 
-  // Action to start the call, after success
-  // 'provider(_ provider: CXProvider, perform action: CXStartCallAction)'
-  // event will be called.
-  func call(destination userId: String, type: CallType, with callback: @escaping CallStartedCallback) {
-    // Object associated with the call that will be used to identify the users involved with the call.
-    let handle = CXHandle(type: .generic, value: userId)
+  func setupCommunication(with communicationKit: CommunicationKit) {
+    self.communicationKit = communicationKit
 
-    let startCallAction = CXStartCallAction(call: UUID(), handle: handle)
-    startCallAction.isVideo = type == .video
-    let startCallTransaction = CXTransaction(action: startCallAction)
+    CommunicationKit.save(communicationKit: communicationKit)
+
+    os_log("Setup communication kit: %{public}@",
+           log: .sinchOSLog(for: SinchClientMediator.identifier),
+           type: .info,
+           communicationKit.toString())
+
+    guard #available(iOS 17.4, *), communicationKit == .liveCommunicationKit else {
+      self.communicationService = SinchCallKitService(delegate: self)
+      return
+    }
+
+    self.communicationService = SinchLiveCommunicationKitService(delegate: self)
+  }
+
+  func call(destination userId: String, type: CallType, with callback: @escaping CallStartedCallback) {
+    let uuid = UUID()
 
     callStartedCallback = callback
-    callTypes[startCallAction.callUUID.uuidString] = type
+    callTypes[uuid.uuidString] = type
 
-    // Request to start a call to CallKit.
-    callController.request(startCallTransaction, completion: { [weak self] error in
+    let errorCompletion: (Error?) -> Void = { [weak self] error in
       guard let self = self, let error = error else { return }
 
       os_log("Error requesting start call transaction: %{public}@",
@@ -203,21 +175,30 @@ final class SinchClientMediator: NSObject {
         self.callStartedCallback(.failure(error))
         self.callStartedCallback = nil
       }
-    })
+    }
+
+    os_log("Calling with %{public}@ for userId: %{public}@, uuid: %{public}@",
+           log: .sinchOSLog(for: SinchClientMediator.identifier),
+           type: .info,
+           self.communicationKit.toString(),
+           userId,
+           uuid.uuidString)
+
+    guard let communicationService = self.communicationService else {
+      os_log("%{public}@ service is not initialized",
+             log: .sinchOSLog(for: SinchClientMediator.identifier),
+             type: .error,
+             self.communicationKit.toString())
+      return
+    }
+
+    communicationService.call(userId: userId, uuid: uuid, isVideo: type == .video, with: errorCompletion)
   }
 
-  // Action to end the call, after success
-  // 'provider(_ provider: CXProvider, perform action: CXEndCallAction)'
-  // event will be called.
   func end(call: SinchCall) {
-    // End a call by sinch call id.
-    guard let uuid = callRegistry.callKitUUID(forSinchId: call.callId) else { return }
+    guard let uuid = callRegistry.uuid(from: call.callId) else { return }
 
-    let endCallAction = CXEndCallAction(call: uuid)
-    let endCallTransaction = CXTransaction(action: endCallAction)
-
-    // Request to end a call to CallKit.
-    callController.request(endCallTransaction, completion: { [weak self] error in
+    let errorCompletion: (Error?) -> Void = { [weak self] error in
       guard let self = self else { return }
 
       if let error = error {
@@ -228,7 +209,17 @@ final class SinchClientMediator: NSObject {
       }
 
       self.callStartedCallback = nil
-    })
+    }
+
+    guard let communicationService = self.communicationService else {
+      os_log("%{public}@ service is not initialized",
+             log: .sinchOSLog(for: SinchClientMediator.identifier),
+             type: .error,
+             self.communicationKit.toString())
+      return
+    }
+
+    communicationService.end(uuid: uuid, with: errorCompletion)
   }
 
   func logout(with completion: () -> Void) {
@@ -236,8 +227,7 @@ final class SinchClientMediator: NSObject {
       completion()
     }
 
-    UserDefaults.standard.removeObject(forKey: SinchClientMediator.userIdKey)
-    UserDefaults.standard.removeObject(forKey: SinchClientMediator.cliKey)
+    UserInfo.clear()
 
     guard let client = sinchClient else { return }
 
@@ -250,6 +240,7 @@ final class SinchClientMediator: NSObject {
     }
 
     sinchClient = nil
+    communicationService = nil
 
     logoutDelegate?.didLogout()
   }
@@ -259,12 +250,9 @@ final class SinchClientMediator: NSObject {
 
 extension SinchClientMediator {
 
-  // Report new incoming call.
   func reportIncomingCall(with pushPayload: [AnyHashable: Any], and completion: @escaping (Error?) -> Void) {
-    // Create client if user logged out / terminated app without unregistering device token.
     createClientIfNeededOnIncomingCall()
 
-    // Extract call information from the push payload.
     let notification = queryPushNotificationPayload(pushPayload)
 
     guard notification.isCall, notification.isValid else {
@@ -277,56 +265,76 @@ extension SinchClientMediator {
     }
 
     let callNotification = notification.callResult
+    let callId = callNotification.callId
 
-    guard callRegistry.callKitUUID(forSinchId: callNotification.callId) == nil else {
+    guard callRegistry.uuid(from: callId) == nil else {
       os_log("Push notification for %{public}@ call was already processed",
              log: .sinchOSLog(for: SinchClientMediator.identifier),
-             callNotification.callId)
+             callId)
 
       return
     }
 
-    let callKitId = UUID()
-    callRegistry.map(callKitId: callKitId, toSinchCallId: callNotification.callId)
+    let uuid = UUID()
+    callRegistry.map(uuid: uuid, to: callId)
 
-    os_log("Reporting new incoming call with CallKit id: %{public}@ and push call id: %{public}@",
+    os_log("Reporting new incoming call with %{public}@ with uuid: %{public}@ and push call id: %{public}@",
            log: .sinchOSLog(for: SinchClientMediator.identifier),
-           callKitId.description,
-           callNotification.callId)
+           self.communicationKit.toString(),
+           uuid.description,
+           callId)
 
-    // Request SinchClientProvider to report new call to CallKit.
-    let update = CXCallUpdate()
+    let errorCompletion: (Error?) -> Void = self.handleIncomingCallError(for: callId, and: uuid, with: completion)
 
-    update.remoteHandle = CXHandle(type: .generic, value: callNotification.remoteUserId)
-    update.hasVideo = callNotification.isVideoOffered
+    guard let communicationService = self.communicationService else {
+      os_log("%{public}@ service is not initialized",
+             log: .sinchOSLog(for: SinchClientMediator.identifier),
+             type: .error,
+             self.communicationKit.toString())
+      return
+    }
 
-    // Reporting the call to CallKit.
-    provider.reportNewIncomingCall(with: callKitId, update: update, completion: { [weak self] (error: Error?) in
-      guard let self = self else { return }
-      if error != nil {
-        // If we get an error here from the OS,
-        // it is possibly the callee's phone has
-        // "Do Not Disturb" turned on;
-        // check CXErrorCodeIncomingCallError in CXError.h
-        self.hangupCallOnError(with: callNotification.callId)
-      }
-      let hasActiveCallKitCalls = !self.callRegistry.activeSinchCalls.isEmpty
-      completion(error)
-      // As per Apple docs we are forced to call `CXProvider.reportNewIncomingCall` whenever a new VoIP push arrives.
-      // However Sinch SDK can handle only a single active call at a time (relaying any new incoming call push,
-      // when there's already ongoing call will cause the new
-      // call to be automatically denied and `SinchCallClientDelegate.didReceiveIncomingCall` will not be called).
-      // In order to prevent CallKit UI from showing the new call data, we need to mark it as ended as soon as
-      // completion block is invoked.
-      if hasActiveCallKitCalls {
-        provider.reportCall(with: callKitId, endedAt: nil, reason: .declinedElsewhere)
-      }
-    })
+    let userInfo = UserInfo.load(with: "unknown")
+    communicationService.reportIncomingCall(localUserId: userInfo.userId,
+                                            remoteUserId: callNotification.remoteUserId,
+                                            uuid: uuid,
+                                            isVideoOffered: callNotification.isVideoOffered,
+                                            with: errorCompletion)
   }
 
-  // If error occured, just finish the call.
-  private func hangupCallOnError(with callId: String) {
-    guard let call = callRegistry.sinchCall(forCallId: callId) else {
+  private func handleIncomingCallError(for callId: String,
+                                       and uuid: UUID,
+                                       with completion: @escaping (Error?) -> Void) -> (Error?) -> Void {
+    return { [weak self] error in
+      guard let self = self else { return }
+
+      // If we get an error here from the OS, it is possibly the callee's phone has "Do Not Disturb" turned on
+      self.hangupCall(with: callId, on: error)
+      completion(error)
+
+      guard let communicationService = self.communicationService else {
+        os_log("%{public}@ service is not initialized",
+               log: .sinchOSLog(for: SinchClientMediator.identifier),
+               type: .error,
+               self.communicationKit.toString())
+        return
+      }
+
+      if !self.callRegistry.activeSinchCalls.isEmpty {
+        communicationService.declineIncomingCallIfBusy(uuid: uuid)
+      }
+    }
+  }
+
+  private func hangupCall(with callId: String, on error: Error?) {
+    guard let error = error else { return }
+
+    os_log("Call ended with error: %{public}@",
+           log: .sinchOSLog(for: SinchClientMediator.identifier),
+           type: .error,
+           error.localizedDescription)
+
+    guard let call = callRegistry.sinchCall(for: callId) else {
       os_log("Unable to find sinch call for callId: %{public}@",
              log: .sinchOSLog(for: SinchClientMediator.identifier),
              type: .error,

@@ -30,8 +30,7 @@ extension SinchClientMediator: SinchClientDelegate {
   }
 
   func clientDidFail(_ client: SinchClient, error: Error) {
-    UserDefaults.standard.removeObject(forKey: SinchClientMediator.userIdKey)
-    UserDefaults.standard.removeObject(forKey: SinchClientMediator.cliKey)
+    UserInfo.clear()
 
     guard clientStartedCallback != nil else { return }
 

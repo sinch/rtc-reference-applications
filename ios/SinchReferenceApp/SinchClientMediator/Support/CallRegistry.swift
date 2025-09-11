@@ -5,11 +5,11 @@ final class CallRegistry {
 
   private var lock = NSLock()
   private var activeCalls: [String: SinchCall] = [:]
-  private var mapCallIdToCallKitId: [String: UUID] = [:]
+  private var uuidsByCallIds: [String: UUID] = [:]
 
   func reset() {
     self.activeCalls.removeAll()
-    self.mapCallIdToCallKitId.removeAll()
+    self.uuidsByCallIds.removeAll()
   }
 
   // MARK: - SinchCall API
@@ -23,26 +23,23 @@ final class CallRegistry {
   func removeSinchCall(withId callId: String) {
     synchronized(self.lock) {
       self.activeCalls.removeValue(forKey: callId)
-      self.mapCallIdToCallKitId.removeValue(forKey: callId)
+      self.uuidsByCallIds.removeValue(forKey: callId)
     }
   }
 
-  func sinchCall(forCallId callId: String) -> SinchCall? {
+  func sinchCall(for callId: String) -> SinchCall? {
     return synchronized(self.lock) {
       return self.activeCalls[callId]
     }
   }
 
-  func sinchCall(forCallKitUUID uuid: UUID) -> SinchCall? {
+  func sinchCall(from uuid: UUID) -> SinchCall? {
     return synchronized(self.lock) {
-      let tuple = self.mapCallIdToCallKitId.first { tuple -> Bool in
-        let (_, value) = tuple
-        return uuid == value
+      guard let callId = self.uuidsByCallIds.first(where: { $0.value == uuid })?.key else {
+        return nil
       }
 
-      guard let (key, _) = tuple else { return nil }
-
-      return self.activeCalls[key]
+      return self.activeCalls[callId]
     }
   }
 
@@ -52,18 +49,18 @@ final class CallRegistry {
     }
   }
 
-  // MARK: - CallKit <-> Sinch CallId mapping API
+  // MARK: - UUID <-> Sinch call id mapping API
 
-  // This is necessary to properly bind Callkit UUID and sinch callId when making calls.
-  func map(callKitId uuid: UUID, toSinchCallId callId: String) {
+  // This is necessary to properly bind CallKit/LCK UUID and sinch call id when making calls.
+  func map(uuid: UUID, to callId: String) {
     synchronized(self.lock) {
-      self.mapCallIdToCallKitId[callId] = uuid
+      self.uuidsByCallIds[callId] = uuid
     }
   }
 
-  func callKitUUID(forSinchId callId: String) -> UUID? {
+  func uuid(from callId: String) -> UUID? {
     return synchronized(self.lock) {
-      return self.mapCallIdToCallKitId[callId]
+      return self.uuidsByCallIds[callId]
     }
   }
 }

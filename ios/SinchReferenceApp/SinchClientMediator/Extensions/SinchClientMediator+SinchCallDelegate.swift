@@ -1,52 +1,77 @@
 import CallKit
 import Foundation
+import LiveCommunicationKit
 import OSLog
 import SinchRTC
 import UIKit
 
-// Make SinchClientMediator a delegate to a call by implementing Observer pattern.
-// By implementing this we could handle call establishment, progress and ending whereever observers were added.
+enum OutgoingCallState {
+
+  case progress, answer
+}
+
+// Makes SinchClientMediator an observer-based call delegate.
+// This lets us handle call establishment, progress, and ending through registered observers.
 extension SinchClientMediator: SinchCallDelegate {
 
-  // For each observer callback action will be called.
   private func fanoutDelegateCall(_ callback: (_ observer: SinchClientMediatorObserver?) -> Void) {
-    observers.removeAll(where: { $0 === nil })
-    observers.forEach { callback($0) }
+    self.observers.removeAll(where: { $0 === nil })
+    self.observers.forEach { callback($0) }
   }
 
   func addObserver(_ observer: SinchClientMediatorObserver) {
-    guard observers.firstIndex(where: { $0 === observer }) == nil else { return }
+    guard self.observers.firstIndex(where: { $0 === observer }) == nil else { return }
 
-    observers.append(observer)
+    self.observers.append(observer)
   }
 
   func removeObserver(_ observer: SinchClientMediatorObserver) {
-    guard let index = observers.firstIndex(where: { $0 === observer }) else { return }
+    guard let index = self.observers.firstIndex(where: { $0 === observer }) else { return }
 
-    observers.remove(at: index)
+    self.observers.remove(at: index)
   }
 
   func callDidProgress(_ call: SinchCall) {
-    if let callKitId = self.callRegistry.callKitUUID(forSinchId: call.callId), call.direction == .outgoing {
-      self.provider.reportOutgoingCall(with: callKitId, startedConnectingAt: call.details.startedTime)
+    if let uuid = self.callRegistry.uuid(from: call.callId), call.direction == .outgoing {
+      self.reportCallProgressed(call, with: uuid)
     }
+
+    os_log("Call did progress for call id: %{public}@",
+           log: .sinchOSLog(for: SinchClientMediator.identifier),
+           type: .info,
+           call.callId)
 
     self.fanoutDelegateCall { $0?.callDidProgress(call) }
   }
 
   func callDidRing(_ call: SinchCall) {
+    os_log("Call did ring for call id: %{public}@",
+           log: .sinchOSLog(for: SinchClientMediator.identifier),
+           type: .info,
+           call.callId)
+
     self.fanoutDelegateCall { $0?.callDidRing(call) }
   }
 
   func callDidAnswer(_ call: SinchRTC.SinchCall) {
-    if let callKitId = self.callRegistry.callKitUUID(forSinchId: call.callId), call.direction == .outgoing {
-      self.provider.reportOutgoingCall(with: callKitId, connectedAt: call.details.establishedTime)
+    if let uuid = self.callRegistry.uuid(from: call.callId), call.direction == .outgoing {
+      self.reportCallAnswered(call, with: uuid)
     }
+
+    os_log("Call did answer for call id: %{public}@",
+           log: .sinchOSLog(for: SinchClientMediator.identifier),
+           type: .info,
+           call.callId)
 
     self.fanoutDelegateCall { $0?.callDidAnswer(call) }
   }
 
   func callDidEstablish(_ call: SinchCall) {
+    os_log("Call did establish for call id: %{public}@",
+           log: .sinchOSLog(for: SinchClientMediator.identifier),
+           type: .info,
+           call.callId)
+
     self.fanoutDelegateCall { $0?.callDidEstablish(call) }
   }
 
@@ -55,12 +80,14 @@ extension SinchClientMediator: SinchCallDelegate {
       call.delegate = nil
     }
 
-    if let uuid = self.callRegistry.callKitUUID(forSinchId: call.callId) {
-      // Report end of the call to CallKit.
-      self.provider.reportCall(with: uuid,
-                               endedAt: call.details.endedTime,
-                               reason: call.details.endCause.reason)
+    if let uuid = self.callRegistry.uuid(from: call.callId) {
+      self.reportCallEnded(call, with: uuid)
     }
+
+    os_log("Call did end for call id: %{public}@",
+           log: .sinchOSLog(for: SinchClientMediator.identifier),
+           type: .info,
+           call.callId)
 
     self.callRegistry.removeSinchCall(withId: call.callId)
 
@@ -86,49 +113,63 @@ extension SinchClientMediator: SinchCallDelegate {
     self.fanoutDelegateCall { $0?.callDidEnd(call) }
   }
 
+  func callDidEmitCallQualityEvent(_ call: SinchCall, event: SinchCallQualityWarningEvent) {
+    os_log("Event: %{public}@ Call id: %{public}@.", event.toString, call.callId)
+    self.fanoutDelegateCall { $0?.callDidEmitCallQualityEvent(call, event: event) }
+  }
+
   // If application is using video, SinchCallDelegate should be extended with
   // callDidAddVideoTrack, callDidPauseVideoTrack, callDidResumeVideoTrack.
 
-  // When video is available, notify all observers and perform specific actions.
   func callDidAddVideoTrack(_ call: SinchCall) {
     self.fanoutDelegateCall { $0?.callDidAddVideoTrack(call) }
   }
 
-  // When video was paused, notify all observers and perform specific actions.
   func callDidPauseVideoTrack(_ call: SinchCall) {
     self.fanoutDelegateCall { $0?.callDidPauseVideoTrack(call) }
   }
 
-  // When video was unpaused, notify all observers and perform specific actions.
   func callDidResumeVideoTrack(_ call: SinchCall) {
     self.fanoutDelegateCall { $0?.callDidResumeVideoTrack(call) }
   }
-
-  func callDidEmitCallQualityEvent(_ call: SinchCall, event: SinchCallQualityWarningEvent) {
-    os_log("Event: %{public}@ Call id: %{public}@.", event.toString, call.callId)
-
-    self.fanoutDelegateCall { $0?.callDidEmitCallQualityEvent(call, event: event) }
-  }
 }
 
-extension SinchRTC.SinchCallDetails.EndCause {
+// Support methods for reporting call progress, answer, and end to the communication kit services.
+extension SinchClientMediator {
 
-  var reason: CXCallEndedReason {
-    switch self {
-      case .error:
-        return .failed
-      // .hangUp mapping is not really correct, as it is the end cause also when the local peer ended the call.
-      // .inactive mapping is not really correct, as it is triggered by the local peer.
-      case .denied, .hungUp, .inactive:
-        return .remoteEnded
-      case .timeout, .canceled, .noAnswer:
-        return .unanswered
-      case .otherDeviceAnswered:
-        return .answeredElsewhere
-      case .voipCallDetected, .gsmCallDetected:
-        return .failed
-      default:
-        return .failed
+  private func reportCallProgressed(_ call: SinchCall, with uuid: UUID) {
+    guard let communicationService = self.communicationService else {
+      os_log("%{public}@ service is not initialized",
+             log: .sinchOSLog(for: SinchClientMediator.identifier),
+             type: .error,
+             self.communicationKit.toString())
+      return
     }
+
+    communicationService.reportOutgoingCall(uuid: uuid, time: call.details.startedTime, for: .progress)
+  }
+
+  private func reportCallAnswered(_ call: SinchCall, with uuid: UUID) {
+    guard let communicationService = self.communicationService else {
+      os_log("%{public}@ service is not initialized",
+             log: .sinchOSLog(for: SinchClientMediator.identifier),
+             type: .error,
+             self.communicationKit.toString())
+      return
+    }
+
+    communicationService.reportOutgoingCall(uuid: uuid, time: call.details.establishedTime, for: .answer)
+  }
+
+  private func reportCallEnded(_ call: SinchCall, with uuid: UUID) {
+    guard let communicationService = self.communicationService else {
+      os_log("%{public}@ service is not initialized",
+             log: .sinchOSLog(for: SinchClientMediator.identifier),
+             type: .error,
+             self.communicationKit.toString())
+      return
+    }
+
+    communicationService.reportCallEnd(uuid: uuid, time: call.details.endedTime, endCause: call.details.endCause)
   }
 }
