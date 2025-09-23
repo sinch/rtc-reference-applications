@@ -12,6 +12,9 @@ import {
   SHOW,
   setText,
   showCallQualityWarningEventNotification,
+  initDeviceSelectors,
+  setMediaSource,
+  setAudioOutput,
 } from "../common/common.js";
 
 export default class VoiceCallUI {
@@ -20,6 +23,7 @@ export default class VoiceCallUI {
     this.audio = new Audio();
     this.handleMakeCallClick();
     this.handleManualStartClick();
+    this.handleDeviceSelectors();
     setText("version", `Sinch - Version:  ${Sinch.version}`);
   }
 
@@ -112,6 +116,19 @@ export default class VoiceCallUI {
     document
       .getElementById("startclientbutton")
       .addEventListener("click", () => this.sinchPhone.startManually());
+  }
+
+  handleDeviceSelectors() {
+    initDeviceSelectors();
+    document
+      .getElementById("audioSource")
+      .addEventListener("change", () =>
+        setMediaSource(this.sinchPhone.sinchClient, false),
+      );
+    document
+      .getElementById("audioOutput")
+      .addEventListener("change", () => setAudioOutput(this.audio));
+    navigator.mediaDevices.ondevicechange = initDeviceSelectors;
   }
 
   handleHangupClick(call) {

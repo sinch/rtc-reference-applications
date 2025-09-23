@@ -93,9 +93,27 @@
         <img src="../common/style/sinch-logo.jpeg" />
       </div>
     </div>
-    <div id="videos-container" class="videos-container"></div>
+    <div id="videos-container" class="videos-container">
+      <video id="incoming-video" autoplay muted></video>
+      <video id="outgoing-video" autoplay muted></video>
+    </div>
     <div id="sinchbody" class="sinchbody">
       <form>
+        <div class="input-field">
+          <select id="audioSource">
+            <option value="" disabled selected>Select audio source</option>
+          </select>
+        </div>
+        <div class="input-field">
+          <select id="audioOutput">
+            <option value="" disabled selected>Select audio output</option>
+          </select>
+        </div>
+        <div class="input-field">
+          <select id="videoSource">
+            <option value="" disabled selected>Select video source</option>
+          </select>
+        </div>
         <div id="forminput" class="forminput">
           <div id="calldestination" class="calldestination">
             <fieldset>

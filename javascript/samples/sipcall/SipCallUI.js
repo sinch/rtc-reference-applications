@@ -3,11 +3,16 @@ import {
   ringtone,
   setText,
   showCallQualityWarningEventNotification,
+  initDeviceSelectors,
+  setMediaSource,
+  setAudioOutput,
 } from "../common/common.js";
 
 export default class SipCallUI {
-  constructor() {
+  constructor(sinchPhone) {
+    this.sinchPhone = sinchPhone;
     this.audio = new Audio();
+    this.handleDeviceSelectors();
     setText("version", `Sinch - Version:  ${Sinch.version}`);
   }
 
@@ -75,5 +80,18 @@ export default class SipCallUI {
   setStatus(text) {
     setText("statusheader", text);
     console.log(text);
+  }
+
+  handleDeviceSelectors() {
+    initDeviceSelectors();
+    document
+      .getElementById("audioSource")
+      .addEventListener("change", () =>
+        setMediaSource(this.sinchPhone.sinchClient, false),
+      );
+    document
+      .getElementById("audioOutput")
+      .addEventListener("change", () => setAudioOutput(this.audio));
+    navigator.mediaDevices.ondevicechange = initDeviceSelectors;
   }
 }

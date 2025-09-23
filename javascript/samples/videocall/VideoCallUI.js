@@ -13,6 +13,9 @@ import {
   SHOW,
   setText,
   showCallQualityWarningEventNotification,
+  initDeviceSelectors,
+  setMediaSource,
+  setAudioOutput,
 } from "../common/common.js";
 
 export default class VideoCallUI {
@@ -20,6 +23,7 @@ export default class VideoCallUI {
     this.sinchClientWrapper = sinchClientWrapper;
     this.handleMakeCallClick();
     this.handleManualStartClick();
+    this.handleDeviceSelectors();
     setState("call", DISABLE);
     setState("answer", DISABLE);
     setState("hangup", DISABLE);
@@ -46,8 +50,8 @@ export default class VideoCallUI {
   onOutboundCall(call) {
     this.playRingtone(OUTGOING_RINGTONE);
     this.handleHangupClick(call);
-    this.playStream(call.incomingStream, "incoming", true, true);
-    this.playStream(call.outgoingStream, "outgoing", false, false);
+    this.playStream(call.incomingStream, "incoming", false);
+    this.playStream(call.outgoingStream, "outgoing", false);
     this.muteVideoStream("outgoing-video");
     setState("hangup", ENABLE);
   }
@@ -61,8 +65,8 @@ export default class VideoCallUI {
     setState("answer", ENABLE);
     setState("hangup", ENABLE);
     setAnswerPulse(CALLING);
-    this.playStream(call.incomingStream, "incoming", false, false);
-    this.playStream(call.outgoingStream, "outgoing", false, false);
+    this.playStream(call.incomingStream, "incoming", false);
+    this.playStream(call.outgoingStream, "outgoing", false);
     this.muteVideoStream("outgoing-video");
   }
 
@@ -108,24 +112,14 @@ export default class VideoCallUI {
     showCallQualityWarningEventNotification(callQualityWarningEvent);
   }
 
-  playStream(stream, direction, mute = true, emptyContainer = true) {
-    const videoElement = document.createElement("video");
-    videoElement.setAttribute("id", `${direction}-video`);
+  playStream(stream, direction, mute = true) {
+    const videoElement = document.getElementById(`${direction}-video`);
     videoElement.setAttribute("class", `${direction}-video`);
     videoElement.playsInline = true;
     videoElement.srcObject = stream;
-    videoElement.autoplay = true;
-    videoElement.playsinline = true;
     videoElement.muted = mute;
     videoElement.setAttribute("playsinline", ""); // Standard attribute
     videoElement.setAttribute("webkit-playsinline", "");
-
-    const container = document.getElementById("videos-container");
-    if (emptyContainer) {
-      container.innerHTML = "";
-    }
-
-    container.appendChild(videoElement);
   }
 
   setStatus(text) {
@@ -147,6 +141,25 @@ export default class VideoCallUI {
     document
       .getElementById("startclientbutton")
       .addEventListener("click", () => this.sinchClientWrapper.startManually());
+  }
+
+  handleDeviceSelectors() {
+    initDeviceSelectors();
+    const audioElement = document.getElementById("incoming-video");
+    document
+      .getElementById("audioSource")
+      .addEventListener("change", () =>
+        setMediaSource(this.sinchClientWrapper.sinchClient, false),
+      );
+    document
+      .getElementById("audioOutput")
+      .addEventListener("change", () => setAudioOutput(audioElement));
+    document
+      .getElementById("videoSource")
+      .addEventListener("change", () =>
+        setMediaSource(this.sinchClientWrapper.sinchClient, true),
+      );
+    navigator.mediaDevices.ondevicechange = initDeviceSelectors;
   }
 
   handleHangupClick(call) {
@@ -174,7 +187,9 @@ export default class VideoCallUI {
   removeVideoStream(id) {
     console.log("Action: Remove videosteam ==>", id);
     const videostream = document.getElementById(id);
-    videostream?.remove();
+    if (videostream) {
+      videostream.srcObject = null;
+    }
   }
 
   getCallee() {

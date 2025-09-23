@@ -79,6 +79,10 @@ fieldset {
   width: 100%;
 }
 
+.select {
+  width: 100%;
+}
+
 .collapsible {
   border-top: 1px solid #ddd;
   border-right: 1px solid #ddd;

@@ -61,6 +61,16 @@
     </div>
     <div class="sinchbody">
       <form>
+        <div class="input-field">
+          <select id="audioSource">
+            <option value="" disabled selected>Select audio source</option>
+          </select>
+        </div>
+        <div class="input-field">
+          <select id="audioOutput">
+            <option value="" disabled selected>Select audio output</option>
+          </select>
+        </div>
         <div id="sinchclient">
           <fieldset>
             <span class="header_l1">Start a Sinch Client</span>
@@ -150,6 +160,8 @@
       document.addEventListener("DOMContentLoaded", function () {
         const elems = document.querySelectorAll(".collapsible");
         const instances = M.Collapsible.init(elems, {});
+        const selectors = document.querySelectorAll("select");
+        M.FormSelect.init(selectors);
       });
     </script>
     <script>

@@ -6,13 +6,18 @@ import {
   HIDE,
   SHOW,
   showCallQualityWarningEventNotification,
+  initDeviceSelectors,
+  setMediaSource,
+  setAudioOutput,
 } from "../common/common.js";
 
 export default class NumberCallUI {
   constructor(sinchPhone) {
+    this.sinchPhone = sinchPhone;
     this.audio = new Audio();
     this.setupDialerInput();
     this.handleStartClientClick(sinchPhone);
+    this.handleDeviceSelectors();
     setText("version", `Sinch - Version:  ${Sinch.version}`);
     setVisibility("sinchclient", SHOW);
     setVisibility("call-destination", HIDE);
@@ -26,6 +31,19 @@ export default class NumberCallUI {
       setVisibility("dialer", SHOW, "grid");
       this.setStatus("Sinch client is started");
     });
+  }
+
+  handleDeviceSelectors() {
+    initDeviceSelectors();
+    document
+      .getElementById("audioSource")
+      .addEventListener("change", () =>
+        setMediaSource(this.sinchPhone.sinchClient, false),
+      );
+    document
+      .getElementById("audioOutput")
+      .addEventListener("change", () => setAudioOutput(this.audio));
+    navigator.mediaDevices.ondevicechange = initDeviceSelectors;
   }
 
   onCallProgressing(call) {
