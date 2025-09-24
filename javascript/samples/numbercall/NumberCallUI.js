@@ -1,6 +1,7 @@
 import {
   OUTGOING_RINGTONE,
   ringtone,
+  setState,
   setText,
   setVisibility,
   HIDE,
@@ -9,6 +10,8 @@ import {
   initDeviceSelectors,
   setMediaSource,
   setAudioOutput,
+  DISABLE,
+  ENABLE,
 } from "../common/common.js";
 
 export default class NumberCallUI {
@@ -21,6 +24,8 @@ export default class NumberCallUI {
     setText("version", `Sinch - Version:  ${Sinch.version}`);
     setVisibility("sinchclient", SHOW);
     setVisibility("call-destination", HIDE);
+    setState("audioSource", DISABLE);
+    setState("audioOutput", DISABLE);
   }
 
   handleStartClientClick(sinchPhone) {
@@ -29,6 +34,8 @@ export default class NumberCallUI {
       setVisibility("sinchclient", HIDE);
       setVisibility("call-destination", SHOW);
       setVisibility("dialer", SHOW, "grid");
+      setState("audioSource", ENABLE);
+      setState("audioOutput", ENABLE);
       this.setStatus("Sinch client is started");
     });
   }

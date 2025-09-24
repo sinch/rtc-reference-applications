@@ -74,12 +74,21 @@ export const ringtone = (type) => {
 };
 
 export const setState = (id, state) => {
+  const element = document.getElementById(id);
+  if (!element) throw new Error(`Element with id "${id}" not found`);
+
   if (state === ENABLE) {
-    document.getElementById(id).removeAttribute("disabled", true);
+    element.removeAttribute("disabled");
   } else if (state === DISABLE) {
-    document.getElementById(id).setAttribute("disabled", true);
+    element.setAttribute("disabled", true);
   } else {
     throw new Error("State not supported");
+  }
+  if (window.M && window.M.FormSelect) {
+    const instance = window.M.FormSelect.getInstance(element);
+    if (instance) {
+      window.M.FormSelect.init(element);
+    }
   }
 };
 
