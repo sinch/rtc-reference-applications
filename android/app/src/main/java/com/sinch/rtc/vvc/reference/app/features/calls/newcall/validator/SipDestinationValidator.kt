@@ -5,7 +5,7 @@ import java.util.regex.Pattern
 class SipDestinationValidator : DestinationValidator {
 
     private val sipPattern: Pattern = Pattern.compile(
-        "^(sip(?:s)?):(?:[^:]*(?::[^@]*)?@)?([^:@]*)(?::([0-9]*))?$",
+        "^(?:[^:]*(?::[^@]*)?@)?([^:@]+)(?::([0-9]*))?$",
         Pattern.CASE_INSENSITIVE
     )
 
