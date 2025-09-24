@@ -16,7 +16,7 @@ export default class SipCallSinchClientWrapper {
       .build();
 
     this.sinchClient.addListener(this.#sinchClientListener());
-    this.ui = new SipCallUI(this.sinchClient);
+    this.ui = new SipCallUI(this);
   }
 
   start() {
