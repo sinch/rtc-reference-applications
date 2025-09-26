@@ -28,7 +28,6 @@ stages:
 
 build:android:device:release:
     stage: Build
-    
     before_script:
         - cp -v $CI_GRADLE_PROPERTIES_PATH .
         - cp -rf -v $CI_REF_APP_GOOGLE_SERVICE_PATH ./android/app

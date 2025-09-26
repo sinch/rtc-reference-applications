@@ -44,16 +44,15 @@ task runMakeSyncIfNeeded() {
 }
 
 android {
-    compileSdkVersion 33
-
     lintOptions {
         abortOnError false
     }
 
     defaultConfig {
         applicationId "com.sinch.rtc.vvc.reference.app"
-        minSdkVersion 21
-        targetSdkVersion 33
+        minSdkVersion 23
+        compileSdk 34
+        targetSdkVersion 36
         versionCode 1
         versionName "1.0"
 
@@ -66,9 +65,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+    kotlin {
+        jvmToolchain(17)
     }
     buildFeatures {
         viewBinding true
@@ -90,6 +97,8 @@ preBuild.doFirst {
 }
 
 dependencies {
+    implementation platform("com.google.firebase:firebase-bom:$firebase_bom_version")
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation fileTree(dir: "libs", include: ["*.aar"])
 
@@ -109,7 +118,7 @@ dependencies {
     implementation "com.google.android.material:material:$material_design_version"
 
     // Messaging
-    implementation "com.google.firebase:firebase-messaging:$firebase_messaging_version"
+    implementation "com.google.firebase:firebase-messaging"
 
     //Room
     implementation "androidx.room:room-runtime:$room_version"
@@ -124,4 +133,4 @@ dependencies {
 
 }
 
-apply plugin: 'com.google.gms.google-services'  // Google Services plugin
+apply plugin: 'com.google.gms.google-services'

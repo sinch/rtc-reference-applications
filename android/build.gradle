@@ -1,18 +1,18 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = "1.8.10"
+    ext.kotlin_version = "1.9.21"
     ext.material_design_version = "1.9.0"
     ext.nav_component_version = '2.5.3'
-    ext.google_services_version = '4.3.10'
-    ext.firebase_messaging_version = "23.1.2"
+    ext.google_services_version = '4.4.3'
     ext.room_version = "2.5.1"
     ext.activity_version = "1.7.1"
     ext.fragment_version = "1.5.7"
     ext.coroutines_version = "1.4.3"
-    ext.gradle_tools_version = "7.4.2"
+    ext.gradle_tools_version = '8.7.3'
     ext.core_ktx_version = "1.10.1"
     ext.appcompat_version = "1.6.1"
     ext.constraint_layout_version = "2.1.4"
+    ext.firebase_bom_version = "34.1.0"
 
     repositories {
         google()
