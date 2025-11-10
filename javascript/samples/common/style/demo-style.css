@@ -1,0 +1,677 @@
+/* Demo Design Styles - Modern Sinch Interface */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: #DCEDE1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+}
+
+/* Decorative Stars */
+.decorative-stars {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.star {
+    position: absolute;
+    font-size: 32px;
+    color: #FFBE3C;
+    opacity: 0.8;
+    text-shadow: 0 0 8px rgba(255, 190, 60, 0.4);
+}
+
+.star1 { top: 15%; left: 12%; font-size: 24px; }
+.star2 { top: 25%; left: 8%; font-size: 18px; }
+.star3 { top: 60%; left: 10%; font-size: 28px; }
+.star4 { top: 20%; right: 10%; font-size: 36px; }
+.star5 { top: 45%; right: 8%; font-size: 32px; }
+.star6 { bottom: 20%; right: 12%; font-size: 24px; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(5deg); }
+}
+
+/* Container */
+.container {
+    max-width: 580px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+/* Browser Window */
+.browser-window {
+    background: #37474F;
+    border-radius: 16px 16px 0 0;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.browser-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.dot-red { background: #EF5858; }
+.dot-yellow { background: #FFBE3C; }
+.dot-green { background: #059688; }
+
+/* Browser Content */
+.browser-content {
+    background: white;
+    border-radius: 0 0 16px 16px;
+    padding: 48px 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* Logo Section */
+.logo-section {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.logo-icon {
+    width: 120px;
+    height: auto;
+    margin: 0 auto;
+}
+
+/* Token Input Form */
+.token-input {
+    width: 100%;
+}
+
+/* Form Section */
+.form-section {
+    margin-top: 32px;
+    width: 100%;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+    background: #F5F5F5;
+    border-radius: 12px;
+    padding: 4px;
+    width: 100%;
+}
+
+.form-group-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    width: 100%;
+}
+
+.form-label {
+    color: #059688;
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 120px;
+    flex-shrink: 0;
+}
+
+.form-control,
+.form-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    outline: none;
+    padding: 4px;
+    color: #37474F;
+    min-width: 0;
+    width: 100%;
+}
+
+.form-control::placeholder,
+.form-input::placeholder {
+    color: #999;
+}
+
+.form-input-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    width: 100%;
+}
+
+.form-input-wrapper .material-symbols-outlined {
+    flex-shrink: 0;
+    font-size: 20px;
+    color: #059688;
+    cursor: pointer;
+}
+
+.form-icons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.icon-button {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #059688;
+    background: none;
+    border: none;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.material-icons {
+    font-size: 20px;
+    color: #059688;
+}
+
+.material-symbols-outlined {
+    font-size: 20px;
+    color: #059688;
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 32px;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.demo-button,
+.btn-small {
+    background: #059688;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 70px;
+    flex: 1;
+    max-width: 120px;
+    font-weight: 600;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.demo-button:hover,
+.btn-small:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(5, 150, 136, 0.3);
+}
+
+.demo-button:disabled,
+.btn-small:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.button-icon {
+    font-size: 28px;
+    color: white;
+}
+
+/* Instruction Text */
+.instruction-text {
+    text-align: center;
+    margin-top: 40px;
+    color: #37474F;
+    font-size: 18px;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+/* Status Section */
+.status {
+    background: #FFBE3C;
+    color: #37474F;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    margin: 20px 0;
+}
+
+#statusheader {
+    font-weight: 600;
+}
+
+.status.connected {
+    background: #059688;
+    color: white;
+}
+
+/* Collapsible Instructions - Override Materialize */
+.collapsible {
+    border: none !important;
+    margin: 0 0 20px 0 !important;
+    box-shadow: none !important;
+}
+
+.collapsible-header {
+    background: #37474F !important;
+    color: white !important;
+    padding: 12px 16px !important;
+    border-radius: 12px !important;
+    cursor: pointer;
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    border-bottom: none !important;
+    min-height: auto !important;
+}
+
+.collapsible-header:hover {
+    background: #455A64 !important;
+}
+
+.collapsible-header .material-icons {
+    color: white !important;
+    transition: transform 0.3s ease;
+    margin-right: 0 !important;
+}
+
+.collapsible-header .header_l1 {
+    color: white !important;
+}
+
+.collapsible.active .collapsible-header,
+.collapsible li.active .collapsible-header {
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.collapsible.active .collapsible-header .material-icons,
+.collapsible li.active .collapsible-header .material-icons {
+    transform: rotate(180deg);
+}
+
+.collapsible-body {
+    background: white !important;
+    padding: 0 !important;
+    border-radius: 0 0 12px 12px;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: max-height 0.3s ease, padding 0.3s ease !important;
+    display: block !important;
+    border-bottom: none !important;
+}
+
+.collapsible.active .collapsible-body,
+.collapsible li.active .collapsible-body {
+    padding: 20px !important;
+    max-height: 1000px !important;
+}
+
+.collection {
+    border: none;
+    margin: 0;
+}
+
+.collection-item {
+    border: none;
+    padding: 12px 0;
+    border-bottom: 1px solid #F5F5F5;
+}
+
+.collection-item:last-child {
+    border-bottom: none;
+}
+
+.collection-item.avatar {
+    padding-left: 50px;
+    position: relative;
+}
+
+.collection-item .material-icons.circle {
+    position: absolute;
+    left: 0;
+    top: 12px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 20px;
+    color: white;
+}
+
+.collection-item .material-icons.circle.red {
+    background: #EF5858;
+}
+
+.collection-item .material-icons.circle.orange {
+    background: #FFBE3C;
+}
+
+.collection-item .material-icons.circle.green {
+    background: #059688;
+}
+
+.header_l1 {
+    font-weight: 700;
+    font-size: 16px;
+    color: #37474F;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.collection-item p {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 8px 0 0 0;
+}
+
+/* Input Fields */
+.input-field {
+    margin-bottom: 16px;
+	margin-left: 0px;
+    position: relative;
+}
+
+.input-field input[type="text"],
+.input-field input[type="password"] {
+    width: calc(100% - 2.8rem);
+    padding: 12px 16px;
+    border: none;
+    background: #F5F5F5;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #37474F;
+	margin-left: 0px;
+}
+
+.input-field input[type="text"]:focus,
+.input-field input[type="password"]:focus {
+    outline: 2px solid #059688;
+}
+
+.input-field .prefix {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #059688;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Select Dropdowns - Use Materialize styling */
+.input-field select {
+    display: none;
+}
+
+.select-wrapper input.select-dropdown {
+    background: #F5F5F5;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #37474F;
+    margin-bottom: 12px;
+    height: auto;
+}
+
+.select-wrapper input.select-dropdown:focus {
+    border-bottom: none;
+    box-shadow: none;
+    outline: 2px solid #059688;
+}
+
+.select-wrapper .caret {
+    fill: #059688;
+}
+
+.dropdown-content li > a,
+.dropdown-content li > span {
+    color: #37474F;
+}
+
+.dropdown-content li:hover,
+.dropdown-content li.active {
+    background-color: #DCEDE1;
+}
+
+.dropdown-content li > a:hover,
+.dropdown-content li > span:hover {
+    background-color: #DCEDE1;
+}
+
+.dropdown-content li.selected {
+    background-color: #F5F5F5;
+}
+
+/* Video Container */
+.videos-container {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 400px;
+    background-color: #37474F;
+    overflow: hidden;
+    position: relative;
+    margin: 20px 0;
+    border-radius: 12px;
+    display: none;
+}
+
+video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+#outgoing-video {
+    width: 30%;
+    max-width: 150px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+}
+
+/* Dialer Container */
+.dialer-container {
+    display: none;
+    grid-template-columns: auto auto auto;
+    grid-gap: 10px;
+    padding: 20px 0;
+    margin-top: 20px;
+}
+
+.dialer-container > div {
+    text-align: center;
+}
+
+.dialer-container .btn-small {
+    width: 100%;
+    min-width: 60px;
+    padding: 16px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.btn-dialer {
+    background: #059688 !important;
+}
+
+/* Call Control */
+.callcontrol,
+#callcontrol {
+    margin-top: 20px;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+}
+
+/* Notification Container */
+.notification-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.notification {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.notification-success {
+    background: #059688;
+}
+
+.notification-error {
+    background: #EF5858;
+}
+
+/* Error Container */
+.error-container {
+    background: #EF5858;
+    color: white;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin: 20px 0;
+    display: none;
+}
+
+/* Footer */
+.footer {
+    position: fixed;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #37474F;
+    text-align: center;
+    z-index: 1;
+}
+
+/* Chip for status */
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #37474F;
+    margin-left: 12px;
+}
+
+.chip img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    body {
+        padding: 20px 10px;
+    }
+
+    .browser-content {
+        padding: 32px 20px;
+    }
+
+    .form-label {
+        min-width: 80px;
+        font-size: 12px;
+    }
+
+    .form-group-inner {
+        padding: 12px;
+        gap: 8px;
+    }
+
+    .button-group {
+        gap: 6px;
+    }
+
+    .demo-button,
+    .btn-small {
+        min-width: 60px;
+        padding: 12px 8px;
+        font-size: 9px;
+        gap: 4px;
+    }
+
+    .button-icon {
+        font-size: 24px;
+    }
+
+    .instruction-text {
+        font-size: 16px;
+    }
+
+    .star {
+        font-size: 20px !important;
+    }
+}
