@@ -15,6 +15,7 @@ import {
   initDeviceSelectors,
   setMediaSource,
   setAudioOutput,
+  sleep,
 } from "../common/common.js";
 
 export default class VoiceCallUI {
@@ -141,9 +142,20 @@ export default class VoiceCallUI {
   handleAnswerClick(call) {
     const answerElement = document.getElementById("answer");
     answerElement.removeEventListener("click", this.handleAnswer);
-    this.handleAnswer = () => {
+    this.handleAnswer = async () => {
       setState("answer", DISABLE);
-      call.answer();
+      try {
+        await call.answer();
+      } catch (error) {
+        console.error("Failed to answer call:", error);
+        call.hangup();
+        await sleep(50);
+        this.setStatus(
+          `Failed to answer call from ${call.remoteUserId}. Message: ${
+            error?.message ?? ""
+          }`,
+        );
+      }
     };
     answerElement.addEventListener("click", this.handleAnswer);
   }
