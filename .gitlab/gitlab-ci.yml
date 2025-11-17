@@ -1,13 +1,12 @@
 include:
-    # Metadata shared by many jobs
-    - local: .gitlab/rules.yml
-    - local: .gitlab/artifacts.yml
+  # Metadata shared by many jobs
+  - local: .gitlab/rules.yml
+  - local: .gitlab/artifacts.yml
 
-    # OS builds
-    - local: .gitlab/os-android.yml
-    - local: .gitlab/os-ios.yml
-    - local: .gitlab/release.yml
-
+  # OS builds
+  - local: .gitlab/os-android.yml
+  - local: .gitlab/os-ios.yml
+  - local: .gitlab/release.yml
 
 # NOTE: It’s possible to overwrite a globally defined before_script or after_script with per-job actions
 # Deploy host gradle.properties to the root of the repo
@@ -17,99 +16,97 @@ default:
     - ""
 
 stages:
-    - Lint Javascript
-    - Cut Release
-    - Build
-    # Add test stage when build system will be ready for it
-    - Update SDK version
-    - Test Dist Sample Apps
+  - Lint Javascript
+  - Cut Release
+  - Build
+  # Add test stage when build system will be ready for it
+  - Update SDK version
+  - Test Dist Sample Apps
 
 ############################################## pipeline jobs
 
 build:android:device:release:
-    stage: Build
-    before_script:
-        - cp -v $CI_GRADLE_PROPERTIES_PATH .
-        - cp -rf -v $CI_REF_APP_GOOGLE_SERVICE_PATH ./android/app
-        - cp -rf -v $CI_REF_APP_CONFIG_PATH ./android/app/src/main/assets
-        
-    extends:
-        - .conf:android:env
-        - .conf:android:release
-        - .conf:android:artifacts
-        - .conf:android:runner:tags
-        - .conf:rule:default
-        - .build:android:do
-        
+  stage: Build
+  before_script:
+    - cp -v $CI_GRADLE_PROPERTIES_PATH .
+    - cp -rf -v $CI_REF_APP_GOOGLE_SERVICE_PATH ./android/app
+    - cp -rf -v $CI_REF_APP_CONFIG_PATH ./android/app/src/main/assets
+
+  extends:
+    - .conf:android:env
+    - .conf:android:release
+    - .conf:android:artifacts
+    - .conf:android:runner:tags
+    - .conf:rule:default
+    - .build:android:do
+
 build:ios:device:release:
-    stage: Build
-    
-    before_script:
-        - ./scripts/ci_unlock_appledev_keychain.sh
-        - cd ios/
-        - pwd
-    
-    extends:
-        - .conf:ios:runner:tags
-        - .conf:rule:default
-        - .lint:ios:do
-        - .build:ios:do
+  stage: Build
+
+  before_script:
+    - ./scripts/ci_unlock_appledev_keychain.sh
+    - cd ios/
+    - pwd
+
+  extends:
+    - .conf:ios:runner:tags
+    - .conf:rule:default
+    - .lint:ios:do
+    - .build:ios:do
 
 test:android:dist:samples:
-    extends:
-        - .conf:android:env
-        - .conf:android:release
-        - .conf:android:runner:tags
-        - .conf:rule:default
-        - .test:android:do
+  extends:
+    - .conf:android:env
+    - .conf:android:release
+    - .conf:android:runner:tags
+    - .conf:rule:default
+    - .test:android:do
 
-    dependencies:
-        - build:android:device:release
+  dependencies:
+    - build:android:device:release
 
 lint:javascript:
-    stage: Lint Javascript
+  stage: Lint Javascript
 
-    extends:
-        - .conf:rule:default
-    
-    tags:
-        - rtc
-    
-    image: node:16-slim
+  extends:
+    - .conf:rule:default
 
-    script:
-        - cd javascript
-        - npm ci
-        - npm run lint
+  tags:
+    - rtc
 
+  image: node:16-slim
+
+  script:
+    - cd javascript
+    - npm ci
+    - npm run lint
 
 # Multi project job
 
 update:sdk:version:android:
-    stage: Update SDK version
-    extends:
-        - .conf:rule:android:update:sdk
-    tags:
-        - rtc-mac
-    script:
-        - ./scripts/ci_update_android_version.sh $SDK_VERSION $SDK_REVISION
-    needs:
-        - project: sinch/sinch-projects/voice/vvc-client-sdk/android-sdk
-          job: ${ARTIFACT_JOB_NAME}
-          ref: ${PARENT_REF}
-          artifacts: true
+  stage: Update SDK version
+  extends:
+    - .conf:rule:android:update:sdk
+  tags:
+    - rtc-mac
+  script:
+    - ./scripts/ci_update_android_version.sh $SDK_VERSION $SDK_REVISION
+  needs:
+    - project: sinch/sinch-projects/voice/vvc-client-sdk/android-sdk
+      job: ${ARTIFACT_JOB_NAME}
+      ref: ${PARENT_REF}
+      artifacts: true
 
 update:sdk:version:ios:
-    stage: Update SDK version
-    extends:
-        - .conf:rule:ios:update:sdk
-    tags:
-        - rtc-mac
-    script:
-        - ./scripts/ci_update_ios_version.sh "$SDK_VERSION%2b$SDK_REVISION"
-    needs:
-        - project: sinch/sinch-projects/voice/vvc-client-sdk/ios-sdk
-          job: ${ARTIFACT_JOB_NAME}
-          ref: ${PARENT_REF}
-          artifacts: true
-          
+  stage: Update SDK version
+  extends:
+    - .conf:rule:ios:update:sdk
+  tags:
+    - rtc-mac
+  script:
+    - ./scripts/ci_update_ios_version.sh "$SDK_VERSION%2b$SDK_REVISION"
+  needs:
+    - project: sinch/sinch-projects/voice/vvc-client-sdk/ios-sdk
+      job: ${ARTIFACT_JOB_NAME}
+      ref: ${PARENT_REF}
+      artifacts: true

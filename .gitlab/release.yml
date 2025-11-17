@@ -3,18 +3,18 @@
 # If you need to bump major version pass --major in CI_BRANCH_RELEASE_FLAGS
 
 cut:branch:release:
-    stage: Cut Release
+  stage: Cut Release
 
-    extends:
-        - .conf:android:env
-        - .conf:rule:for:release:cut
-        - .conf:android:runner:tags
+  extends:
+    - .conf:android:env
+    - .conf:rule:for:release:cut
+    - .conf:android:runner:tags
 
-    script:
-        - echo Nothing to release for now
-        # - git remote set-url --push origin git@git.sinch.se:$CI_PROJECT_PATH
-        # - git remote show origin
-        # - git checkout master
-        # - git reset --hard $CI_COMMIT_BRANCH
-        # - make -C devenv
-        # - source ./env.sh && ./sdk_release_tools/make_release.py -c sinch-rtc/CHANGELOG.txt release $CI_BRANCH_RELEASE_FLAGS
+  script:
+    - echo Nothing to release for now
+    # - git remote set-url --push origin git@git.sinch.se:$CI_PROJECT_PATH
+    # - git remote show origin
+    # - git checkout master
+    # - git reset --hard $CI_COMMIT_BRANCH
+    # - make -C devenv
+    # - source ./env.sh && ./sdk_release_tools/make_release.py -c sinch-rtc/CHANGELOG.txt release $CI_BRANCH_RELEASE_FLAGS

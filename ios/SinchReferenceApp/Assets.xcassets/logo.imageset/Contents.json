@@ -1,23 +1,23 @@
 {
-  "images" : [
+  "images": [
     {
-      "filename" : "Sinch_Logotype_Black_RGB 1.png",
-      "idiom" : "universal",
-      "scale" : "1x"
+      "filename": "Sinch_Logotype_Black_RGB 1.png",
+      "idiom": "universal",
+      "scale": "1x"
     },
     {
-      "filename" : "Sinch_Logotype_Black_RGB.png",
-      "idiom" : "universal",
-      "scale" : "2x"
+      "filename": "Sinch_Logotype_Black_RGB.png",
+      "idiom": "universal",
+      "scale": "2x"
     },
     {
-      "filename" : "Sinch_Logotype_Black_RGB 2.png",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename": "Sinch_Logotype_Black_RGB 2.png",
+      "idiom": "universal",
+      "scale": "3x"
     }
   ],
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
+  "info": {
+    "author": "xcode",
+    "version": 1
   }
 }

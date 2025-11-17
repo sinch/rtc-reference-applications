@@ -334,8 +334,3 @@ export function setAudioOutput(audioElement) {
     console.error("Error setting audio output:", error);
   }
 }
-
-export const sleep = (ms) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });

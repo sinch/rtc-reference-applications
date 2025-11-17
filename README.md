@@ -1,8 +1,9 @@
 # Sinch In-app Voice and Video Reference Applications
 
-The In-app voice and video reference applications for ***iOS***, ***Android***, and ***JavaScript*** platforms, demonstrate the In-app functionality and integration of the Sinch In-app Voice and Video SDKs.
+The In-app voice and video reference applications for **_iOS_**, **_Android_**, and **_JavaScript_** platforms, demonstrate the In-app functionality and integration of the Sinch In-app Voice and Video SDKs.
 
 The reference applications provide the following features:
+
 - [Android Reference Application](./android/README.md)
   - **App2App Audio calling**: In-app audio calls between users.
   - **App2App Video calling**: In-app video calls between users.

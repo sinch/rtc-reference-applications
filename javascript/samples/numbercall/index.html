@@ -1,4 +1,5 @@
-<html>
+<!doctype html>
+<html lang="en">
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
     <meta content="utf-8" http-equiv="encoding" />
@@ -9,7 +10,10 @@
       type="image/png"
       href="../common/style/favicon-32x32.png"
     />
-    <!--Import Google Icon Font-->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
@@ -18,138 +22,161 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
     />
+    <link rel="stylesheet" href="../common/style/demo-style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <link rel="stylesheet" href="../common/style/sample.css" />
     <script src="https://cdn.sinch.com/latest/sinch-rtc-min.js"></script>
     <!-- start:js -->
     <!-- end:js -->
   </head>
   <body>
-    <div class="sinchheader">
-      <a href="../index.html"
-        ><img
-          width="165"
-          height="69"
-          src="../common/style/header-logo-300x125-1.png"
-          alt="Sinch"
-      /></a>
+    <div class="decorative-stars">
+      <div class="star star1">✦</div>
+      <div class="star star2">✦</div>
+      <div class="star star3">✦</div>
+      <div class="star star4">✦</div>
+      <div class="star star5">✦</div>
+      <div class="star star6">✦</div>
     </div>
-    <ul class="collapsible">
-      <li>
-        <div class="collapsible-header">
-          <i class="material-icons">menu</i
-          ><span class="header_l1">In-app to phone (PSTN) calling demo</span>
+
+    <div class="container">
+      <div class="browser-window">
+        <div class="browser-dot dot-red"></div>
+        <div class="browser-dot dot-yellow"></div>
+        <div class="browser-dot dot-green"></div>
+      </div>
+
+      <div class="browser-content">
+        <div class="logo-section">
+          <a href="../index.html">
+            <img
+              src="../common/style/sinch_logomark_black.png"
+              class="logo-icon"
+              alt="Sinch"
+            />
+          </a>
         </div>
-        <div class="collapsible-body">
-          <ul class="collection">
-            <li class="collection-item avatar">
-              <i class="small material-icons circle green">phone</i>
-              <span class="header_l1">Step One</span>
-              <p>
-                Enter a telephone number in
-                <a href="https://en.wikipedia.org/wiki/E.164">E164</a>
-                format
-              </p>
-              <a href="#!" class="secondary-content"></a>
-            </li>
-          </ul>
-        </div>
-      </li>
-    </ul>
-    <div id="status" class="status">
-      <span id="statusheader">Sinch client is not started</span>
-    </div>
-    <div class="sinchbody">
-      <form>
-        <div class="input-field">
-          <select id="audioSource">
-            <option value="" disabled selected>Select audio source</option>
-          </select>
-        </div>
-        <div class="input-field">
-          <select id="audioOutput">
-            <option value="" disabled selected>Select audio output</option>
-          </select>
-        </div>
-        <div id="sinchclient">
-          <fieldset>
-            <span class="header_l1">Start a Sinch Client</span>
-            <br />
-            <div class="input-field start">
-              <i class="material-icons prefix">input</i>
-              <input
-                placeholder="Enter caller identifier e.g. +460000000000"
-                id="caller-identifier"
-                type="text"
-              />
+
+        <ul class="collapsible">
+          <li>
+            <div class="collapsible-header">
+              <i class="material-icons">menu</i
+              ><span class="header_l1"
+                >In-app to phone (PSTN) calling demo</span
+              >
             </div>
-            <button class="btn-small" type="button" id="start-client">
-              Start
-            </button>
-          </fieldset>
-        </div>
-        <div class="input-box" id="call-destination">
-          <fieldset>
-            <div class="input-field class">
-              <i class="material-icons prefix">phone</i>
-              <input
-                placeholder="Enter phone number e.g. +460000000000"
-                id="to"
-                type="text"
-              />
+            <div class="collapsible-body">
+              <ul class="collection">
+                <li class="collection-item avatar">
+                  <i class="small material-icons circle green">phone</i>
+                  <span class="header_l1">Step One</span>
+                  <p>
+                    Enter a telephone number in
+                    <a href="https://en.wikipedia.org/wiki/E.164">E164</a>
+                    format
+                  </p>
+                </li>
+              </ul>
             </div>
-          </fieldset>
+          </li>
+        </ul>
+
+        <div id="status" class="status">
+          <span id="statusheader">Sinch client is not started</span>
         </div>
-      </form>
-      <div id="dialer" class="dialer-container">
-        <div>
-          <button id="dtmf1" class="btn-small btn-dialer">1</button>
+
+        <form>
+          <div class="input-field">
+            <select id="audioSource">
+              <option value="" disabled selected>Select audio source</option>
+            </select>
+          </div>
+          <div class="input-field">
+            <select id="audioOutput">
+              <option value="" disabled selected>Select audio output</option>
+            </select>
+          </div>
+          <div id="sinchclient">
+            <fieldset>
+              <span class="header_l1">Start a Sinch Client</span>
+              <br />
+              <div class="input-field start">
+                <i class="material-icons prefix">input</i>
+                <input
+                  placeholder="Enter caller identifier e.g. +460000000000"
+                  id="caller-identifier"
+                  type="text"
+                />
+              </div>
+              <button class="btn-small" type="button" id="start-client">
+                Start
+              </button>
+            </fieldset>
+          </div>
+          <div class="input-box" id="call-destination">
+            <fieldset>
+              <div class="input-field class">
+                <i class="material-icons prefix">phone</i>
+                <input
+                  placeholder="Enter phone number e.g. +460000000000"
+                  id="to"
+                  type="text"
+                />
+              </div>
+            </fieldset>
+          </div>
+        </form>
+
+        <div id="dialer" class="dialer-container">
+          <div>
+            <button id="dtmf1" class="btn-small btn-dialer">1</button>
+          </div>
+          <div>
+            <button id="dtmf2" class="btn-small btn-dialer">2</button>
+          </div>
+          <div>
+            <button id="dtmf3" class="btn-small btn-dialer">3</button>
+          </div>
+          <div>
+            <button id="dtmf4" class="btn-small btn-dialer">4</button>
+          </div>
+          <div>
+            <button id="dtmf5" class="btn-small btn-dialer">5</button>
+          </div>
+          <div>
+            <button id="dtmf6" class="btn-small btn-dialer">6</button>
+          </div>
+          <div>
+            <button id="dtmf7" class="btn-small btn-dialer">7</button>
+          </div>
+          <div>
+            <button id="dtmf8" class="btn-small btn-dialer">8</button>
+          </div>
+          <div>
+            <button id="dtmf9" class="btn-small btn-dialer">9</button>
+          </div>
+          <div>
+            <button id="dtmfasterisk" class="btn-small btn-dialer">*</button>
+          </div>
+          <div>
+            <button id="dtmf0" class="btn-small btn-dialer">0</button>
+          </div>
+          <div>
+            <button id="dtmfpoundhash" class="btn-small btn-dialer">#</button>
+          </div>
+          <div>
+            <button id="plus" class="btn-small btn-dialer">+</button>
+          </div>
+          <div id="callaction">
+            <button class="btn-small btn" id="call">Call</button>
+          </div>
+          <div>
+            <button id="clear" class="btn-small btn-dialer">Clear</button>
+          </div>
+          <div id="blank"></div>
         </div>
-        <div>
-          <button id="dtmf2" class="btn-small btn-dialer">2</button>
-        </div>
-        <div>
-          <button id="dtmf3" class="btn-small btn-dialer">3</button>
-        </div>
-        <div>
-          <button id="dtmf4" class="btn-small btn-dialer">4</button>
-        </div>
-        <div>
-          <button id="dtmf5" class="btn-small btn-dialer">5</button>
-        </div>
-        <div>
-          <button id="dtmf6" class="btn-small btn-dialer">6</button>
-        </div>
-        <div>
-          <button id="dtmf7" class="btn-small btn-dialer">7</button>
-        </div>
-        <div>
-          <button id="dtmf8" class="btn-small btn-dialer">8</button>
-        </div>
-        <div>
-          <button id="dtmf9" class="btn-small btn-dialer">9</button>
-        </div>
-        <div>
-          <button id="dtmfasterisk" class="btn-small btn-dialer">*</button>
-        </div>
-        <div>
-          <button id="dtmf0" class="btn-small btn-dialer">0</button>
-        </div>
-        <div>
-          <button id="dtmfpoundhash" class="btn-small btn-dialer">#</button>
-        </div>
-        <div>
-          <button id="plus" class="btn-small btn-dialer">+</button>
-        </div>
-        <div id="callaction">
-          <button class="btn-small btn" id="call">Call</button>
-        </div>
-        <div>
-          <button id="clear" class="btn-small btn-dialer">Clear</button>
-        </div>
-        <div id="blank"></div>
       </div>
     </div>
+
     <div id="notification-container" class="notification-container"></div>
     <footer class="footer">
       <div id="version"></div>
@@ -158,10 +185,32 @@
     <script type="module" src="index.js"></script>
     <script type="text/javascript">
       document.addEventListener("DOMContentLoaded", function () {
-        const elems = document.querySelectorAll(".collapsible");
-        const instances = M.Collapsible.init(elems, {});
+        // Initialize Materialize select components only (not collapsible)
         const selectors = document.querySelectorAll("select");
         M.FormSelect.init(selectors);
+
+        // Custom collapsible toggle for our design (override Materialize)
+        document.querySelectorAll(".collapsible-header").forEach((header) => {
+          header.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const collapsible = this.closest(".collapsible");
+            const collapsibleLi = this.closest("li");
+
+            // Toggle active class
+            collapsible.classList.toggle("active");
+            if (collapsibleLi) {
+              collapsibleLi.classList.toggle("active");
+            }
+          });
+        });
+      });
+
+      // Floating animation for stars
+      document.querySelectorAll(".star").forEach((star, index) => {
+        star.style.animation = `float ${3 + index * 0.5}s ease-in-out infinite`;
+        star.style.animationDelay = `${index * 0.2}s`;
       });
     </script>
     <script>

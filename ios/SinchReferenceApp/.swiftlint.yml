@@ -66,4 +66,4 @@ type_name:
     warning: 40
     error: 50
   excluded: iPhone
-  allowed_symbols: ["_"] 
+  allowed_symbols: ["_"]

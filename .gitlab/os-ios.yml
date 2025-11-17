@@ -1,14 +1,14 @@
 .conf:ios:runner:tags:
-    tags:
-        - rtc-mac
-        
+  tags:
+    - rtc-mac
+
 .lint:ios:do:
-    script:
-        - swiftlint --strict
+  script:
+    - swiftlint --strict
 
 .build:ios:do:
-    script:
-        - xcodebuild clean
-        - xcodebuild -scheme SinchReferenceApp
-        
-    interruptible: true
+  script:
+    - xcodebuild clean
+    - xcodebuild -scheme SinchReferenceApp
+
+  interruptible: true

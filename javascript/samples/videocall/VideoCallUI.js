@@ -16,7 +16,6 @@ import {
   initDeviceSelectors,
   setMediaSource,
   setAudioOutput,
-  sleep,
 } from "../common/common.js";
 
 export default class VideoCallUI {
@@ -173,20 +172,9 @@ export default class VideoCallUI {
   handleAnswerClick(call) {
     const answerElement = document.getElementById("answer");
     answerElement.removeEventListener("click", this.handleAnswer);
-    this.handleAnswer = async () => {
+    this.handleAnswer = () => {
       setState("answer", DISABLE);
-      try {
-        await call.answer();
-      } catch (error) {
-        console.error("Failed to answer call:", error);
-        call.hangup();
-        await sleep(50);
-        this.setStatus(
-          `Failed to answer call from ${call.remoteUserId}. Message: ${
-            error?.message ?? ""
-          }`,
-        );
-      }
+      call.answer();
     };
     answerElement.addEventListener("click", this.handleAnswer);
   }
