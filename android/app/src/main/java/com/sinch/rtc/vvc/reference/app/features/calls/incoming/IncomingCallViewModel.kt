@@ -30,7 +30,7 @@ class IncomingCallViewModel(
     private val user: User?
 ) : AndroidViewModel(app), CallListener {
 
-    private val call: Call
+    private val call: Call?
     private var callItem: CallItem? = null
 
     private val callStateMutable: MutableLiveData<CallState> = MutableLiveData()
@@ -50,16 +50,20 @@ class IncomingCallViewModel(
         Log.d(TAG, "IncomingCallViewModel initialised with $callId")
         call = sinchClient.callController.getCall(callId)?.apply {
             addCallListener(this@IncomingCallViewModel)
-        } ?: error("Call with id $callId not found")
-        issueCallStateUpdate(call)
-        callPropertiesMutable.postValue(CallProperties(call.remoteUserId))
-        user?.let {
-            val generatedCallItem = CallItem(call = call, user = it).let { item ->
-                callDao.insertAndGetWithGeneratedId(item)
-            }
-            callItem = generatedCallItem
         }
-        handleImmediateResponse()
+        if (call != null) {
+            issueCallStateUpdate(call)
+            callPropertiesMutable.postValue(CallProperties(call.remoteUserId))
+            user?.let {
+                val generatedCallItem = CallItem(call = call, user = it).let { item ->
+                    callDao.insertAndGetWithGeneratedId(item)
+                }
+                callItem = generatedCallItem
+            }
+            handleImmediateResponse()
+        } else {
+            navigationEvents.postValue(Back)
+        }
     }
 
     fun onCallAccepted() {
@@ -74,7 +78,7 @@ class IncomingCallViewModel(
         if (permissionRequestResult.areAudioPermissionsGranted) {
             // Don't wait for onCallAnswered callback, adjust UI as soon as possible
             callStateMutable.postValue(CallState.ANSWERED)
-            call.answer()
+            call?.answer()
         } else {
             declineCall()
             navigationEvents.value = Back
@@ -111,7 +115,7 @@ class IncomingCallViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        call.removeCallListener(this)
+        call?.removeCallListener(this)
     }
 
     private fun acceptCall() {
@@ -121,7 +125,7 @@ class IncomingCallViewModel(
     }
 
     private fun declineCall() {
-        call.hangup()
+        call?.hangup()
     }
 
     private fun handleImmediateResponse() {
