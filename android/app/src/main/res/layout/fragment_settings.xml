@@ -15,12 +15,19 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/versionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/basic_margin"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:gravity="center" />
+
             <LinearLayout
                 android:id="@+id/loggedInSettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/basic_margin"
-                android:layout_marginTop="@dimen/basic_margin"
                 android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView

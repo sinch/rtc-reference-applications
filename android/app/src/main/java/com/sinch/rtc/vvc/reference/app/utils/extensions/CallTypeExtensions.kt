@@ -13,6 +13,7 @@ fun CallItem.createSinchCall(callController: CallController, cli: String?): Call
     CallType.AppToAppAudio -> callController.callUser(destination, MediaConstraints(false))
     CallType.AppToAppVideo -> callController.callUser(destination, MediaConstraints(true))
     CallType.AppToSip -> callController.callSip(destination)
+    CallType.AppToConference -> callController.callConference(destination, cli)
 }
 
 val CallDetails.expectedType: CallType

@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.sinch.android.rtc.Sinch
 import com.sinch.android.rtc.video.VideoScalingType
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
@@ -34,9 +35,14 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupButtons()
+        setupLabels()
         setupScalingAdapters()
         setupConfigAdapters()
         observeViewModel()
+    }
+
+    private fun setupLabels() {
+        binding.versionText.text = getString(R.string.version_text_template, Sinch.version)
     }
 
     private fun setupButtons() {

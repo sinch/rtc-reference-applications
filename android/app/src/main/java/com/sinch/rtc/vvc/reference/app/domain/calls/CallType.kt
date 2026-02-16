@@ -9,7 +9,9 @@ enum class CallType {
     AppToPhone,
     AppToAppAudio,
     AppToAppVideo,
-    AppToSip;
+    AppToSip,
+
+    AppToConference,
 }
 
 fun CallType.newCallLabel(context: Context): String {
@@ -18,6 +20,7 @@ fun CallType.newCallLabel(context: Context): String {
         CallType.AppToAppAudio -> R.string.call_app_to_app_audio
         CallType.AppToAppVideo -> R.string.call_app_to_app_video
         CallType.AppToSip -> R.string.call_app_to_sip
+        CallType.AppToConference -> R.string.call_app_to_conference
     }
     return context.getString(resource)
 

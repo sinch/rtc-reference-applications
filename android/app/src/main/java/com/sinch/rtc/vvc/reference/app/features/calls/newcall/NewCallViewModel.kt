@@ -13,6 +13,7 @@ import com.sinch.rtc.vvc.reference.app.domain.calls.insertAndGetWithGeneratedId
 import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.AppDestinationValidator
+import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.ConferenceDestinationValidator
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.DestinationValidator
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.PSTNDestinationValidator
 import com.sinch.rtc.vvc.reference.app.features.calls.newcall.validator.SipDestinationValidator
@@ -55,7 +56,8 @@ class NewCallViewModel(
             val base = mutableListOf(
                 CallType.AppToAppAudio,
                 CallType.AppToAppVideo,
-                CallType.AppToSip
+                CallType.AppToSip,
+                CallType.AppToConference
             )
             return if (!usedConfig.cli.isNullOrBlank()) {
                 base.apply { add(CallType.AppToPhone) }
@@ -69,6 +71,7 @@ class NewCallViewModel(
             CallType.AppToSip -> SipDestinationValidator()
             CallType.AppToPhone -> PSTNDestinationValidator()
             CallType.AppToAppAudio, CallType.AppToAppVideo -> AppDestinationValidator()
+            CallType.AppToConference -> ConferenceDestinationValidator()
         }
         callItemMutable.value = callItem.value?.copy(type = newType)
     }

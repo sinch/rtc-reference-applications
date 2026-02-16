@@ -20,8 +20,10 @@
     <string name="call_app_to_app_audio">App-to-App Audio</string>
     <string name="call_app_to_app_video">App-to-App Video</string>
     <string name="call_app_to_sip">App-to-Sip</string>
+    <string name="call_app_to_conference">App-to-Conference</string>
     <string name="choose_type">Choose type</string>
     <string name="logged_in_template">Logged in as %s</string>
+    <string name="version_text_template">Sinch - Version: %s</string>
 
     <!-- History screen -->
     <string name="started_at">Started at: %s</string>
