@@ -12,6 +12,9 @@ import {
   setAudioOutput,
   DISABLE,
   ENABLE,
+  initMuteButton,
+  enableMute,
+  resetMute,
 } from "../common/common.js";
 
 export default class NumberCallUI {
@@ -21,6 +24,7 @@ export default class NumberCallUI {
     this.setupDialerInput();
     this.handleStartClientClick(sinchPhone);
     this.handleDeviceSelectors();
+    initMuteButton();
     setText("version", `Sinch - Version:  ${Sinch.version}`);
     setVisibility("sinchclient", SHOW);
     setVisibility("call-destination", HIDE);
@@ -73,12 +77,14 @@ export default class NumberCallUI {
   onCallEstablished(call) {
     this.playAudio(call);
     this.setStatus(`Call established with ${call.remoteUserId}`);
+    enableMute(call);
   }
 
   onCallEnded(call) {
     this.setStatus(`Call ended ${call.remoteUserId}`);
     setText("call", "Call");
     this.ringToneAudio?.pause();
+    resetMute();
     this.resetCurrentCall();
   }
 

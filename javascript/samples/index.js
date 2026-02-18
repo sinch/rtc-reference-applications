@@ -2,6 +2,7 @@ import {
   setupLogin,
   isIOSBrowserNotInStandaloneMode,
   isPushPermissionStatusDenied,
+  API_URL,
 } from "./common/common.js";
 
 const keyVisibilityElem = document.getElementById("keyVisibility");
@@ -10,9 +11,13 @@ const videoCallBtn = document.getElementById("videocall");
 const voiceCallBtn = document.getElementById("voicecall");
 const numberCallBtn = document.getElementById("numbercall");
 const sipCallBtn = document.getElementById("sipcall");
+const conferenceCallBtn = document.getElementById("conferencecall");
 const erroContainer = document.getElementById("errorContainer");
 const errorMessage = document.getElementById("errorMessage");
 const loginForm = document.getElementById("loginForm");
+const environmentHostInput = document.getElementById("environment-host");
+
+environmentHostInput.value = API_URL;
 
 export const demo = function (event) {
   event.preventDefault();
@@ -20,11 +25,14 @@ export const demo = function (event) {
   const applicationKey = document.getElementById("key").value;
   const applicationSecret = document.getElementById("secret").value;
   const userid = document.getElementById("userid").value;
-  setupLogin(applicationKey, applicationSecret, userid).then(() => {
-    if (window) {
-      window.location.href = `${type}/index.html`;
-    }
-  });
+  const environmentHost = document.getElementById("environment-host").value;
+  setupLogin(applicationKey, applicationSecret, userid, environmentHost).then(
+    () => {
+      if (window) {
+        window.location.href = `${type}/index.html`;
+      }
+    },
+  );
 };
 
 const showError = (message) => {
@@ -33,7 +41,13 @@ const showError = (message) => {
   errorMessage.innerHTML = message;
 };
 
-[videoCallBtn, voiceCallBtn, numberCallBtn, sipCallBtn].forEach((btn) => {
+[
+  videoCallBtn,
+  voiceCallBtn,
+  numberCallBtn,
+  sipCallBtn,
+  conferenceCallBtn,
+].forEach((btn) => {
   btn.addEventListener("click", demo);
 });
 

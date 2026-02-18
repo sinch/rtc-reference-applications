@@ -17,14 +17,20 @@ import {
   setMediaSource,
   setAudioOutput,
   sleep,
+  initMuteButton,
+  enableMute,
+  resetMute,
 } from "../common/common.js";
 
 export default class VideoCallUI {
   constructor(sinchClientWrapper) {
     this.sinchClientWrapper = sinchClientWrapper;
+    this.isVideoPaused = false;
     this.handleMakeCallClick();
     this.handleManualStartClick();
     this.handleDeviceSelectors();
+    this.handlePauseVideoClick();
+    initMuteButton();
     setState("call", DISABLE);
     setState("answer", DISABLE);
     setState("hangup", DISABLE);
@@ -92,18 +98,22 @@ export default class VideoCallUI {
 
   onCallEstablished(call) {
     this.setStatus(`Call established with ${call.remoteUserId}`);
+    this.enablePauseVideo(call);
     setVisibility("videos-container", SHOW);
     setVisibility("calldestination", HIDE);
+    enableMute(call);
   }
 
   onCallEnded(call) {
     this.setStatus(`Call ended ${call.remoteUserId}`);
     this.pauseRingtone();
+    this.resetPauseVideo();
     setVisibility("videos-container", HIDE);
     setVisibility("calldestination", SHOW);
     setState("call", ENABLE);
     setState("hangup", DISABLE);
     setState("answer", DISABLE);
+    resetMute();
     setAnswerPulse(IDLE);
     this.removeVideoStream("outgoing-video");
     this.removeVideoStream("incoming-video");
@@ -194,6 +204,33 @@ export default class VideoCallUI {
   muteVideoStream(id) {
     const video = document.getElementById(id);
     video.muted = true;
+  }
+
+  handlePauseVideoClick() {
+    document.getElementById("pausevideo").addEventListener("click", () => {
+      if (!this.currentCall) return;
+      if (this.isVideoPaused) {
+        this.currentCall.resumeVideo();
+        this.isVideoPaused = false;
+        setText("pausevideo", "Video Off");
+      } else {
+        this.currentCall.pauseVideo();
+        this.isVideoPaused = true;
+        setText("pausevideo", "Video On");
+      }
+    });
+  }
+
+  enablePauseVideo(call) {
+    this.currentCall = call;
+    setState("pausevideo", ENABLE);
+  }
+
+  resetPauseVideo() {
+    this.isVideoPaused = false;
+    this.currentCall = null;
+    setState("pausevideo", DISABLE);
+    setText("pausevideo", "Video Off");
   }
 
   removeVideoStream(id) {

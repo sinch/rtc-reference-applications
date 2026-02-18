@@ -21,7 +21,7 @@ import {
   resetMute,
 } from "../common/common.js";
 
-export default class VoiceCallUI {
+export default class ConferenceCallUI {
   constructor(sinchPhone) {
     this.sinchPhone = sinchPhone;
     this.audio = new Audio();
@@ -51,9 +51,9 @@ export default class VoiceCallUI {
   }
 
   async makeCall() {
-    const callee = this.getCallee();
-    this.setStatus(`Make call to ${callee}`);
-    await this.sinchPhone.makeCall(callee);
+    const conferenceId = this.getConferenceId();
+    this.setStatus(`Joining conference ${conferenceId}`);
+    await this.sinchPhone.makeCall(conferenceId);
     setState("hangup", ENABLE);
     setState("call", DISABLE);
     setState("answer", DISABLE);
@@ -85,12 +85,12 @@ export default class VoiceCallUI {
   }
 
   onCallEstablished(call) {
-    this.setStatus(`Call established with ${call.remoteUserId}`);
+    this.setStatus(`Conference call established with ${call.remoteUserId}`);
     enableMute(call);
   }
 
   onCallEnded(call) {
-    this.setStatus(`Call ended ${call.remoteUserId}`);
+    this.setStatus(`Conference call ended ${call.remoteUserId}`);
     this.pauseRingtone();
     setState("hangup", DISABLE);
     setState("call", ENABLE);
@@ -166,8 +166,8 @@ export default class VoiceCallUI {
     answerElement.addEventListener("click", this.handleAnswer);
   }
 
-  getCallee() {
-    return document.getElementById("callee").value;
+  getConferenceId() {
+    return document.getElementById("conferenceid").value;
   }
 
   playRingtone(directionRingtone) {

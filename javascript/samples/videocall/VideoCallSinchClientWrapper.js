@@ -3,7 +3,7 @@ import {
   getJwtToken,
   getApplicationKey,
   getUserId,
-  API_URL,
+  getEnvironmentHost,
 } from "../common/common.js";
 import VideoCallUI from "./VideoCallUI.js";
 
@@ -20,7 +20,7 @@ export default class VideoCallSinchClientWrapper {
     this.sinchClient = Sinch.getSinchClientBuilder()
       .applicationKey(getApplicationKey())
       .userId(getUserId())
-      .environmentHost(API_URL)
+      .environmentHost(getEnvironmentHost())
       .build();
     this.sinchClient.addListener(this.#sinchClientListener());
     this.sinchClient.setSupportManagedPush().then(() => {

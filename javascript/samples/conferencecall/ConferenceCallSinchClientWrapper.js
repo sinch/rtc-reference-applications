@@ -1,38 +1,60 @@
 import {
+  canAutoStart,
   getJwtToken,
   getUserId,
   getApplicationKey,
-  setText,
   getEnvironmentHost,
 } from "../common/common.js";
-import SipCallUI from "./SipCallUI.js";
+import ConferenceCallUI from "./ConferenceCallUI.js";
 
-export default class SipCallSinchClientWrapper {
+export default class ConferenceCallSinchClientWrapper {
   constructor() {
-    this.sinchClient = Sinch.getSinchClientBuilder()
+    this.ui = new ConferenceCallUI(this);
+    const sinchClient = Sinch.getSinchClientBuilder()
       .applicationKey(getApplicationKey())
       .userId(getUserId())
       .environmentHost(getEnvironmentHost())
       .build();
 
-    this.sinchClient.addListener(this.#sinchClientListener());
-    this.ui = new SipCallUI(this);
+    sinchClient.addListener(this.#sinchClientListener());
+    sinchClient.setSupportManagedPush().then(() => {
+      this.attemptAutoStart();
+    });
+
+    this.sinchClient = sinchClient;
   }
 
-  start() {
+  async attemptAutoStart() {
+    if (await canAutoStart()) {
+      this.sinchClient.start();
+    } else {
+      this.ui.setManualStartButtonVisible(true);
+    }
+  }
+
+  startManually() {
     this.sinchClient.start();
-    this.ui.start();
+    this.ui.setManualStartButtonVisible(false);
+  }
+
+  async makeCall(conferenceId) {
+    const call = await this.sinchClient.callClient.callConference(conferenceId);
+    this.ui.onOutboundCall(call);
+    this.#callListeners(call);
   }
 
   #sinchClientListener() {
     return {
       onClientStarted: (sinchClient) => {
         const { callClient } = sinchClient;
-        this.ui.getInput("to", "call", async (destination) => {
-          setText("call", "Hangup");
-          const call = await callClient.callSip(destination);
-          this.#outboundCall(call);
+        callClient.addListener({
+          onIncomingCall: (client, call) => {
+            this.ui.onIncomingCall(call);
+            this.#callListeners(call);
+          },
         });
+
+        this.ui.onClientStarted(sinchClient);
       },
 
       onCredentialsRequired: (sinchClient, clientRegistration) => {
@@ -45,15 +67,14 @@ export default class SipCallSinchClientWrapper {
       },
 
       onClientFailed: (sinchClient, error) => {
+        console.log("Sinch - Start client failed");
         console.error(error);
       },
     };
   }
 
-  #outboundCall(currentCall) {
-    this.ui.setCurrentCall(currentCall);
+  #callListeners(currentCall) {
     currentCall.addListener({
-      // eslint-disable-next-line no-unused-vars
       onCallProgressing: (call) => {
         this.ui.onCallProgressing(call);
       },

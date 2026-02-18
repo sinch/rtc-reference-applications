@@ -2,7 +2,7 @@ import {
   getJwtToken,
   getUserId,
   getApplicationKey,
-  API_URL,
+  getEnvironmentHost,
   setText,
 } from "../common/common.js";
 import NumberCallUI from "./NumberCallUI.js";
@@ -17,7 +17,7 @@ export default class NumberCallSinchClientWrapper {
       .applicationKey(getApplicationKey())
       .userId(getUserId())
       .callerIdentifier(callerIdentifier)
-      .environmentHost(API_URL)
+      .environmentHost(getEnvironmentHost())
       .build();
 
     this.sinchClient.addListener(this.#sinchClientListener());

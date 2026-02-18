@@ -6,6 +6,9 @@ import {
   initDeviceSelectors,
   setMediaSource,
   setAudioOutput,
+  initMuteButton,
+  enableMute,
+  resetMute,
 } from "../common/common.js";
 
 export default class SipCallUI {
@@ -13,6 +16,7 @@ export default class SipCallUI {
     this.sinchPhone = sinchPhone;
     this.audio = new Audio();
     this.handleDeviceSelectors();
+    initMuteButton();
     setText("version", `Sinch - Version:  ${Sinch.version}`);
   }
 
@@ -40,12 +44,14 @@ export default class SipCallUI {
   onCallEstablished(call) {
     this.playAudio(call);
     this.setStatus(`Call established with ${call.remoteUserId}`);
+    enableMute(call);
   }
 
   onCallEnded(call) {
     this.setStatus(`Call ended ${call.remoteUserId}`);
     setText("call", "Call");
     this.ringToneAudio?.pause();
+    resetMute();
     this.resetCurrentCall();
   }
 

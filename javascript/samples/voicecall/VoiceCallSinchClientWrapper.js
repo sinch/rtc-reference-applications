@@ -3,7 +3,7 @@ import {
   getJwtToken,
   getUserId,
   getApplicationKey,
-  API_URL,
+  getEnvironmentHost,
 } from "../common/common.js";
 import VoiceCallUI from "./VoiceCallUI.js";
 
@@ -13,7 +13,7 @@ export default class VoiceCallSinchClientWrapper {
     const sinchClient = Sinch.getSinchClientBuilder()
       .applicationKey(getApplicationKey())
       .userId(getUserId())
-      .environmentHost(API_URL)
+      .environmentHost(getEnvironmentHost())
       .build();
 
     sinchClient.addListener(this.#sinchClientListener());

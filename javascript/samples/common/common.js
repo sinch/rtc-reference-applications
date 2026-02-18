@@ -1,6 +1,7 @@
 import JWT from "./jwt.js";
 
 export const API_URL = "https://ocra.api.sinch.com";
+
 export const INCOMING_RINGTONE = "INCOMING_RINGTONE";
 export const OUTGOING_RINGTONE = "OUTGOING_RINGTONE";
 export const HIDE = "HIDE";
@@ -13,6 +14,7 @@ export const STORAGE_KEY_BASE = "sinch:referenceapp:";
 export const JWT_TOKEN_KEY = `${STORAGE_KEY_BASE}jwttoken`;
 export const APPLICATION_KEY = `${STORAGE_KEY_BASE}applicationkey`;
 export const USER_ID_KEY = `${STORAGE_KEY_BASE}userid`;
+export const ENVIRONMENT_HOST_KEY = `${STORAGE_KEY_BASE}environmenthost`;
 
 const PERMISSION_STATUS_PROMPT = "prompt";
 const PERMISSION_STATUS_DENIED = "denied";
@@ -24,7 +26,12 @@ const PERMISSION_STATUS_GRANTED = "granted";
  * signed on your server, then passed via a secure channel to the application instance and
  * Sinch client running on a device.
  */
-export const setupLogin = async (applicationKey, applicationSecret, userId) => {
+export const setupLogin = async (
+  applicationKey,
+  applicationSecret,
+  userId,
+  environmentHost,
+) => {
   const jwtToken = await new JWT(
     applicationKey,
     applicationSecret,
@@ -33,7 +40,12 @@ export const setupLogin = async (applicationKey, applicationSecret, userId) => {
   localStorage.setItem(JWT_TOKEN_KEY, jwtToken);
   localStorage.setItem(APPLICATION_KEY, applicationKey);
   localStorage.setItem(USER_ID_KEY, userId);
+  localStorage.setItem(ENVIRONMENT_HOST_KEY, environmentHost || API_URL);
 };
+
+export function getEnvironmentHost() {
+  return localStorage.getItem(ENVIRONMENT_HOST_KEY) || API_URL;
+}
 
 export const getJwtToken = async () => {
   const jwtToken = localStorage.getItem(JWT_TOKEN_KEY);
@@ -339,3 +351,32 @@ export const sleep = (ms) =>
   new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
+
+const muteState = { isMuted: false, currentCall: null };
+
+export function initMuteButton() {
+  document.getElementById("mute").addEventListener("click", () => {
+    if (!muteState.currentCall) return;
+    if (muteState.isMuted) {
+      muteState.currentCall.unmute();
+      muteState.isMuted = false;
+      setText("mute", "Mute");
+    } else {
+      muteState.currentCall.mute();
+      muteState.isMuted = true;
+      setText("mute", "Unmute");
+    }
+  });
+}
+
+export function enableMute(call) {
+  muteState.currentCall = call;
+  setState("mute", ENABLE);
+}
+
+export function resetMute() {
+  muteState.isMuted = false;
+  muteState.currentCall = null;
+  setState("mute", DISABLE);
+  setText("mute", "Mute");
+}
