@@ -10,7 +10,6 @@ enum class CallType {
     AppToAppAudio,
     AppToAppVideo,
     AppToSip,
-
     AppToConference,
 }
 
@@ -32,22 +31,17 @@ val CallType.requiredPermissions: List<String>
         val bluetoothPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
             Manifest.permission.BLUETOOTH_CONNECT else Manifest.permission.BLUETOOTH
         return when (this) {
-            CallType.AppToPhone -> listOf(
-                Manifest.permission.RECORD_AUDIO,
-                bluetoothPermission,
-            )
-
-            CallType.AppToAppAudio -> listOf(
+            CallType.AppToPhone,
+            CallType.AppToAppAudio,
+            CallType.AppToSip,
+            CallType.AppToConference -> listOf(
                 Manifest.permission.RECORD_AUDIO,
                 bluetoothPermission
             )
-
             CallType.AppToAppVideo -> listOf(
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.CAMERA,
                 bluetoothPermission
             )
-
-            else -> emptyList()
         }
     }

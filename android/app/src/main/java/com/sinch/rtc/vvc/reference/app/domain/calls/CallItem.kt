@@ -5,11 +5,15 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.sinch.android.rtc.calling.Call
 import com.sinch.android.rtc.calling.CallEndCause
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.Constants
 import com.sinch.rtc.vvc.reference.app.domain.user.User
+import com.sinch.rtc.vvc.reference.app.storage.converters.CallTypeConverter
+import com.sinch.rtc.vvc.reference.app.storage.converters.DateConverter
+import com.sinch.rtc.vvc.reference.app.storage.converters.EndCauseConverter
 import com.sinch.rtc.vvc.reference.app.utils.extensions.appendLineIfValuePresent
 import com.sinch.rtc.vvc.reference.app.utils.extensions.expectedType
 import com.sinch.rtc.vvc.reference.app.utils.extensions.isSet
@@ -21,11 +25,16 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity(tableName = Constants.CALL_HISTORY_ITEMS_TABLE_NAME)
 data class CallItem(
+    @TypeConverters(CallTypeConverter::class)
     val type: CallType,
     val destination: String,
+    @TypeConverters(DateConverter::class)
     val startDate: Date,
+    @TypeConverters(DateConverter::class)
     val establishedDate: Date? = null,
+    @TypeConverters(DateConverter::class)
     val endDate: Date? = null,
+    @TypeConverters(EndCauseConverter::class)
     val endCause: CallEndCause? = null,
     val errorMessage: String? = null,
     @PrimaryKey(autoGenerate = true) val itemId: Long = 0,
