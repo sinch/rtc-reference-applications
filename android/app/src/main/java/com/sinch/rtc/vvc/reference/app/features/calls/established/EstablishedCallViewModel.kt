@@ -3,6 +3,9 @@ package com.sinch.rtc.vvc.reference.app.features.calls.established
 import android.Manifest
 import android.app.Application
 import android.content.pm.PackageManager
+import android.media.AudioDeviceInfo
+import android.media.AudioManager
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.text.format.DateUtils
@@ -66,6 +69,8 @@ class EstablishedCallViewModel(
 
     private val callDurationMutable: MutableLiveData<Int> = MutableLiveData()
     private val mainThreadHandler = Handler(Looper.getMainLooper())
+    private val audioManager = app.getSystemService(AudioManager::class.java)
+    private val supportsCommunicationDeviceSelection = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
     private var sinchCall: Call? = null //We have to store it as user can cancel the call first
     private val qualityWarningEventsMutable: MutableLiveData<CallQualityWarningEvent> = MutableLiveData()
@@ -101,6 +106,8 @@ class EstablishedCallViewModel(
     val qualityWarningEvents: LiveData<CallQualityWarningEvent> = qualityWarningEventsMutable
     val callProperties: LiveData<CallProperties> = callPropertiesMutable
     val captureState: LiveData<FrameCaptureState> = frameCaptureStateMutable
+
+    val communicationDevicePickerEvent = SingleLiveEvent<List<AudioDeviceInfo>>()
 
     init {
         sinchCall =
@@ -196,6 +203,23 @@ class EstablishedCallViewModel(
         updateVideoProperties()
     }
 
+    fun onCommunicationDeviceButtonClicked() {
+        if (!supportsCommunicationDeviceSelection) {
+            messageEvents.postValue(app.getString(R.string.communication_device_not_available))
+            return
+        }
+        val devices = audioManager.availableCommunicationDevices
+        communicationDevicePickerEvent.postValue(devices)
+    }
+
+    fun onCommunicationDeviceSelected(device: AudioDeviceInfo) {
+        currentAudioState = AudioState.MANUAL
+        audioManager.setCommunicationDevice(device)
+        messageEvents.postValue(
+            app.getString(R.string.communication_device_selected, device.productName)
+        )
+    }
+
     override fun onCallProgressing(call: Call) {
         Log.d(TAG, "onCallProgressing $call")
     }
@@ -217,6 +241,9 @@ class EstablishedCallViewModel(
 
     override fun onCleared() {
         super.onCleared()
+        if (supportsCommunicationDeviceSelection) {
+            audioManager.clearCommunicationDevice()
+        }
         sinchCall?.qualityController?.removeCallQualityWarningEventListener(this)
         sinchCall?.hangup()
         sinchCall?.removeCallListener(this)
@@ -251,8 +278,11 @@ class EstablishedCallViewModel(
     }
 
     private fun setNewAudioState(audioState: AudioState) {
+        if (audioState != AudioState.MANUAL && supportsCommunicationDeviceSelection) {
+            audioManager.clearCommunicationDevice()
+        }
         sinchClient.audioController.setAutomaticRoutingEnabled(audioState == AudioState.AAR)
-        if (audioState != AudioState.AAR) {
+        if (audioState != AudioState.AAR && audioState != AudioState.MANUAL) {
             sinchClient.audioController.setSpeakerEnabled(audioState == AudioState.SPEAKER)
         }
     }

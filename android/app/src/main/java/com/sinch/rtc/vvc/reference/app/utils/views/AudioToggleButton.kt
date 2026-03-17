@@ -27,8 +27,9 @@ class AudioToggleButton @JvmOverloads constructor(
     }
 
     private fun toggleState() {
-        val nextState = (audioState.ordinal + 1) % AudioState.values().size
-        audioState = AudioState.values()[nextState]
+        val currentIndex = TOGGLEABLE_AUDIO_STATES.indexOf(audioState)
+        val nextIndex = (currentIndex + 1) % TOGGLEABLE_AUDIO_STATES.size
+        audioState = TOGGLEABLE_AUDIO_STATES[nextIndex]
         onAudioStateChanged(audioState)
     }
 
@@ -37,6 +38,11 @@ class AudioToggleButton @JvmOverloads constructor(
             AudioState.SPEAKER -> R.drawable.ic_baseline_speaker_phone_24
             AudioState.PHONE -> R.drawable.ic_baseline_phone_in_talk_24
             AudioState.AAR -> R.drawable.ic_baseline_aar_24
+            AudioState.MANUAL -> R.drawable.ic_baseline_devices_24
         }
+
+    companion object {
+        private val TOGGLEABLE_AUDIO_STATES = listOf(AudioState.AAR, AudioState.SPEAKER, AudioState.PHONE)
+    }
 
 }

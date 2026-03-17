@@ -135,6 +135,25 @@
             android:background="@drawable/ic_baseline_mic_off_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/communicationDeviceButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/communicationDeviceButton"
+            android:layout_width="@dimen/toggle_button_size"
+            android:layout_height="@dimen/toggle_button_size"
+            android:background="@drawable/button_incoming_call_bg"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            app:backgroundTint="@color/blackSemiTransparent"
+            app:icon="@drawable/ic_baseline_devices_24"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/isMutedToggleButton"
             app:layout_constraintRight_toLeftOf="@id/audioStateButton"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -143,7 +162,7 @@
             android:layout_width="@dimen/toggle_button_size"
             android:layout_height="@dimen/toggle_button_size"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/isMutedToggleButton"
+            app:layout_constraintLeft_toRightOf="@id/communicationDeviceButton"
             app:layout_constraintRight_toLeftOf="@id/isVideoPausedToggleButton"
             app:layout_constraintTop_toTopOf="parent" />
 

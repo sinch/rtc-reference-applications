@@ -1,6 +1,7 @@
 package com.sinch.rtc.vvc.reference.app.features.calls.established
 
 import android.Manifest
+import android.media.AudioDeviceInfo
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -111,6 +112,9 @@ class EstablishedCallFragment :
         binding.isVideoPausedToggleButton.setOnCheckedChangeListener { _, isChecked ->
             viewModel.requestIsPaused(isChecked)
         }
+        binding.communicationDeviceButton.setOnClickListener {
+            viewModel.onCommunicationDeviceButtonClicked()
+        }
     }
 
     private fun observeViewModel() {
@@ -151,6 +155,9 @@ class EstablishedCallFragment :
         }
         viewModel.qualityWarningEvents.observe(viewLifecycleOwner) {
             handleCallQualityWarningEvent(it)
+        }
+        viewModel.communicationDevicePickerEvent.observe(viewLifecycleOwner) {
+            showCommunicationDevicePicker(it)
         }
     }
 
@@ -213,6 +220,7 @@ class EstablishedCallFragment :
                 AudioState.AAR -> getString(R.string.aar_on_msg)
                 AudioState.SPEAKER -> getString(R.string.external_speaker_on_msg)
                 AudioState.PHONE -> getString(R.string.phone_speaker_on)
+                AudioState.MANUAL -> getString(R.string.manual_device_on_msg)
             }
 
     private fun showSnackbar(message: String) {
@@ -221,6 +229,18 @@ class EstablishedCallFragment :
                 anchorView = binding.callSettingsLayout
             }
             .makeMultiline().show()
+    }
+
+    private fun showCommunicationDevicePicker(devices: List<AudioDeviceInfo>) {
+        val context = context ?: return
+        val deviceNames = devices.map { it.productName.toString() }.toTypedArray()
+        AlertDialog.Builder(context)
+            .setTitle(R.string.select_communication_device)
+            .setItems(deviceNames) { _, which ->
+                viewModel.onCommunicationDeviceSelected(devices[which])
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     companion object {
