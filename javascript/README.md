@@ -17,6 +17,25 @@ Read specific instructions for each call sample by clicking the icon on the left
 
 Run `npm install` and then `npm start` to host the app locally.
 
+### Predefined environments (config.json)
+
+You can create a `samples/config.json` file to preload named environments into the login screen, avoiding the need to type credentials manually each time.
+
+Create `samples/config.json` with your credentials:
+
+```json
+[
+  {
+    "name": "Production",
+    "appKey": "your-app-key",
+    "appSecret": "your-app-secret",
+    "environment": "https://ocra.api.sinch.com"
+  }
+]
+```
+
+You can add multiple entries — they will appear in a dropdown on the login screen. Selecting `— manual entry —` from the dropdown clears the fields so you can type credentials manually instead.
+
 ## Available Demos
 
 - voicecall - in-app to in-app voice (data to data voice)

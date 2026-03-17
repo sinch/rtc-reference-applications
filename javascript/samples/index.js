@@ -19,6 +19,48 @@ const environmentHostInput = document.getElementById("environment-host");
 
 environmentHostInput.value = API_URL;
 
+const loadConfig = async () => {
+  try {
+    const response = await fetch("./config.json");
+    if (!response.ok) return;
+    const configs = await response.json();
+    if (!Array.isArray(configs) || configs.length === 0) return;
+
+    const select = document.getElementById("env-preset");
+    const presetGroup = document.getElementById("presetGroup");
+
+    configs.forEach((cfg, i) => {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = cfg.name;
+      select.appendChild(option);
+    });
+
+    presetGroup.style.display = "block";
+
+    const applyPreset = (idx) => {
+      if (idx === "") {
+        document.getElementById("key").value = "";
+        document.getElementById("secret").value = "";
+        document.getElementById("environment-host").value = API_URL;
+      } else {
+        const cfg = configs[parseInt(idx, 10)];
+        document.getElementById("key").value = cfg.appKey ?? "";
+        document.getElementById("secret").value = cfg.appSecret ?? "";
+        document.getElementById("environment-host").value =
+          cfg.environment ?? API_URL;
+      }
+    };
+
+    select.value = "0";
+    applyPreset("0");
+
+    select.addEventListener("change", () => applyPreset(select.value));
+  } catch {
+    // config.json not found or invalid — manual entry only
+  }
+};
+
 export const demo = function (event) {
   event.preventDefault();
   const type = this.id;
@@ -86,3 +128,5 @@ if (await isPushPermissionStatusDenied()) {
     "Push notifications are denied. Please enable push notifications in the browser settings.",
   );
 }
+
+loadConfig();

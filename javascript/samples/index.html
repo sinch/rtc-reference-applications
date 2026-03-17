@@ -52,6 +52,17 @@
         <div id="loginForm" style="display: block">
           <form class="token-input" id="demotype">
             <div class="form-section">
+              <div class="form-group" id="presetGroup" style="display: none">
+                <div class="form-group-inner">
+                  <div class="form-label">Environment</div>
+                  <div class="form-input-wrapper">
+                    <select class="form-control" id="env-preset">
+                      <option value="">— manual entry —</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
               <div class="form-group">
                 <div class="form-group-inner">
                   <div class="form-label">Application key</div>
@@ -61,6 +72,7 @@
                       type="password"
                       name="key"
                       id="key"
+                      value=""
                       placeholder="Enter application key"
                       autofocus
                     />
@@ -82,6 +94,7 @@
                       type="password"
                       name="secret"
                       id="secret"
+                      value=""
                       placeholder="Enter secret"
                     />
                     <i
