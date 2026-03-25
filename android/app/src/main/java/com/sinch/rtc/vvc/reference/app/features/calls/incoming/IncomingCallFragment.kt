@@ -1,6 +1,8 @@
 package com.sinch.rtc.vvc.reference.app.features.calls.incoming
 
+import android.content.Context
 import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.viewModels
+import androidx.media.AudioAttributesCompat
+import androidx.media.AudioFocusRequestCompat
+import androidx.media.AudioManagerCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.sinch.android.rtc.calling.CallState
@@ -36,19 +41,7 @@ class IncomingCallFragment :
         )
     }
 
-    private val progressingCallTonePlayer: MediaPlayer by lazy {
-        MediaPlayer().apply {
-            setDataSource(requireContext(), UriHelper.uriForResource(requireContext(), R.raw.progress_tone))
-            setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build()
-            )
-            isLooping = true
-            prepare()
-        }
-    }
+    private var progressingCallTonePlayer: MediaPlayer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,7 +65,7 @@ class IncomingCallFragment :
 
     override fun onDestroyView() {
         super.onDestroyView()
-        progressingCallTonePlayer.safeStop()
+        progressingCallTonePlayer?.safeStop()
     }
 
     override fun onResume() {
@@ -100,9 +93,9 @@ class IncomingCallFragment :
             val wasAnsweredAlready =
                 listOf(CallState.ANSWERED, CallState.ESTABLISHED, CallState.ENDED).contains(callState)
             if (!wasAnsweredAlready) {
-                progressingCallTonePlayer.start()
+                tryToReproduceAARBug()
             } else {
-                progressingCallTonePlayer.safeStop()
+                progressingCallTonePlayer?.safeStop()
             }
             binding.acceptButton.isEnabled = !wasAnsweredAlready
             val stateText = when (callState) {
@@ -114,6 +107,53 @@ class IncomingCallFragment :
                 binding.stateTextView.setText(stateText)
             }
         }
+    }
+
+    private fun tryToReproduceAARBug() {
+        // At this point the AAR is already enabled in side init blog of the view model.
+        val audioManager = requireContext().getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        Log.d("BUGTEST", "Trying to reproduce AAR bug by playing progressing tone")
+        val onAudioFocusChangeListener = AudioManager.OnAudioFocusChangeListener { focus ->
+            when (focus) {
+                AudioManager.AUDIOFOCUS_GAIN -> {
+                    Log.d("BUGTEST", "Audio focus gained (listener notified)")
+                    playProgressingTone()
+                }
+            }
+        }
+        val request = AudioFocusRequestCompat.Builder(AudioManagerCompat.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+            .setAudioAttributes(
+                AudioAttributesCompat.Builder()
+                    .setUsage(AudioAttributesCompat.USAGE_NOTIFICATION_RINGTONE)
+                    .setContentType(AudioAttributesCompat.CONTENT_TYPE_SONIFICATION)
+                    .setLegacyStreamType(AudioManager.STREAM_RING)
+                    .build()
+            ).setOnAudioFocusChangeListener(onAudioFocusChangeListener).build()
+        val requestResult = AudioManagerCompat.requestAudioFocus(audioManager, request);
+        if (requestResult == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            Log.d("BUGTEST", "Audio focus request granted will play incoming call tone")
+        } else {
+            Log.d("BUGTEST", "Audio focus request failed with code $requestResult")
+            return
+        }
+        playProgressingTone()
+    }
+
+    private fun playProgressingTone() {
+        progressingCallTonePlayer = MediaPlayer().apply {
+            setDataSource(requireContext(), UriHelper.uriForResource(requireContext(), R.raw.progress_tone))
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setLegacyStreamType(AudioManager.STREAM_RING)
+                    .build()
+            )
+            isLooping = true
+            prepare()
+        }
+        Log.d("BUGTEST", "Starting progressing call tone to reproduce AAR bug, what is the output?")
+        progressingCallTonePlayer?.start()
     }
 
     private fun observeViewModel() {

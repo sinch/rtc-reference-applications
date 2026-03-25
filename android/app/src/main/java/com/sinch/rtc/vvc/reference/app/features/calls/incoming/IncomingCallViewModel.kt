@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.sinch.android.rtc.AudioController
 import com.sinch.android.rtc.SinchClient
 import com.sinch.android.rtc.calling.Call
 import com.sinch.android.rtc.calling.CallEndCause
@@ -52,6 +53,13 @@ class IncomingCallViewModel(
             addCallListener(this@IncomingCallViewModel)
         }
         if (call != null) {
+            Log.d("BUGTEST", "Enabling AAR with  SPEAKERPHONE_FALSE and isBluetoothAudioManaged = true $callId")
+            sinchClient.audioController.enableAutomaticAudioRouting(
+                AudioController.AudioRoutingConfig(
+                    AudioController.UseSpeakerphone.SPEAKERPHONE_FALSE,
+                    isBluetoothAudioManaged = true
+                )
+            )
             issueCallStateUpdate(call)
             callPropertiesMutable.postValue(CallProperties(call.remoteUserId))
             user?.let {
