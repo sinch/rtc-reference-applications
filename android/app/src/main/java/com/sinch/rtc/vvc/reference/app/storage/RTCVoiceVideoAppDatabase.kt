@@ -10,7 +10,7 @@ import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
 
 
-@Database(entities = [User::class, CallItem::class], version = 1, exportSchema = false)
+@Database(entities = [User::class, CallItem::class], version = 2, exportSchema = false)
 abstract class RTCVoiceVideoAppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
