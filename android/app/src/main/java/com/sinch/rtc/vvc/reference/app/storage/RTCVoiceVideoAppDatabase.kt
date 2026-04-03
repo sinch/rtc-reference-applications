@@ -32,7 +32,7 @@ abstract class RTCVoiceVideoAppDatabase : RoomDatabase() {
                             DATABASE_NAME
                         )
                             .allowMainThreadQueries() //Since this is a reference app with relatively small database for simplicity we allow queries on main thread
-                            .fallbackToDestructiveMigration()
+                            .fallbackToDestructiveMigrationFrom(1)
                             .fallbackToDestructiveMigrationOnDowngrade()
                             .build()
                     }

@@ -19,6 +19,7 @@ import com.sinch.rtc.vvc.reference.app.domain.calls.properties.VideoCallProperti
 import com.sinch.rtc.vvc.reference.app.features.calls.established.screenshot.Idle
 import com.sinch.rtc.vvc.reference.app.utils.base.fragment.MainActivityFragment
 import com.sinch.rtc.vvc.reference.app.utils.extensions.addVideoViewChild
+import com.sinch.rtc.vvc.reference.app.utils.extensions.friendlyName
 import com.sinch.rtc.vvc.reference.app.utils.extensions.makeMultiline
 import java.util.Timer
 import java.util.TimerTask
@@ -233,7 +234,7 @@ class EstablishedCallFragment :
 
     private fun showCommunicationDevicePicker(devices: List<AudioDeviceInfo>) {
         val context = context ?: return
-        val deviceNames = devices.map { it.productName.toString() }.toTypedArray()
+        val deviceNames = devices.map { it.friendlyName(context) }.toTypedArray()
         AlertDialog.Builder(context)
             .setTitle(R.string.select_communication_device)
             .setItems(deviceNames) { _, which ->

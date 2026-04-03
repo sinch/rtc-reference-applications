@@ -39,6 +39,7 @@ import com.sinch.rtc.vvc.reference.app.features.calls.established.screenshot.Scr
 import com.sinch.rtc.vvc.reference.app.features.calls.established.screenshot.Triggered
 import com.sinch.rtc.vvc.reference.app.utils.extensions.PermissionRequestResult
 import com.sinch.rtc.vvc.reference.app.utils.extensions.areAllPermissionsGranted
+import com.sinch.rtc.vvc.reference.app.utils.extensions.friendlyName
 import com.sinch.rtc.vvc.reference.app.utils.extensions.isFrontCameraUsedForCapture
 import com.sinch.rtc.vvc.reference.app.utils.extensions.setAutomaticRoutingEnabled
 import com.sinch.rtc.vvc.reference.app.utils.extensions.setMuted
@@ -49,6 +50,7 @@ import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 import java.util.Date
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class EstablishedCallViewModel(
@@ -214,10 +216,13 @@ class EstablishedCallViewModel(
 
     fun onCommunicationDeviceSelected(device: AudioDeviceInfo) {
         currentAudioState = AudioState.MANUAL
-        audioManager.setCommunicationDevice(device)
-        messageEvents.postValue(
-            app.getString(R.string.communication_device_selected, device.productName)
-        )
+        viewModelScope.launch {
+            delay(500)
+            audioManager.setCommunicationDevice(device)
+            messageEvents.postValue(
+                app.getString(R.string.communication_device_selected, device.friendlyName(app))
+            )
+        }
     }
 
     override fun onCallProgressing(call: Call) {
@@ -241,7 +246,7 @@ class EstablishedCallViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        if (supportsCommunicationDeviceSelection) {
+        if (supportsCommunicationDeviceSelection && !sinchClient.audioController.isAutomaticAudioRoutingEnabled) {
             audioManager.clearCommunicationDevice()
         }
         sinchCall?.qualityController?.removeCallQualityWarningEventListener(this)
@@ -278,7 +283,9 @@ class EstablishedCallViewModel(
     }
 
     private fun setNewAudioState(audioState: AudioState) {
-        if (audioState != AudioState.MANUAL && supportsCommunicationDeviceSelection) {
+        if (audioState != AudioState.MANUAL && !sinchClient.audioController.isAutomaticAudioRoutingEnabled &&
+            supportsCommunicationDeviceSelection
+        ) {
             audioManager.clearCommunicationDevice()
         }
         sinchClient.audioController.setAutomaticRoutingEnabled(audioState == AudioState.AAR)

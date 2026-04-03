@@ -90,6 +90,12 @@
     <string name="phone_speaker_on">Phone speaker enabled</string>
     <string name="manual_device_on_msg">Manual audio device selected</string>
     <string name="select_communication_device">Select communication device</string>
+    <string name="device_earpiece">Earpiece</string>
+    <string name="device_speaker">Speaker</string>
+    <string name="device_wired_headset">Wired Headset</string>
+    <string name="device_wired_headphones">Wired Headphones</string>
+    <string name="device_bluetooth">Bluetooth</string>
+    <string name="device_usb">USB Audio</string>
     <string name="communication_device_selected">Communication device: %s</string>
     <string name="communication_device_not_available">Communication device selection requires Android 12+</string>
     <string name="video_pause">Video paused</string>
