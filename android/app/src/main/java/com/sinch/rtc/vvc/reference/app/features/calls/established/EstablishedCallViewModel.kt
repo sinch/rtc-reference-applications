@@ -50,7 +50,6 @@ import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 import java.util.Date
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class EstablishedCallViewModel(
@@ -216,13 +215,10 @@ class EstablishedCallViewModel(
 
     fun onCommunicationDeviceSelected(device: AudioDeviceInfo) {
         currentAudioState = AudioState.MANUAL
-        viewModelScope.launch {
-            delay(500)
-            audioManager.setCommunicationDevice(device)
-            messageEvents.postValue(
-                app.getString(R.string.communication_device_selected, device.friendlyName(app))
-            )
-        }
+        audioManager.setCommunicationDevice(device)
+        messageEvents.postValue(
+            app.getString(R.string.communication_device_selected, device.friendlyName(app))
+        )
     }
 
     override fun onCallProgressing(call: Call) {
