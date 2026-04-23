@@ -30,6 +30,8 @@ struct CallState {
   var speakerEnabled: Bool = false
   var paused: Bool = false
 
+  var availableDevices: [SinchAudioDevice] = []
+
   var status: Status = .none
 }
 
@@ -45,7 +47,9 @@ final class CallViewModel {
   private let type: CallType
 
   init(call: SinchCall?, type: CallType, clientMediator: SinchClientMediator) {
-    self.state = CallState(couldHangUp: call?.direction == .outgoing)
+    let availableAudioDevices = clientMediator.sinchClient?.audioController.availableAudioDevices() ?? []
+    self.state = CallState(couldHangUp: call?.direction == .outgoing,
+                           availableDevices: availableAudioDevices)
 
     self.call = call
     self.type = type
@@ -96,6 +100,14 @@ final class CallViewModel {
 
   func toggleSwitchCamera() {
     clientMediator.sinchClient?.videoController.captureDevicePosition.toggle()
+  }
+
+  func choosePreferredAudioDevice(_ device: SinchAudioDevice) {
+    clientMediator.sinchClient?.audioController.setPreferredAudioDevice(device)
+  }
+
+  func resetAudioDevice() {
+    clientMediator.sinchClient?.audioController.setPreferredAudioDevice(nil)
   }
 
   func terminate() {

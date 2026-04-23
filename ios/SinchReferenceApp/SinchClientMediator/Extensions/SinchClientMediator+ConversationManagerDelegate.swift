@@ -36,6 +36,7 @@ extension SinchClientMediator: ConversationManagerDelegate {
     }
   }
 
+  // swiftlint:disable function_body_length
   private func perform(action: StartConversationAction) {
     defer { callStartedCallback = nil }
 
@@ -71,6 +72,10 @@ extension SinchClientMediator: ConversationManagerDelegate {
       case .phone:
         // To perform calls, CLI should be set and calling number provided.
         callResult = callClient.callPhoneNumber(recipientIdentifier)
+      case .sip:
+        callResult = callClient.callSIP(recipientIdentifier)
+      case .conference:
+        callResult = callClient.callConference(withId: recipientIdentifier)
     }
 
     switch callResult {

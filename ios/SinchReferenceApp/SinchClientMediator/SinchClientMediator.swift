@@ -30,11 +30,16 @@ final class SinchClientMediator: NSObject {
     case audio
     case video
     case phone
+    case sip
+    case conference
   }
 
   var clientStartedCallback: ClientStartedCallback!
 
   private(set) var sinchClient: SinchClient?
+
+  private(set) var applicationKey: String = ""
+  private(set) var applicationSecret: String = ""
 
   var callStartedCallback: CallStartedCallback!
 
@@ -51,6 +56,13 @@ final class SinchClientMediator: NSObject {
   weak var reloginDelegate: ReloginDelegate?
   weak var logoutDelegate: LogoutDelegate?
 
+  var sdkVersion: String {
+    let fullVersion = SinchRTC.version()
+    let version = fullVersion.components(separatedBy: "+").first ?? fullVersion
+
+    return "v." + version
+  }
+
   private(set) var callTypes: [String: CallType] = [:]
 
   var currentCall: SinchCall? {
@@ -61,10 +73,18 @@ final class SinchClientMediator: NSObject {
 
   // Creating and starting a client for particular user.
   // https://developers.sinch.com/docs/in-app-calling/ios/sinch-client/#creating-the-sinclient
-  func createAndStartClient(with userId: String, cli: String = "", and callback: @escaping (_ error: Error?) -> Void) {
+  func createAndStartClient(with userId: String,
+                            cli: String = "",
+                            environmentHost: String,
+                            applicationKey: String,
+                            applicationSecret: String,
+                            and callback: @escaping (_ error: Error?) -> Void) {
+    self.applicationKey = applicationKey
+    self.applicationSecret = applicationSecret
+
     do {
-      sinchClient = try SinchRTC.client(withApplicationKey: APPLICATION_KEY,
-                                        environmentHost: ENVIRONMENT_HOST,
+      sinchClient = try SinchRTC.client(withApplicationKey: applicationKey,
+                                        environmentHost: environmentHost,
                                         userId: userId,
                                         // Setup CLI, number from which call will be performed.
                                         // If CLI is empty, when performing a PSTN call, call will fail.
@@ -118,9 +138,21 @@ final class SinchClientMediator: NSObject {
       return
     }
 
+    let environmentInfo = EnvironmentInfo.load()
+
+    guard environmentInfo != .empty else {
+      os_log("Failed to restore environment from UserDefaults to create new SinchClient",
+             log: .sinchOSLog(for: SinchClientMediator.identifier))
+      return
+    }
+
     self.setupCommunication(with: CommunicationKit.load())
 
-    createAndStartClient(with: userInfo.userId, cli: userInfo.cli) { [weak self] error in
+    createAndStartClient(with: userInfo.userId,
+                         cli: userInfo.cli,
+                         environmentHost: environmentInfo.host,
+                         applicationKey: environmentInfo.appKey,
+                         applicationSecret: environmentInfo.appSecret) { [weak self] error in
       guard let self = self else { return }
 
       if let error = error {
@@ -228,6 +260,7 @@ final class SinchClientMediator: NSObject {
     }
 
     UserInfo.clear()
+    EnvironmentInfo.clear()
 
     guard let client = sinchClient else { return }
 

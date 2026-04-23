@@ -12,8 +12,8 @@ extension SinchClientMediator: SinchClientDelegate {
                                              withCallback callback: SinchRTC.SinchClientRegistration) {
     do {
       // WARNING: test implementation to create JWT token, shouldn't be done for production application.
-      let jwt = try SinchJWT.sinchJWTForUserRegistration(withApplicationKey: APPLICATION_KEY,
-                                                         applicationSecret: APPLICATION_SECRET,
+      let jwt = try SinchJWT.sinchJWTForUserRegistration(withApplicationKey: applicationKey,
+                                                         applicationSecret: applicationSecret,
                                                          userId: client.userId)
 
       callback.register(withJWT: jwt)

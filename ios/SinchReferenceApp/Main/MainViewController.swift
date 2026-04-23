@@ -8,6 +8,7 @@ final class MainViewController: UIViewController {
     didSet {
       userLabel.text = """
       Logged in as \"\(viewModel.state.username)\"
+      Environment: \(viewModel.state.appEnvironment)
       Using \(viewModel.state.communicationKit.toString())
       """
     }
@@ -23,9 +24,23 @@ final class MainViewController: UIViewController {
     }
   }
 
-  @IBOutlet private var separatorView: UIView! {
+  @IBOutlet private var sipIdentityTextField: UITextField! {
     didSet {
-      separatorView.isHidden = viewModel.state.cli.isEmpty
+      sipIdentityTextField.delegate = self
+
+      sipIdentityTextField.keyboardType = .default
+      sipIdentityTextField.returnKeyType = .done
+      sipIdentityTextField.textContentType = .username
+    }
+  }
+
+  @IBOutlet private var conferenceTextField: UITextField! {
+    didSet {
+      conferenceTextField.delegate = self
+
+      conferenceTextField.keyboardType = .default
+      conferenceTextField.returnKeyType = .done
+      conferenceTextField.textContentType = .username
     }
   }
 
@@ -46,21 +61,15 @@ final class MainViewController: UIViewController {
     }
   }
 
-  @IBOutlet private var noteLabel: UILabel! {
-    didSet {
-      noteLabel.numberOfLines = 10
-      noteLabel.adjustsFontSizeToFitWidth = true
-      noteLabel.lineBreakMode = .byClipping
-      noteLabel.text = viewModel.state.cli.isEmpty ? "" : """
-      \u{2022} To make App2App(audio, video) calls just provide recipient name
-      \u{2022} To make App2PSTN calls, just provide recipient number
-      """
-    }
-  }
-
   @IBOutlet private var callButton: UIButton! {
     didSet {
       callButton.setup(with: .call)
+    }
+  }
+
+  @IBOutlet private var versionLabel: UILabel! {
+    didSet {
+      versionLabel.text = viewModel.sdkVersion
     }
   }
 
@@ -106,51 +115,71 @@ final class MainViewController: UIViewController {
   }
 
   private func assignTextUpdate() {
-    NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification,
-                                         object: recipientNameTextField)
-      .compactMap { ($0.object as? UITextField)?.text }
-      .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
-      .removeDuplicates()
-      .receive(on: DispatchQueue.main)
-      .sink { [weak self] in self?.viewModel.set(recepientName: $0) }
-      .store(in: &cancellableBag)
+    configureTextDidChange(for: recipientNameTextField) { [weak self] text in
+      self?.viewModel.set(.recepientName(text))
+    }
 
+    configureTextDidChange(for: sipIdentityTextField) { [weak self] text in
+      self?.viewModel.set(.sipIdentity(text))
+    }
+
+    configureTextDidChange(for: conferenceTextField) { [weak self] text in
+      self?.viewModel.set(.conferenceId(text))
+    }
+
+    configureTextDidChange(for: phoneTextField) { [weak self] text in
+      self?.viewModel.set(.recepientPhone(text))
+    }
+  }
+
+  private func configureTextDidChange(for textField: UITextField, handler: @escaping ((String) -> Void)) {
     NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification,
-                                         object: phoneTextField)
+                                         object: textField)
       .compactMap { ($0.object as? UITextField)?.text }
       .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
       .removeDuplicates()
       .receive(on: DispatchQueue.main)
-      .sink { [weak self] in self?.viewModel.set(recepientPhone: $0) }
+      .sink { handler($0) }
       .store(in: &cancellableBag)
   }
 
   @IBAction private func call(_ sender: Any) {
-    let audioCallAction = UIAlertAction(title: "Audio App-to-App", style: .default, handler: { [weak self] _ in
-      guard let self = self else { return }
-      self.viewModel.call(for: .audio)
-    })
+    let audioCall: CallType? = !viewModel.state.recepientName.isEmpty ? .audio : nil
+    let videoCall: CallType? = !viewModel.state.recepientName.isEmpty ? .video : nil
+    let phoneCall: CallType? = !viewModel.state.recepientPhone.isEmpty ? .phone : nil
+    let sipCall: CallType? = !viewModel.state.sipIdentity.isEmpty ? .sip : nil
+    let conferenceCall: CallType? = !viewModel.state.conferenceId.isEmpty ? .conference : nil
 
-    let videoCallAction = UIAlertAction(title: "Video App-to-App", style: .default, handler: { [weak self] _ in
-      guard let self = self else { return }
-      self.viewModel.call(for: .video)
-    })
+    var actions: [UIAlertAction] = [audioCall,
+                                    videoCall,
+                                    sipCall,
+                                    conferenceCall,
+                                    phoneCall]
+      .compactMap { $0 }
+      .map { type in
+        let title: String
 
-    let phoneCallAction = !viewModel.state.recepientPhone.isEmpty
-      ? UIAlertAction(title: "Phone Call", style: .default, handler: { [weak self] _ in
-        guard let self = self else { return }
-        self.viewModel.call(for: .phone)
-      })
-      : nil
+        switch type {
+          case .audio: title = "Audio App-to-App"
+          case .video: title = "Video App-to-App"
+          case .sip: title = "SIP Call"
+          case .conference: title = "Conference Call"
+          case .phone: title = "Phone Call"
+        }
+
+        return UIAlertAction(title: title, style: .default) { [weak self] _ in
+          guard let self = self else { return }
+
+          self.viewModel.call(for: type)
+        }
+      }
 
     let cancel = UIAlertAction(title: "Cancel", style: .cancel)
+    actions.append(cancel)
 
     prepareActionSheet(title: "Choose a call type",
-                       message: "Connection with \(viewModel.state.recepientName) via:",
-                       actions: [audioCallAction,
-                                 videoCallAction,
-                                 phoneCallAction,
-                                 cancel].compactMap { $0 })
+                       message: "Create a new call with:",
+                       actions: actions.compactMap { $0 })
   }
 
   @IBAction private func logout(_ sender: Any) {

@@ -16,6 +16,7 @@ extension SinchClientMediator: CXProviderDelegate {
     self.sinchClient?.callClient.didDeactivate(audioSession: audioSession)
   }
 
+  // swiftlint:disable function_body_length
   func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
     defer { callStartedCallback = nil }
 
@@ -46,6 +47,10 @@ extension SinchClientMediator: CXProviderDelegate {
       case .phone:
         // To perform calls, CLI should be set and calling number provided.
         callResult = callClient.callPhoneNumber(recipientIdentifier)
+      case .sip:
+        callResult = callClient.callSIP(recipientIdentifier)
+      case .conference:
+        callResult = callClient.callConference(withId: recipientIdentifier)
     }
 
     switch callResult {

@@ -14,6 +14,7 @@ struct LoginState: Equatable {
 
   var username: String?
   var cli: String?
+  var appEnvironment: AppEnvironment
   var communicationKit: CommunicationKit = .callKit
   var loginInfoHidden: Bool = true
   var status: Status = .none
@@ -26,20 +27,41 @@ final class LoginViewModel {
   @Published private(set) var state: LoginState
 
   private var hasValidSinchAppConfiguration: Bool {
-    APPLICATION_KEY != "<APPLICATION KEY>" && APPLICATION_SECRET != "<APPLICATION SECRET>"
+    state.appEnvironment != .empty &&
+      !state.appEnvironment.appKey.isEmpty &&
+      !state.appEnvironment.host.isEmpty
+  }
+
+  var sdkVersion: String {
+    return clientMediator.sdkVersion
   }
 
   init(clientMediator: SinchClientMediator) {
     let userInfo = UserInfo.load()
     let communicationKit = CommunicationKit.load()
+    let appEnvironment = EnvironmentInfo.load()
 
-    self.state = LoginState(username: userInfo.userId,
-                            cli: userInfo.cli,
+    let username = userInfo.userId.isEmpty ? appEnvironment.defaultUserName : userInfo.userId
+    let cli = userInfo.cli.isEmpty ? appEnvironment.defaultCli : userInfo.cli
+
+    self.state = LoginState(username: username,
+                            cli: cli,
+                            appEnvironment: appEnvironment,
                             communicationKit: communicationKit,
                             loginInfoHidden: userInfo.userId.isEmpty)
 
     self.clientMediator = clientMediator
     self.clientMediator.logoutDelegate = self
+  }
+
+  func set(environment: AppEnvironment) {
+    EnvironmentInfo.save(environment)
+
+    update { state in
+      state.appEnvironment = environment
+      state.username = environment.defaultUserName
+      state.cli = environment.defaultCli
+    }
   }
 
   func set(username: String) {
@@ -74,8 +96,11 @@ final class LoginViewModel {
     }
 
     clientMediator.setupCommunication(with: state.communicationKit)
-
-    clientMediator.createAndStartClient(with: username, cli: state.cli ?? "") { [weak self] error in
+    clientMediator.createAndStartClient(with: username,
+                                        cli: state.cli ?? state.appEnvironment.defaultCli,
+                                        environmentHost: state.appEnvironment.host,
+                                        applicationKey: state.appEnvironment.appKey,
+                                        applicationSecret: state.appEnvironment.appSecret) { [weak self] error in
       guard let self = self else { return }
 
       guard let error = error else {

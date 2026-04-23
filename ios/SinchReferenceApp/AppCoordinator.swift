@@ -61,20 +61,20 @@ final class AppCoordinator: NSObject {
     // the UI transition when clicking the App icon on the lockscreen CallKit UI,
     // and the UI transition when an incoming call is answered from homescreen CallKit UI.
     guard let activeCall = clientMediator.currentCall else { return }
-    let topViewController = topViewController()
-    
-    if topViewController is AudioCallViewController || topViewController is VideoCallViewController {
-      return
-    }
 
     navigate(to: activeCall.details.isVideoOffered ? .videoCall(activeCall) : .audioCall(activeCall, .audio))
   }
 
   private func resolvePresentation(from destination: Navigation) {
-    let currentViewController = topViewController()
+    var currentViewController = topViewController()
 
-    if currentViewController.presentedViewController is UIAlertController {
-      currentViewController.presentedViewController?.dismiss(animated: true)
+    if currentViewController is UIAlertController {
+      let presenting = currentViewController.presentingViewController
+      currentViewController.dismiss(animated: false)
+
+      if let presenting = presenting {
+        currentViewController = presenting
+      }
     }
 
     switch destination {

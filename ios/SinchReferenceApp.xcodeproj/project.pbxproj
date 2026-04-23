@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		AE0BDD082CDA082C002FCBB3 /* CallCompletionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0BDD062CDA082C002FCBB3 /* CallCompletionDelegate.swift */; };
 		AE0BDD0D2CDA085D002FCBB3 /* CallQualityEventBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0BDD0B2CDA085D002FCBB3 /* CallQualityEventBanner.swift */; };
+		AE2F2D5E2F9A2DD9008FE37B /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2F2D5D2F9A2DD9008FE37B /* UserInfo.swift */; };
+		AE2F2D5F2F9A2DD9008FE37B /* EnvironmentInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2F2D5C2F9A2DD9008FE37B /* EnvironmentInfo.swift */; };
+		AE2F2D612F9A2DF2008FE37B /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2F2D602F9A2DF2008FE37B /* AppEnvironment.swift */; };
 		AE3FB6EA29B8AF970068C5E8 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = AE3FB6E929B8AF970068C5E8 /* .swiftlint.yml */; };
 		AE52FEDC29B0A8B20052D62B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE52FEDB29B0A8B10052D62B /* SystemConfiguration.framework */; };
 		AE5B480B2CDA0E5C0014C305 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AE5B48092CDA0E5C0014C305 /* Main.storyboard */; };
@@ -34,7 +37,6 @@
 		AECBB3A92E72BE2500992521 /* SinchClientMediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECBB3A32E72BE2500992521 /* SinchClientMediator.swift */; };
 		AECBB3AA2E72BE2500992521 /* Synchronized.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECBB3A12E72BE2500992521 /* Synchronized.swift */; };
 		AECBB3AB2E72BE2500992521 /* SinchClientMediator+ConversationManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECBB3972E72BE2500992521 /* SinchClientMediator+ConversationManagerDelegate.swift */; };
-		AECBB3AC2E72BE2500992521 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECBB3A42E72BE2500992521 /* UserInfo.swift */; };
 		AECBB3AD2E72BE2500992521 /* SinchClientMediator+SinchAudioControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECBB3992E72BE2500992521 /* SinchClientMediator+SinchAudioControllerDelegate.swift */; };
 		AECBB3AE2E72BE2500992521 /* SinchJWT.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECBB3A02E72BE2500992521 /* SinchJWT.swift */; };
 		AECBB3AF2E72BE2500992521 /* CommunicationKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECBB3912E72BE2500992521 /* CommunicationKit.swift */; };
@@ -61,7 +63,6 @@
 		AEE9CDB7299CDFF200F860C3 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDB6299CDFF200F860C3 /* OpenGLES.framework */; };
 		AEE9CDB9299CE00600F860C3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDB8299CE00600F860C3 /* QuartzCore.framework */; };
 		AEE9CDBB299CE00E00F860C3 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE9CDBA299CE00E00F860C3 /* Metal.framework */; };
-		AEE9CDBD299CEF8100F860C3 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDBC299CEF8100F860C3 /* Config.swift */; };
 		AEE9CDCA299E1BD100F860C3 /* incoming.wav in Resources */ = {isa = PBXBuildFile; fileRef = AEE9CDC8299E1BD100F860C3 /* incoming.wav */; };
 		AEE9CDCB299E1BD100F860C3 /* ringback.wav in Resources */ = {isa = PBXBuildFile; fileRef = AEE9CDC9299E1BD100F860C3 /* ringback.wav */; };
 		AEE9CDE229A3B65800F860C3 /* Ringtone.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE9CDE129A3B65800F860C3 /* Ringtone.swift */; };
@@ -84,6 +85,9 @@
 /* Begin PBXFileReference section */
 		AE0BDD062CDA082C002FCBB3 /* CallCompletionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallCompletionDelegate.swift; sourceTree = "<group>"; };
 		AE0BDD0B2CDA085D002FCBB3 /* CallQualityEventBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallQualityEventBanner.swift; sourceTree = "<group>"; };
+		AE2F2D5C2F9A2DD9008FE37B /* EnvironmentInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentInfo.swift; sourceTree = "<group>"; };
+		AE2F2D5D2F9A2DD9008FE37B /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
+		AE2F2D602F9A2DF2008FE37B /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		AE3FB6E929B8AF970068C5E8 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		AE52FEDB29B0A8B10052D62B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		AE5B480A2CDA0E5C0014C305 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -119,7 +123,6 @@
 		AECBB3A02E72BE2500992521 /* SinchJWT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinchJWT.swift; sourceTree = "<group>"; };
 		AECBB3A12E72BE2500992521 /* Synchronized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synchronized.swift; sourceTree = "<group>"; };
 		AECBB3A32E72BE2500992521 /* SinchClientMediator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinchClientMediator.swift; sourceTree = "<group>"; };
-		AECBB3A42E72BE2500992521 /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		AEE9CD6A299CD36E00F860C3 /* SinchReferenceApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SinchReferenceApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEE9CD6D299CD36E00F860C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AEE9CD76299CD36F00F860C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -138,7 +141,6 @@
 		AEE9CDB6299CDFF200F860C3 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		AEE9CDB8299CE00600F860C3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		AEE9CDBA299CE00E00F860C3 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
-		AEE9CDBC299CEF8100F860C3 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		AEE9CDC8299E1BD100F860C3 /* incoming.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = incoming.wav; sourceTree = "<group>"; };
 		AEE9CDC9299E1BD100F860C3 /* ringback.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringback.wav; sourceTree = "<group>"; };
 		AEE9CDCF299E1CAB00F860C3 /* development.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = development.entitlements; sourceTree = "<group>"; };
@@ -184,6 +186,15 @@
 				AE0BDD0B2CDA085D002FCBB3 /* CallQualityEventBanner.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		AE2F2D5B2F9A2DBD008FE37B /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				AE2F2D5C2F9A2DD9008FE37B /* EnvironmentInfo.swift */,
+				AE2F2D5D2F9A2DD9008FE37B /* UserInfo.swift */,
+			);
+			path = Storage;
 			sourceTree = "<group>";
 		};
 		AECBB3712E72BD7D00992521 /* Call */ = {
@@ -267,11 +278,11 @@
 		AECBB3A52E72BE2500992521 /* SinchClientMediator */ = {
 			isa = PBXGroup;
 			children = (
+				AE2F2D5B2F9A2DBD008FE37B /* Storage */,
 				AECBB3952E72BE2500992521 /* Communication */,
 				AECBB39D2E72BE2500992521 /* Extensions */,
 				AECBB3A22E72BE2500992521 /* Support */,
 				AECBB3A32E72BE2500992521 /* SinchClientMediator.swift */,
-				AECBB3A42E72BE2500992521 /* UserInfo.swift */,
 			);
 			path = SinchClientMediator;
 			sourceTree = "<group>";
@@ -304,7 +315,7 @@
 				AECBB38E2E72BDF900992521 /* Main */,
 				AECBB3712E72BD7D00992521 /* Call */,
 				AECBB36C2E72BD3700992521 /* AppCoordinator.swift */,
-				AEE9CDBC299CEF8100F860C3 /* Config.swift */,
+				AE2F2D602F9A2DF2008FE37B /* AppEnvironment.swift */,
 				AEE9CDE129A3B65800F860C3 /* Ringtone.swift */,
 				AEE9CD6D299CD36E00F860C3 /* AppDelegate.swift */,
 				AE5B48092CDA0E5C0014C305 /* Main.storyboard */,
@@ -451,18 +462,20 @@
 				AECBB3802E72BDBF00992521 /* Identifiable.swift in Sources */,
 				AECBB38A2E72BDE900992521 /* LoginViewController.swift in Sources */,
 				AECBB3A62E72BE2500992521 /* SinchCallEnd+Reason.swift in Sources */,
+				AE2F2D612F9A2DF2008FE37B /* AppEnvironment.swift in Sources */,
 				AECBB3A72E72BE2500992521 /* CallRegistry.swift in Sources */,
 				AECBB3A82E72BE2500992521 /* SinchClientMediator+SinchCallDelegate.swift in Sources */,
 				AECBB3A92E72BE2500992521 /* SinchClientMediator.swift in Sources */,
 				AECBB3AA2E72BE2500992521 /* Synchronized.swift in Sources */,
 				AECBB3AB2E72BE2500992521 /* SinchClientMediator+ConversationManagerDelegate.swift in Sources */,
-				AECBB3AC2E72BE2500992521 /* UserInfo.swift in Sources */,
 				AECBB3AD2E72BE2500992521 /* SinchClientMediator+SinchAudioControllerDelegate.swift in Sources */,
 				AECBB3AE2E72BE2500992521 /* SinchJWT.swift in Sources */,
 				AECBB3AF2E72BE2500992521 /* CommunicationKit.swift in Sources */,
 				AECBB3B02E72BE2500992521 /* SinchCallKitService.swift in Sources */,
 				AECBB3B12E72BE2500992521 /* CommunicationService.swift in Sources */,
 				AECBB3B22E72BE2500992521 /* SinchLiveCommunicationKitService.swift in Sources */,
+				AE2F2D5E2F9A2DD9008FE37B /* UserInfo.swift in Sources */,
+				AE2F2D5F2F9A2DD9008FE37B /* EnvironmentInfo.swift in Sources */,
 				AECBB3B32E72BE2500992521 /* SinchClientMediator+SinchClientDelegate.swift in Sources */,
 				AECBB3B42E72BE2500992521 /* SinchClientMediator+SinchCallClientDelegate.swift in Sources */,
 				AECBB3B52E72BE2500992521 /* SinchClientMediator+CXProviderDelegate.swift in Sources */,
@@ -479,7 +492,6 @@
 				AE0BDD082CDA082C002FCBB3 /* CallCompletionDelegate.swift in Sources */,
 				AE0BDD0D2CDA085D002FCBB3 /* CallQualityEventBanner.swift in Sources */,
 				AEE9CD6E299CD36E00F860C3 /* AppDelegate.swift in Sources */,
-				AEE9CDBD299CEF8100F860C3 /* Config.swift in Sources */,
 				AECBB3722E72BD7D00992521 /* AudioCallViewController.swift in Sources */,
 				AECBB3732E72BD7D00992521 /* VideoCallViewController.swift in Sources */,
 				AECBB3742E72BD7D00992521 /* CallViewModel.swift in Sources */,

@@ -47,6 +47,12 @@ final class VideoCallViewController: UIViewController {
     }
   }
 
+  @IBOutlet private var prefferedAudioDevice: UIButton! {
+    didSet {
+      prefferedAudioDevice.layer.cornerRadius = Constant.cornerRadius
+    }
+  }
+
   @IBOutlet private var buttonsStack: UIStackView!
 
   @IBOutlet private var hangupButton: UIButton! {
@@ -72,11 +78,13 @@ final class VideoCallViewController: UIViewController {
 
     viewModel.$state.map(\.info)
       .removeDuplicates()
+      .receive(on: DispatchQueue.main)
       .assign(to: \.text, on: infoLabel)
       .store(in: &cancellableBag)
 
     viewModel.$state.map(\.status)
       .removeDuplicates()
+      .receive(on: DispatchQueue.main)
       .sink { [weak self] status in
         guard let self = self else { return }
 
@@ -104,11 +112,13 @@ final class VideoCallViewController: UIViewController {
   private func assignEnablability() {
     viewModel.$state.map(\.couldHangUp)
       .removeDuplicates()
+      .receive(on: DispatchQueue.main)
       .assign(to: \.isEnabled, on: hangupButton)
       .store(in: &cancellableBag)
 
     viewModel.$state.map { !$0.couldMute && !$0.couldPause && !$0.couldEnableSpeaker }
       .removeDuplicates()
+      .receive(on: DispatchQueue.main)
       .assign(to: \.isHidden, on: buttonsStack)
       .store(in: &cancellableBag)
   }
@@ -116,6 +126,7 @@ final class VideoCallViewController: UIViewController {
   private func assignPresentation() {
     viewModel.$state.map(\.muted)
       .removeDuplicates()
+      .receive(on: DispatchQueue.main)
       .sink { [weak self] muted in
         guard let self = self else { return }
 
@@ -129,6 +140,7 @@ final class VideoCallViewController: UIViewController {
 
     viewModel.$state.map(\.speakerEnabled)
       .removeDuplicates()
+      .receive(on: DispatchQueue.main)
       .sink { [weak self] speakerEnabled in
         guard let self = self else { return }
 
@@ -142,6 +154,7 @@ final class VideoCallViewController: UIViewController {
 
     viewModel.$state.map(\.paused)
       .removeDuplicates()
+      .receive(on: DispatchQueue.main)
       .sink { [weak self] paused in
         guard let self = self else { return }
 
@@ -168,6 +181,36 @@ final class VideoCallViewController: UIViewController {
 
   @IBAction private func switchCamera(_ sender: Any) {
     viewModel.toggleSwitchCamera()
+  }
+
+  @IBAction private func choosePreferredAudioDevice(_ sender: Any) {
+    var actions = viewModel.state.availableDevices.map { device in
+      let title: String
+
+      switch device {
+        case .builtIn: title = "Build In"
+        case .headset: title = "Headset"
+        default: title = "Unknown"
+      }
+
+      return UIAlertAction(title: title, style: .default) { [weak self] _ in
+        guard let self = self else { return }
+
+        self.viewModel.choosePreferredAudioDevice(device)
+      }
+    }
+
+    let resetAction = UIAlertAction(title: "Reset", style: .default) { [weak self] _ in
+      guard let self = self else { return }
+
+      self.viewModel.resetAudioDevice()
+    }
+
+    actions.append(resetAction)
+
+    prepareActionSheet(title: "Choose audio device:",
+                       message: "List of available devices:",
+                       actions: actions.compactMap { $0 })
   }
 
   @IBAction private func hangup(_ sender: Any) {
