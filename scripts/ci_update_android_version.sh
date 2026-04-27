@@ -13,13 +13,13 @@ NEW_VERSION="$1"
 NEW_REVISION="$2"
 MAKEFILE="$SCRIPT_DIR/../android/Makefile"
 
-sed -i '' "/^SDK_VERSION/c\\
+sed -i.bak "/^SDK_VERSION/c\\
 SDK_VERSION=$NEW_VERSION\\
-" $MAKEFILE
+" "$MAKEFILE" && rm "$MAKEFILE.bak"
 
-sed -i '' "/^SDK_REVISION/c\\
+sed -i.bak "/^SDK_REVISION/c\\
 SDK_REVISION=$NEW_REVISION\\
-" $MAKEFILE
+" "$MAKEFILE" && rm "$MAKEFILE.bak"
 
 echo "Makefile version updated new version: $NEW_VERSION revision: $NEW_REVISION"
 

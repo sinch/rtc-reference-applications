@@ -2,11 +2,9 @@ include:
   # Metadata shared by many jobs
   - local: .gitlab/rules.yml
   - local: .gitlab/artifacts.yml
-
   # OS builds
   - local: .gitlab/os-android.yml
   - local: .gitlab/os-ios.yml
-  - local: .gitlab/release.yml
 
 # NOTE: It’s possible to overwrite a globally defined before_script or after_script with per-job actions
 # Deploy host gradle.properties to the root of the repo
@@ -19,18 +17,15 @@ stages:
   - Lint Javascript
   - Cut Release
   - Build
-  # Add test stage when build system will be ready for it
   - Update SDK version
-  - Test Dist Sample Apps
 
 ############################################## pipeline jobs
 
 build:android:device:release:
   stage: Build
   before_script:
-    - cp -v $CI_GRADLE_PROPERTIES_PATH .
-    - cp -rf -v $CI_REF_APP_GOOGLE_SERVICE_PATH ./android/app
-    - cp -rf -v $CI_REF_APP_CONFIG_PATH ./android/app/src/main/assets
+    - cp -v "$CI_REF_APP_GOOGLE_SERVICES_DEFAULT" ./android/app/google-services.json
+    - cp -v "$CI_REF_APP_CONFIG_DEFAULT" ./android/app/src/main/assets/config.json
 
   extends:
     - .conf:android:env
@@ -54,17 +49,6 @@ build:ios:device:release:
     - .lint:ios:do
     - .build:ios:do
 
-test:android:dist:samples:
-  extends:
-    - .conf:android:env
-    - .conf:android:release
-    - .conf:android:runner:tags
-    - .conf:rule:default
-    - .test:android:do
-
-  dependencies:
-    - build:android:device:release
-
 lint:javascript:
   stage: Lint Javascript
 
@@ -72,7 +56,7 @@ lint:javascript:
     - .conf:rule:default
 
   tags:
-    - rtc
+    - default
 
   image: node:16-slim
 
@@ -86,9 +70,8 @@ lint:javascript:
 update:sdk:version:android:
   stage: Update SDK version
   extends:
+    - .conf:android:runner:tags
     - .conf:rule:android:update:sdk
-  tags:
-    - rtc-mac
   script:
     - ./scripts/ci_update_android_version.sh $SDK_VERSION $SDK_REVISION
   needs:
@@ -100,9 +83,8 @@ update:sdk:version:android:
 update:sdk:version:ios:
   stage: Update SDK version
   extends:
+    - .conf:android:runner:tags # Reuse the same runner for iOS SDK update job as it doesn't require macOS specific features
     - .conf:rule:ios:update:sdk
-  tags:
-    - rtc-mac
   script:
     - ./scripts/ci_update_ios_version.sh "$SDK_VERSION%2b$SDK_REVISION"
   needs:

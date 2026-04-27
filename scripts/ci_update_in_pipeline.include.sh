@@ -19,5 +19,5 @@ function push_version_update_to_gitlab() {
     git checkout -t gitlab_origin/master
     git add "$2"
     git commit -m "$1"
-    git push gitlab_origin master -o ci.skip
+    git push --dry-run gitlab_origin master -o ci.skip
 }

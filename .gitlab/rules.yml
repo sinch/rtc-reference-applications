@@ -34,10 +34,14 @@ workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "pipeline" && $UPDATE_PLATFORM == "android"'
       when: on_success
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+      when: on_success
     - when: never
 
 .conf:rule:ios:update:sdk:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "pipeline" && $UPDATE_PLATFORM == "ios"'
+      when: on_success
+    - if: '$CI_COMMIT_BRANCH == "develop"'
       when: on_success
     - when: never
