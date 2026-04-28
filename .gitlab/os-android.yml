@@ -46,6 +46,15 @@
   - echo $ANDROID_HOME
   - echo $RELEASE_STORE_FILE
 
+.conf:android:publish:
+  interruptible: false
+  image: "registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest"
+  tags:
+    - default
+  variables:
+    AWS_DEFAULT_REGION: eu-west-1
+    GIT_SUBMODULE_STRATEGY: none
+
 .build:android:do:
   script:
     - *before_script_android

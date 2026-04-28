@@ -10,6 +10,7 @@ include:
 # Deploy host gradle.properties to the root of the repo
 # CI_GRADLE_PROPERTIES_PATH is set in runner config
 default:
+  interruptible: true
   before_script:
     - ""
 
@@ -17,6 +18,7 @@ stages:
   - Lint Javascript
   - Cut Release
   - Build
+  - Publish demos
   - Update SDK version
 
 ############################################## pipeline jobs
@@ -48,6 +50,39 @@ build:ios:device:release:
     - .conf:rule:default
     - .lint:ios:do
     - .build:ios:do
+
+build:android:demo:release:
+  stage: Build
+
+  before_script:
+    - cp -v "$CI_REF_APP_GOOGLE_SERVICES_DEFAULT" ./android/app/google-services.json
+    - base64 -d "$CI_REF_APP_CONFIG_SALES_BASE64" > ./android/app/src/main/assets/config.json
+    - echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > /tmp/release.jks
+    - export ORG_GRADLE_PROJECT_RELEASE_STORE_FILE=/tmp/release.jks
+
+  extends:
+    - .conf:android:env
+    - .conf:android:runner:tags
+    - .conf:rule:android:demo
+
+  script:
+    - ./scripts/ci_build_demo_android.sh
+
+  artifacts:
+    expire_in: 1d
+    paths:
+      - build/sinch-android-reference-app.apk
+
+publish:android:demo:release:
+  stage: Publish demos
+  needs: [build:android:demo:release]
+
+  extends:
+    - .conf:android:publish
+    - .conf:rule:android:demo
+
+  script:
+    - ./scripts/ci_publish_demo_android.sh
 
 lint:javascript:
   stage: Lint Javascript

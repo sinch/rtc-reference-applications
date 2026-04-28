@@ -30,6 +30,16 @@ workflow:
       when: on_success
     - when: never
 
+.conf:rule:android:demo:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+      when: on_success
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+      changes:
+        - android/**/*
+      when: on_success
+    - when: never
+
 .conf:rule:android:update:sdk:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "pipeline" && $UPDATE_PLATFORM == "android"'

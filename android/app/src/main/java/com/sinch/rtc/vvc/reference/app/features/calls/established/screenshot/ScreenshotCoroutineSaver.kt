@@ -99,7 +99,7 @@ class ScreenshotCoroutineSaver(
         val screenshotBitmap = BitmapFactory.decodeFile(uri)
         val contentPendingIntent = PendingIntent.getActivity(
             context, 0,
-            contentIntent, 0
+            contentIntent, PendingIntent.FLAG_IMMUTABLE
         )
 
         val notification = NotificationCompat.Builder(
