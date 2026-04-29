@@ -2,6 +2,7 @@ package com.sinch.rtc.vvc.reference.app.features.calls.history
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,9 +32,17 @@ class CallHistoryFragment : ViewBindingFragment<FragmentHistoryBinding>(R.layout
         binding.apply {
             callHistoryRecycler.adapter = adapter
             callHistoryRecycler.layoutManager = LinearLayoutManager(requireContext())
+            newCallFab.setOnClickListener {
+                findNavController().navigate(
+                    CallHistoryFragmentDirections.actionCallHistoryFragmentToNewCallFragment()
+                )
+            }
         }
         viewModel.historyData.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+            val isEmpty = it.isNullOrEmpty()
+            binding.historyEmptyState.isVisible = isEmpty
+            binding.callHistoryRecycler.isVisible = !isEmpty
         }
         viewModel.navigationEvents.observe(viewLifecycleOwner) {
             when (it) {

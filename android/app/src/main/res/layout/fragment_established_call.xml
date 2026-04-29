@@ -3,14 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline20"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_call_screen">
 
     <FrameLayout
         android:id="@+id/bigVideoFrame"
@@ -25,7 +19,7 @@
         android:id="@+id/bigVideoFrameOverlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/black"
+        android:background="@drawable/bg_call_screen"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/bigVideoFrame"
         app:layout_constraintEnd_toEndOf="@id/bigVideoFrame"
@@ -33,19 +27,25 @@
         app:layout_constraintTop_toTopOf="@id/bigVideoFrame">
 
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:layout_gravity="center"
-            android:alpha="0.5"
+            android:alpha="0.6"
+            android:contentDescription="@null"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_baseline_videocam_off_24" />
+            android:src="@drawable/ic_baseline_videocam_off_24"
+            app:tint="@color/onCallSurface" />
 
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/smallVideoFrame"
-        android:layout_width="150dp"
-        android:layout_height="200dp"
+        android:layout_width="120dp"
+        android:layout_height="180dp"
+        android:layout_marginTop="@dimen/space_m"
+        android:layout_marginEnd="@dimen/space_m"
+        android:background="@drawable/bg_small_video_frame"
+        android:clipToOutline="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,150 +61,253 @@
         app:layout_constraintTop_toTopOf="@id/smallVideoFrame">
 
         <ImageView
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_gravity="center"
-            android:alpha="0.5"
+            android:alpha="0.6"
+            android:contentDescription="@null"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_baseline_videocam_off_24" />
+            android:src="@drawable/ic_baseline_videocam_off_24"
+            app:tint="@color/onCallSurface" />
 
     </FrameLayout>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline80"
+    <LinearLayout
+        android:id="@+id/calleeChip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_m"
+        android:layout_marginTop="@dimen/space_m"
+        android:background="@drawable/rounded_corner_callee_bg"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.8" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/calleNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="@color/onCallSurface"
+            tools:text="alex" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="14dp"
+            android:layout_marginHorizontal="@dimen/space_s"
+            android:background="@color/onCallSurface"
+            android:alpha="0.5" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/durationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="@color/onCallSurface"
+            tools:text="00:42" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/audioCallInfoLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/hangUpButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/calleeChip">
+
+        <ImageView
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_baseline_person_24"
+            android:alpha="0.7"
+            app:tint="@color/onCallSurface" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/audioCalleNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m"
+            android:textAppearance="?attr/textAppearanceHeadlineMedium"
+            android:textColor="@color/onCallSurface"
+            tools:text="alex" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/audioDurationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_s"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="@color/onCallSurface"
+            android:alpha="0.7"
+            tools:text="00:42" />
+
+    </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/hangUpButton"
-        android:layout_width="@dimen/toggle_button_size"
-        android:layout_height="@dimen/toggle_button_size"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:background="@drawable/button_incoming_call_bg"
-        android:insetLeft="0dp"
-        android:insetTop="0dp"
-        android:insetRight="0dp"
-        android:insetBottom="0dp"
-        android:minWidth="0dp"
-        app:backgroundTint="@color/red"
+        style="@style/Widget.SinchRefApp.CallActionButton.Hangup"
+        android:layout_marginBottom="@dimen/space_m"
         app:icon="@drawable/ic_baseline_call_end_24"
-        app:iconGravity="textStart"
-        app:iconPadding="0dp"
         app:layout_constraintBottom_toTopOf="@id/callSettingsLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/calleNameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_small"
-        android:layout_marginTop="@dimen/margin_small"
-        android:background="@drawable/rounded_corner_callee_bg"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="sasasasa" />
-
-    <TextView
-        android:id="@+id/durationText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_small"
-        android:background="@drawable/rounded_corner_callee_bg"
-        android:textColor="@color/white"
-        app:layout_constraintBaseline_toBaselineOf="@id/calleNameText"
-        app:layout_constraintStart_toEndOf="@id/calleNameText" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/callSettingsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/blackSemiTransparent"
+        android:background="@drawable/bg_call_controls"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:paddingTop="@dimen/basic_margin"
-        android:paddingBottom="@dimen/basic_margin"
+        android:paddingHorizontal="@dimen/space_s"
+        android:paddingTop="@dimen/space_l"
+        android:paddingBottom="@dimen/space_l"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <com.sinch.rtc.vvc.reference.app.utils.views.RTCToggleButton
-            android:id="@+id/isMutedToggleButton"
-            android:layout_width="@dimen/toggle_button_size"
-            android:layout_height="@dimen/toggle_button_size"
-            android:background="@drawable/ic_baseline_mic_off_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/communicationDeviceButton"
-            app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/communicationDeviceButton"
-            android:layout_width="@dimen/toggle_button_size"
-            android:layout_height="@dimen/toggle_button_size"
-            android:background="@drawable/button_incoming_call_bg"
-            android:insetLeft="0dp"
-            android:insetTop="0dp"
-            android:insetRight="0dp"
-            android:insetBottom="0dp"
-            android:minWidth="0dp"
-            app:backgroundTint="@color/blackSemiTransparent"
-            app:icon="@drawable/ic_baseline_devices_24"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/isMutedToggleButton"
-            app:layout_constraintRight_toLeftOf="@id/audioStateButton"
-            app:layout_constraintTop_toTopOf="parent" />
+            <com.sinch.rtc.vvc.reference.app.utils.views.RTCToggleButton
+                android:id="@+id/isMutedToggleButton"
+                android:layout_width="@dimen/call_action_button"
+                android:layout_height="@dimen/call_action_button"
+                android:background="@drawable/ic_baseline_mic_off_24" />
 
-        <com.sinch.rtc.vvc.reference.app.utils.views.AudioToggleButton
-            android:id="@+id/audioStateButton"
-            android:layout_width="@dimen/toggle_button_size"
-            android:layout_height="@dimen/toggle_button_size"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/communicationDeviceButton"
-            app:layout_constraintRight_toLeftOf="@id/isVideoPausedToggleButton"
-            app:layout_constraintTop_toTopOf="parent" />
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:text="@string/control_mute"
+                android:textAppearance="?attr/textAppearanceLabelSmall"
+                android:textColor="@color/onCallSurface" />
 
-        <com.sinch.rtc.vvc.reference.app.utils.views.RTCToggleButton
-            android:id="@+id/isVideoPausedToggleButton"
-            android:layout_width="@dimen/toggle_button_size"
-            android:layout_height="@dimen/toggle_button_size"
-            android:background="@drawable/ic_baseline_videocam_off_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/audioStateButton"
-            app:layout_constraintRight_toLeftOf="@id/isTorchToggleButton"
-            app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
 
-        <com.sinch.rtc.vvc.reference.app.utils.views.RTCToggleButton
-            android:id="@+id/isTorchToggleButton"
-            android:layout_width="@dimen/toggle_button_size"
-            android:layout_height="@dimen/toggle_button_size"
-            android:background="@drawable/ic_baseline_flash_on_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/isVideoPausedToggleButton"
-            app:layout_constraintRight_toLeftOf="@id/screenshotButton"
-            app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/screenshotButton"
-            android:layout_width="@dimen/toggle_button_size"
-            android:layout_height="@dimen/toggle_button_size"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:background="@drawable/button_incoming_call_bg"
-            android:insetLeft="0dp"
-            android:insetTop="0dp"
-            android:insetRight="0dp"
-            android:insetBottom="0dp"
-            android:minWidth="0dp"
-            app:backgroundTint="@color/blackSemiTransparent"
-            app:icon="@drawable/ic_baseline_screenshot_24"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/isTorchToggleButton"
-            app:layout_constraintTop_toTopOf="parent" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/communicationDeviceButton"
+                style="@style/Widget.SinchRefApp.CallActionButton.Toggle"
+                app:icon="@drawable/ic_baseline_devices_24" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:text="@string/control_device"
+                android:textAppearance="?attr/textAppearanceLabelSmall"
+                android:textColor="@color/onCallSurface" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.sinch.rtc.vvc.reference.app.utils.views.AudioToggleButton
+                android:id="@+id/audioStateButton"
+                android:layout_width="@dimen/call_action_button"
+                android:layout_height="@dimen/call_action_button" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:text="@string/control_audio"
+                android:textAppearance="?attr/textAppearanceLabelSmall"
+                android:textColor="@color/onCallSurface" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/videoControl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.sinch.rtc.vvc.reference.app.utils.views.RTCToggleButton
+                android:id="@+id/isVideoPausedToggleButton"
+                android:layout_width="@dimen/call_action_button"
+                android:layout_height="@dimen/call_action_button"
+                android:background="@drawable/ic_baseline_videocam_off_24" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:text="@string/control_video"
+                android:textAppearance="?attr/textAppearanceLabelSmall"
+                android:textColor="@color/onCallSurface" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/torchControl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.sinch.rtc.vvc.reference.app.utils.views.RTCToggleButton
+                android:id="@+id/isTorchToggleButton"
+                android:layout_width="@dimen/call_action_button"
+                android:layout_height="@dimen/call_action_button"
+                android:background="@drawable/ic_baseline_flash_on_24" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:text="@string/control_torch"
+                android:textAppearance="?attr/textAppearanceLabelSmall"
+                android:textColor="@color/onCallSurface" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/screenshotControl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/screenshotButton"
+                style="@style/Widget.SinchRefApp.CallActionButton.Toggle"
+                app:icon="@drawable/ic_baseline_screenshot_24" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:text="@string/control_snapshot"
+                android:textAppearance="?attr/textAppearanceLabelSmall"
+                android:textColor="@color/onCallSurface" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

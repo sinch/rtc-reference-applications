@@ -1,8 +1,36 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="basic_margin">16dp</dimen>
-    <dimen name="margin_small">8dp</dimen>
-    <dimen name="toggle_button_size">50dp</dimen>
-    <dimen name="text_size_incoming_callee">30sp</dimen>
-    <dimen name="text_size_incoming_label">26sp</dimen>
+    <!-- Spacing scale -->
+    <dimen name="space_xs">4dp</dimen>
+    <dimen name="space_s">8dp</dimen>
+    <dimen name="space_m">16dp</dimen>
+    <dimen name="space_l">24dp</dimen>
+    <dimen name="space_xl">32dp</dimen>
+    <dimen name="space_xxl">48dp</dimen>
+
+    <!-- Component sizes -->
+    <dimen name="touch_target">48dp</dimen>
+    <dimen name="call_action_button">64dp</dimen>
+    <dimen name="call_primary_action_button">72dp</dimen>
+    <dimen name="brand_logo_size">96dp</dimen>
+    <dimen name="avatar_size">72dp</dimen>
+    <dimen name="settings_button_min_width">280dp</dimen>
+
+    <!-- Corner radii -->
+    <dimen name="corner_small">8dp</dimen>
+    <dimen name="corner_medium">16dp</dimen>
+    <dimen name="corner_large">24dp</dimen>
+    <dimen name="corner_xlarge">28dp</dimen>
+
+    <!-- Typography -->
+    <dimen name="text_call_state">22sp</dimen>
+    <dimen name="text_call_name">32sp</dimen>
+    <dimen name="text_call_duration">14sp</dimen>
+
+    <!-- Backwards-compatible aliases -->
+    <dimen name="fab_margin">@dimen/space_m</dimen>
+    <dimen name="basic_margin">@dimen/space_m</dimen>
+    <dimen name="margin_small">@dimen/space_s</dimen>
+    <dimen name="toggle_button_size">@dimen/call_action_button</dimen>
+    <dimen name="text_size_incoming_callee">@dimen/text_call_name</dimen>
+    <dimen name="text_size_incoming_label">@dimen/text_call_state</dimen>
 </resources>

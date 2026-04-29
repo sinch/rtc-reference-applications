@@ -10,8 +10,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.utils.extensions.PermissionRequestResult
 
 abstract class ViewBindingFragment<Binding : ViewBinding>(@LayoutRes val contentLayoutRes: Int) :
@@ -63,17 +67,19 @@ abstract class ViewBindingFragment<Binding : ViewBinding>(@LayoutRes val content
     }
 
     fun setFullScreenMode(isEnabled: Boolean) {
+        val window = requireActivity().window
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
         if (isEnabled) {
-            requireActivity().window.decorView.systemUiVisibility = (
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_FULLSCREEN)
-            requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            insetsController.hide(WindowInsetsCompat.Type.statusBars())
+            window.navigationBarColor = requireContext().getColor(R.color.callScreenEnd)
+            insetsController.isAppearanceLightNavigationBars = false
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             actionBar?.hide()
         } else {
-            requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            requireActivity().window.decorView.systemUiVisibility = (
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+            insetsController.show(WindowInsetsCompat.Type.statusBars())
+            window.navigationBarColor = requireContext().getColor(R.color.md_surface)
+            insetsController.isAppearanceLightNavigationBars = true
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             actionBar?.show()
         }
     }

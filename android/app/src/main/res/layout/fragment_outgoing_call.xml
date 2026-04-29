@@ -1,55 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blackSemiTransparent">
+    android:background="@drawable/bg_call_screen">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline20"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
+        app:layout_constraintGuide_percent="0.18" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/stateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
         android:text="@string/calling"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_incoming_label"
+        android:textAppearance="@style/TextAppearance.SinchRefApp.CallState"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/guideline20" />
 
-    <TextView
+    <FrameLayout
+        android:id="@+id/avatar"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="@dimen/space_l"
+        android:background="@drawable/bg_call_avatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stateTextView">
+
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_baseline_phone_in_talk_24"
+            app:tint="@color/onCallSurface" />
+
+    </FrameLayout>
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/calleNameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_incoming_callee"
+        android:layout_marginTop="@dimen/space_l"
+        android:textAppearance="@style/TextAppearance.SinchRefApp.CallName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_goneMarginTop="@dimen/margin_small"
-        app:layout_constraintTop_toBottomOf="@id/stateTextView" />
+        app:layout_constraintTop_toBottomOf="@id/avatar"
+        tools:text="alex" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/cancel_button"
-        android:layout_width="@dimen/toggle_button_size"
-        android:layout_height="@dimen/toggle_button_size"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:background="@drawable/button_incoming_call_bg"
-        android:insetLeft="0dp"
-        android:insetTop="0dp"
-        android:insetRight="0dp"
-        android:insetBottom="0dp"
-        android:minWidth="0dp"
-        app:backgroundTint="@color/red"
+        style="@style/Widget.SinchRefApp.CallActionButton.Hangup"
+        android:layout_marginBottom="@dimen/space_xxl"
         app:icon="@drawable/ic_baseline_call_end_24"
-        app:iconGravity="textStart"
-        app:iconPadding="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -3,12 +3,11 @@ package com.sinch.rtc.vvc.reference.app.features.calls.newcall
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.chip.Chip
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.RTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentNewCallBinding
@@ -31,12 +30,14 @@ class NewCallFragment : MainActivityFragment<FragmentNewCallBinding>(R.layout.fr
         )
     }
 
+    private val chipIdsByType: MutableMap<CallType, Int> = mutableMapOf()
+
     override fun setupBinding(root: View): FragmentNewCallBinding =
         FragmentNewCallBinding.bind(root)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupCallTypeAdapter()
+        setupCallTypeChips()
         binding.callButton.setOnClickListener {
             viewModel.onCallButtonClicked()
         }
@@ -45,7 +46,11 @@ class NewCallFragment : MainActivityFragment<FragmentNewCallBinding>(R.layout.fr
         }
 
         viewModel.callItem.observe(viewLifecycleOwner) {
-            binding.callTypeSpinner.setSelection(viewModel.callTypes.indexOf(it.type))
+            chipIdsByType[it.type]?.let { chipId ->
+                if (binding.callTypeChipGroup.checkedChipId != chipId) {
+                    binding.callTypeChipGroup.check(chipId)
+                }
+            }
             binding.destinationInputEditText.setTextKeepState(it.destination)
             setupKeyboardType(it.type)
         }
@@ -64,32 +69,26 @@ class NewCallFragment : MainActivityFragment<FragmentNewCallBinding>(R.layout.fr
         }
     }
 
-    private fun setupCallTypeAdapter() {
-        val itemsAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            viewModel.callTypes.map { it.newCallLabel(requireContext()) }).also {
-            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+    private fun setupCallTypeChips() {
+        binding.callTypeChipGroup.removeAllViews()
+        chipIdsByType.clear()
+        viewModel.callTypes.forEach { type ->
+            val chip = Chip(requireContext()).apply {
+                text = type.newCallLabel(requireContext())
+                isCheckable = true
+                isClickable = true
+                setEnsureMinTouchTargetSize(true)
+                id = View.generateViewId()
+            }
+            binding.callTypeChipGroup.addView(chip)
+            chipIdsByType[type] = chip.id
         }
-        binding.callTypeSpinner.apply {
-            adapter = itemsAdapter
-            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    onTypeChanged(viewModel.callTypes[position])
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
+        binding.callTypeChipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+            val checkedId = checkedIds.firstOrNull() ?: return@setOnCheckedStateChangeListener
+            chipIdsByType.entries.firstOrNull { it.value == checkedId }?.key?.let { type ->
+                viewModel.onCallTypeSelected(type)
             }
         }
-    }
-
-    private fun onTypeChanged(callType: CallType) {
-        viewModel.onCallTypeSelected(callType)
     }
 
     private fun setupKeyboardType(callType: CallType) {

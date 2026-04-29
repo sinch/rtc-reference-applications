@@ -66,6 +66,9 @@ class IncomingCallFragment :
         binding.stateTextView.startAnimation(
             AnimationUtils.loadAnimation(context, R.anim.blink)
         )
+        binding.avatar.startAnimation(
+            AnimationUtils.loadAnimation(context, R.anim.pulse)
+        )
         attachListeners()
         observeViewModel()
     }

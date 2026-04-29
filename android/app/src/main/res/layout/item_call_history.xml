@@ -1,81 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.SinchRefApp.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="16dp">
+    android:layout_marginHorizontal="@dimen/space_s"
+    android:layout_marginVertical="@dimen/space_xs"
+    app:contentPadding="@dimen/space_s">
 
-    <LinearLayout
-        android:id="@+id/iconsLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/iconVideo"
+        <FrameLayout
+            android:id="@+id/avatarChip"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_history_icon_chip"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_baseline_phone_in_talk_24"
+                app:tint="?attr/colorOnPrimaryContainer" />
+
+        </FrameLayout>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/destinationNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_m"
+            android:background="?attr/selectableItemBackground"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingVertical="@dimen/space_xs"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            app:layout_constraintBottom_toTopOf="@id/callTimeTextView"
+            app:layout_constraintEnd_toStartOf="@id/iconsLayout"
+            app:layout_constraintStart_toEndOf="@id/avatarChip"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="alex" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/callTimeTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_m"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iconsLayout"
+            app:layout_constraintStart_toEndOf="@id/avatarChip"
+            app:layout_constraintTop_toBottomOf="@id/destinationNameTextView"
+            tools:text="18:00" />
+
+        <LinearLayout
+            android:id="@+id/iconsLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_videocam_24" />
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/detailsIcon"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iconVideo"
+                android:layout_width="@dimen/touch_target"
+                android:layout_height="@dimen/touch_target"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/call_app_to_app_video"
+                android:padding="@dimen/space_s"
+                android:src="@drawable/ic_baseline_videocam_24"
+                app:tint="?attr/colorPrimary" />
+
+            <ImageView
+                android:id="@+id/iconVoice"
+                android:layout_width="@dimen/touch_target"
+                android:layout_height="@dimen/touch_target"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/call_app_to_app_audio"
+                android:padding="@dimen/space_s"
+                android:src="@drawable/ic_baseline_phone_24"
+                app:tint="?attr/colorPrimary" />
+
+        </LinearLayout>
 
         <ImageView
-            android:id="@+id/iconVoice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_small"
-            android:src="@drawable/ic_baseline_phone_24" />
-    </LinearLayout>
+            android:id="@+id/detailsIcon"
+            android:layout_width="@dimen/touch_target"
+            android:layout_height="@dimen/touch_target"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/call_summary"
+            android:padding="@dimen/space_s"
+            android:src="@drawable/ic_baseline_info_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorOnSurfaceVariant" />
 
-    <View
-        android:id="@+id/seperator"
-        android:layout_width="1dp"
-        android:layout_height="0dp"
-        android:layout_marginVertical="@dimen/margin_small"
-        android:layout_marginStart="@dimen/margin_small"
-        android:background="@color/black"
-        app:layout_constraintBottom_toBottomOf="@id/destinationNameTextView"
-        app:layout_constraintEnd_toStartOf="@id/destinationNameTextView"
-        app:layout_constraintStart_toEndOf="@id/iconsLayout"
-        app:layout_constraintTop_toTopOf="@id/destinationNameTextView" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/destinationNameTextView"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/margin_small"
-        android:background="?android:attr/selectableItemBackground"
-        android:paddingVertical="@dimen/basic_margin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/detailsIcon"
-        app:layout_constraintStart_toEndOf="@id/seperator"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginStart="@dimen/margin_small"
-        tools:text="Test" />
-
-    <ImageView
-        android:id="@+id/detailsIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_small"
-        android:layout_marginEnd="@dimen/margin_small"
-        app:layout_constraintStart_toEndOf="@id/destinationNameTextView"
-        app:layout_constraintEnd_toStartOf="@id/callTimeTextView"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:src="@drawable/ic_baseline_info_24" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/callTimeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_small"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginStart="@dimen/margin_small"
-        tools:text="18:00" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

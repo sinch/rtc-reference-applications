@@ -3,9 +3,11 @@ package com.sinch.rtc.vvc.reference.app.features.calls.summary
 import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import com.sinch.android.rtc.calling.Call
 import com.sinch.android.rtc.calling.CallDirection
+import com.sinch.rtc.vvc.reference.app.BuildConfig
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.databinding.DialogFinishedCallBinding
 import java.util.Date
@@ -26,6 +28,7 @@ class CallSummaryDialogFragment : DialogFragment() {
         binding.okButton.setOnClickListener {
             dismiss()
         }
+        binding.debugTimesSection.isVisible = BuildConfig.SHOW_DEBUG_INFO
         fillCallDetails()
         return AlertDialog.Builder(requireContext())
             .setView(binding.root)

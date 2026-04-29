@@ -2,7 +2,6 @@ package com.sinch.rtc.vvc.reference.app.features.settings
 
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -10,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.sinch.android.rtc.Sinch
 import com.sinch.android.rtc.video.VideoScalingType
+import com.sinch.rtc.vvc.reference.app.BuildConfig
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory
 import com.sinch.rtc.vvc.reference.app.databinding.FragmentSettingsBinding
@@ -29,6 +29,10 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
         requireContext().defaultConfigs.map { it.name } + AppConfig.CUSTOM_CONFIG_NAME
     }
 
+    private val scalingLabels by lazy {
+        VideoScalingType.values().map { it.label(requireContext()) }
+    }
+
     override fun setupBinding(root: View): FragmentSettingsBinding =
         FragmentSettingsBinding.bind(root)
 
@@ -39,6 +43,10 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
         setupScalingAdapters()
         setupConfigAdapters()
         observeViewModel()
+        if (!BuildConfig.SHOW_DEBUG_INFO) {
+            binding.environmentCard.isVisible = false
+            binding.updateDevSettingsButton.isVisible = false
+        }
     }
 
     private fun setupLabels() {
@@ -48,7 +56,7 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
     private fun setupButtons() {
         binding.apply {
             logoutButton.setOnClickListener {
-                viewModel.onLogoutClicked()
+                showLogoutConfirmation()
             }
             clearDataButton.setOnClickListener {
                 viewModel.onClearDataClicked()
@@ -62,67 +70,47 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
     private fun setupConfigAdapters() {
         val itemsAdapter = ArrayAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
+            R.layout.dropdown_menu_item,
             configSpinnerValues
-        ).also {
-            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        )
+        binding.configsDropdown.setAdapter(itemsAdapter)
+        binding.configsDropdown.setOnItemClickListener { _, _, position, _ ->
+            viewModel.onEnvSpinnerItemChanged(
+                configSpinnerValues[position],
+                binding.appKeyInputEditText.text.toString(),
+                binding.appSecretInputEditText.text.toString(),
+                binding.environmentInputEditText.text.toString(),
+                binding.cliInputEditText.text.toString()
+            )
         }
-        binding.configsSpinner.adapter = itemsAdapter
-        binding.configsSpinner.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    viewModel.onEnvSpinnerItemChanged(
-                        configSpinnerValues[position], binding.appKeyInputEditText.text.toString(),
-                        binding.appSecretInputEditText.text.toString(),
-                        binding.environmentInputEditText.text.toString(),
-                        binding.cliInputEditText.text.toString()
-                    )
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
-            }
     }
 
     private fun setupScalingAdapters() {
         val possibleValues = VideoScalingType.values()
-        val itemsAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
-            possibleValues.map { it.label(requireContext()) }).also {
-            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
         listOf(
-            binding.localVideoScalingSpinner,
-            binding.remoteVideoScalingSpinner
-        ).forEach { spinner ->
-            spinner.adapter = itemsAdapter
-            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    val chosenValue = possibleValues[position]
-                    when (spinner) {
-                        binding.localVideoScalingSpinner -> viewModel.onLocalScalingChanged(
-                            chosenValue
-                        )
-
-                        binding.remoteVideoScalingSpinner -> viewModel.onRemoteScalingChanged(
-                            chosenValue
-                        )
-                    }
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            binding.localVideoScalingDropdown to { value: VideoScalingType ->
+                viewModel.onLocalScalingChanged(value)
+            },
+            binding.remoteVideoScalingDropdown to { value: VideoScalingType ->
+                viewModel.onRemoteScalingChanged(value)
+            }
+        ).forEach { (dropdown, onSelected) ->
+            dropdown.setAdapter(
+                ArrayAdapter(requireContext(), R.layout.dropdown_menu_item, scalingLabels)
+            )
+            dropdown.setOnItemClickListener { _, _, position, _ ->
+                onSelected(possibleValues[position])
             }
         }
+    }
+
+    private fun showLogoutConfirmation() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.logout_confirm_title)
+            .setMessage(R.string.logout_confirm_message)
+            .setPositiveButton(R.string.logout) { _, _ -> viewModel.onLogoutClicked() }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
     }
 
     private fun showConfirmationDialog() {
@@ -149,7 +137,6 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
     private fun observeViewModel() {
         viewModel.loggedInUser.observe(viewLifecycleOwner) { user ->
             val isAnyUserLoggedIn = (user != null)
-            binding.updateDevSettingsButton
             listOf(
                 binding.loggedInSettings,
                 binding.clearDataButton,
@@ -158,7 +145,8 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
                 it.isVisible = isAnyUserLoggedIn
             }
             listOf(
-                binding.configsSpinner,
+                binding.configsInputLayout,
+                binding.configsDropdown,
                 binding.appKeyInputLayout,
                 binding.appSecretInputLayout,
                 binding.environmentInputLayout,
@@ -166,7 +154,7 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
             ).forEach {
                 it.isEnabled = !isAnyUserLoggedIn
             }
-            binding.updateDevSettingsButton.isVisible = !isAnyUserLoggedIn
+            binding.updateDevSettingsButton.isVisible = !isAnyUserLoggedIn && BuildConfig.SHOW_DEBUG_INFO
             if (user != null) {
                 adjustUiForLoggedInUser(user)
             }
@@ -185,7 +173,7 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
             ).forEach { textInput ->
                 textInput.isEnabled = it.isCustom
             }
-            binding.configsSpinner.setSelection(configSpinnerValues.indexOf(it.name))
+            binding.configsDropdown.setText(it.name, false)
             binding.appKeyInputEditText.setText(it.appKey)
             binding.appSecretInputEditText.setText(it.appSecret)
             binding.environmentInputEditText.setText(it.environment)
@@ -198,8 +186,14 @@ class SettingsFragment : ViewBindingFragment<FragmentSettingsBinding>(R.layout.f
         binding.apply {
             loggedInUsernameText.text =
                 String.format(getString(R.string.logged_in_template), user.id)
-            localVideoScalingSpinner.setSelection(scalingTypes.indexOf(user.localScalingType))
-            remoteVideoScalingSpinner.setSelection(scalingTypes.indexOf(user.remoteScalingType))
+            localVideoScalingDropdown.setText(
+                scalingLabels.getOrNull(scalingTypes.indexOf(user.localScalingType)).orEmpty(),
+                false
+            )
+            remoteVideoScalingDropdown.setText(
+                scalingLabels.getOrNull(scalingTypes.indexOf(user.remoteScalingType)).orEmpty(),
+                false
+            )
         }
     }
 

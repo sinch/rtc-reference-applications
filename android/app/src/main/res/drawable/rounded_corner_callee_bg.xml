@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/blackSemiTransparent" />
+    <solid android:color="@color/callOverlayLight" />
 
     <padding
-        android:bottom="@dimen/margin_small"
-        android:left="@dimen/margin_small"
-        android:right="@dimen/margin_small"
-        android:top="@dimen/margin_small" />
+        android:bottom="@dimen/space_xs"
+        android:left="@dimen/space_s"
+        android:right="@dimen/space_s"
+        android:top="@dimen/space_xs" />
 
-    <corners android:radius="10dp" />
+    <corners android:radius="@dimen/corner_small" />
 </shape>

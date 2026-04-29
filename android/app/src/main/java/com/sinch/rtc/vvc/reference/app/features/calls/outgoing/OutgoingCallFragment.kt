@@ -56,6 +56,9 @@ class OutgoingCallFragment :
         binding.stateTextView.startAnimation(
             AnimationUtils.loadAnimation(context, R.anim.blink)
         )
+        binding.avatar.startAnimation(
+            AnimationUtils.loadAnimation(context, R.anim.pulse)
+        )
         viewModel.navigationEvents.observe(viewLifecycleOwner) {
             handleNavigationEvent(it)
         }

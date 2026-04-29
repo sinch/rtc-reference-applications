@@ -34,6 +34,8 @@
     <string name="fail_msg">Failure message: %s</string>
 
     <!-- Login screen -->
+    <string name="welcome_title">Sinch Voice &amp; Video</string>
+    <string name="welcome_subtitle">Sign in to start making calls</string>
     <string name="username_hint">Username</string>
     <string name="play_services_not_available_error_message">Play services not available</string>
     <string name="logging_timeout_error_message">Timeout error while logging in</string>
@@ -42,11 +44,16 @@
 
     <!-- Settings screen -->
     <string name="logout">Logout</string>
-    <string name="clear_data">Clear user data</string>
+    <string name="clear_data">Clear history</string>
     <string name="update_dev">Update dev settings</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="environment">Environment</string>
+    <string name="configuration_label">Configuration</string>
+    <string name="history_empty_title">No calls yet</string>
+    <string name="history_empty_subtitle">Calls you make or receive will appear here</string>
+    <string name="logout_confirm_title">Log out</string>
+    <string name="logout_confirm_message">Are you sure you want to log out?</string>
     <string name="local_scale_type">Local video scaling</string>
     <string name="remote_video_scale_type">Remote video scaling</string>
     <string name="aspect_fit">Aspect Fit</string>
@@ -78,6 +85,12 @@
 
     <!-- Established call screen -->
     <string name="hang_up">Hang up</string>
+    <string name="control_mute">Mute</string>
+    <string name="control_device">Device</string>
+    <string name="control_audio">Audio</string>
+    <string name="control_video">Video</string>
+    <string name="control_torch">Torch</string>
+    <string name="control_snapshot">Snapshot</string>
     <string name="speaker_on">Use speaker</string>
     <string name="is_muted">Is muted</string>
     <string name="is_front_camera_used">Is front camera used</string>

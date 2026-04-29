@@ -7,7 +7,9 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sinch.rtc.vvc.reference.app.R
@@ -23,15 +25,29 @@ class LoginFragment : ViewBindingFragment<FragmentLoginBinding>(R.layout.fragmen
         NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory(requireActivity().application)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun setupBinding(root: View): FragmentLoginBinding = FragmentLoginBinding.bind(root)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.menu_login, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                    when (menuItem.itemId) {
+                        R.id.settingsMenuItem -> {
+                            findNavController().navigate(R.id.settingsFragment)
+                            true
+                        }
+                        else -> false
+                    }
+            },
+            viewLifecycleOwner,
+            Lifecycle.State.RESUMED
+        )
+
         binding.loginButton.setOnClickListener {
             viewModel.onLoginClicked(binding.loginInputEditText.text.toString())
         }
@@ -46,20 +62,6 @@ class LoginFragment : ViewBindingFragment<FragmentLoginBinding>(R.layout.fragmen
         }
         requestBasePermissions()
     }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_login, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
-            R.id.settingsMenuItem -> {
-                findNavController().navigate(R.id.settingsFragment)
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
-        }
 
     private fun requestBasePermissions() {
         val permissions = mutableListOf(Manifest.permission.READ_PHONE_STATE)

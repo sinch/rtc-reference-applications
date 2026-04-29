@@ -1,96 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/updateDevSettingsButton"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/space_m">
 
-        <LinearLayout
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/versionText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            tools:text="Sinch - Version: 1.0" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/versionText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/basic_margin"
-                android:layout_marginBottom="@dimen/margin_small"
-                android:gravity="center" />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/loggedInSettings"
+            style="@style/Widget.SinchRefApp.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m">
 
             <LinearLayout
-                android:id="@+id/loggedInSettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/basic_margin"
                 android:orientation="vertical">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dashboard_label"
+                    android:textAppearance="?attr/textAppearanceTitleLarge" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/loggedInUsernameText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/basic_margin"
-                    android:gravity="center" />
+                    android:layout_marginTop="@dimen/space_xs"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="Logged in as alex" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/remote_video_scale_type" />
-
-                <Spinner
-                    android:id="@+id/remoteVideoScalingSpinner"
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/basic_margin" />
+                    android:layout_marginTop="@dimen/space_m"
+                    android:hint="@string/remote_video_scale_type">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/local_scale_type" />
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/remoteVideoScalingDropdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        tools:ignore="LabelFor" />
 
-                <Spinner
-                    android:id="@+id/localVideoScalingSpinner"
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/basic_margin" />
+                    android:layout_marginTop="@dimen/space_s"
+                    android:hint="@string/local_scale_type">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/localVideoScalingDropdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        tools:ignore="LabelFor" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/environmentCard"
+            style="@style/Widget.SinchRefApp.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_m">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/basic_margin"
-                android:layout_marginTop="@dimen/basic_margin"
-                android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@id/loggedInSettings">
+                android:orientation="vertical">
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/environment" />
+                    android:text="@string/environment"
+                    android:textAppearance="?attr/textAppearanceTitleLarge" />
 
-                <Spinner
-                    android:id="@+id/configsSpinner"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/configsInputLayout"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/basic_margin" />
+                    android:layout_marginTop="@dimen/space_s"
+                    android:hint="@string/configuration_label">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/configsDropdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        tools:ignore="LabelFor" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/appKeyInputLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/basic_margin"
-                    android:hint="@string/appkey_hint"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:layout_marginTop="@dimen/space_m"
+                    android:hint="@string/appkey_hint">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/appKeyInputEditText"
@@ -102,15 +136,10 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/appSecretInputLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/basic_margin"
-                    android:hint="@string/appsecret_hint"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:layout_marginTop="@dimen/space_s"
+                    android:hint="@string/appsecret_hint">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/appSecretInputEditText"
@@ -122,15 +151,10 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/environmentInputLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/basic_margin"
-                    android:hint="@string/environment_hint"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:layout_marginTop="@dimen/space_s"
+                    android:hint="@string/environment_hint">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/environmentInputEditText"
@@ -142,16 +166,11 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/cliInputLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/basic_margin"
+                    android:layout_marginTop="@dimen/space_s"
                     android:hint="@string/cli_hint"
-                    app:expandedHintEnabled="false"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:expandedHintEnabled="false">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/cliInputEditText"
@@ -163,39 +182,37 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-    </androidx.core.widget.NestedScrollView>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/updateDevSettingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_l"
+            android:minHeight="@dimen/touch_target"
+            android:text="@string/update_dev" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/updateDevSettingsButton"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:text="@string/update_dev"
-        app:layout_constraintBottom_toTopOf="@id/clearDataButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/clearDataButton"
+            style="@style/Widget.SinchRefApp.Button.Tonal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_s"
+            android:minHeight="@dimen/touch_target"
+            android:text="@string/clear_data" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/clearDataButton"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:text="@string/clear_data"
-        app:layout_constraintBottom_toTopOf="@id/logoutButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/logoutButton"
+            style="@style/Widget.SinchRefApp.Button.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_s"
+            android:layout_marginBottom="@dimen/space_m"
+            android:minHeight="@dimen/touch_target"
+            android:text="@string/logout"
+            app:strokeColor="?attr/colorError"
+            android:textColor="?attr/colorError" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/logoutButton"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:text="@string/logout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/clearDataButton"
-        app:layout_constraintStart_toStartOf="@id/clearDataButton" />
+    </LinearLayout>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

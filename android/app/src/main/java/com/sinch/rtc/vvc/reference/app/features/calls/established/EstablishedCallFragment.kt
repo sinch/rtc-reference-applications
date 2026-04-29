@@ -4,7 +4,9 @@ import android.Manifest
 import android.media.AudioDeviceInfo
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -21,8 +23,6 @@ import com.sinch.rtc.vvc.reference.app.utils.base.fragment.MainActivityFragment
 import com.sinch.rtc.vvc.reference.app.utils.extensions.addVideoViewChild
 import com.sinch.rtc.vvc.reference.app.utils.extensions.friendlyName
 import com.sinch.rtc.vvc.reference.app.utils.extensions.makeMultiline
-import java.util.Timer
-import java.util.TimerTask
 
 class EstablishedCallFragment :
     MainActivityFragment<FragmentEstablishedCallBinding>(R.layout.fragment_established_call) {
@@ -36,9 +36,7 @@ class EstablishedCallFragment :
         )
     }
 
-    private var qualityWarningDialog: AlertDialog? = null
-    private var timer: Timer? = null
-    private var dismissDialogTask: TimerTask? = null
+    private var qualityWarningSnackbar: Snackbar? = null
     private var qualityWarningQueue = mutableListOf<CallQualityWarningEvent>()
 
     override fun setupBinding(root: View): FragmentEstablishedCallBinding =
@@ -49,14 +47,11 @@ class EstablishedCallFragment :
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
         attachBindings()
-        timer = Timer()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        qualityWarningDialog?.dismiss()
-        timer?.cancel()
-        timer = null
+        qualityWarningSnackbar?.dismiss()
     }
 
     override fun onResume() {
@@ -123,9 +118,11 @@ class EstablishedCallFragment :
         viewModel.navigationEvents.observe(viewLifecycleOwner, this::handleNavigation)
         viewModel.callProperties.observe(viewLifecycleOwner) {
             binding.calleNameText.text = it.calleeName
+            binding.audioCalleNameText.text = it.calleeName
         }
         viewModel.callDurationFormatted.observe(viewLifecycleOwner) {
             binding.durationText.text = it
+            binding.audioDurationText.text = it
         }
         viewModel.videoPermissionsRequestEvent.observe(viewLifecycleOwner) {
             requestPermissions(listOf(Manifest.permission.CAMERA)) {
@@ -144,12 +141,14 @@ class EstablishedCallFragment :
             listOf(
                 binding.smallVideoFrame,
                 binding.bigVideoFrame,
-                binding.isVideoPausedToggleButton,
-                binding.isTorchToggleButton,
-                binding.screenshotButton
+                binding.videoControl,
+                binding.torchControl,
+                binding.screenshotControl,
+                binding.calleeChip
             ).forEach {
                 it.isVisible = (videoCallProperties != null)
             }
+            binding.audioCallInfoLayout.isVisible = (videoCallProperties == null)
             if (videoCallProperties != null) {
                 adjustVideoOnlyUI(videoCallProperties)
             }
@@ -168,27 +167,35 @@ class EstablishedCallFragment :
     }
 
     private fun handleNextCallQualityWarning() {
-        if (qualityWarningDialog?.isShowing == true) {
+        if (qualityWarningSnackbar?.isShown == true) {
             return
         }
         val context = context ?: return
         val qualityWarningEvent = qualityWarningQueue.removeFirstOrNull() ?: return
         val isTrigger = qualityWarningEvent.type == CallQualityWarningEventType.Trigger
-        qualityWarningDialog = AlertDialog.Builder(context)
-            .setTitle(if (isTrigger) R.string.warning_trigger else R.string.warning_recover)
-            .setMessage(getString(R.string.warning_name, qualityWarningEvent.name))
-            .setIcon(if (isTrigger) R.drawable.baseline_thumb_down_24 else R.drawable.baseline_thumb_up_24)
-            .show()
-        qualityWarningDialog?.setOnDismissListener {
-            dismissDialogTask?.cancel()
-            handleNextCallQualityWarning()
-        }
-        dismissDialogTask = object : TimerTask() {
-            override fun run() {
-                qualityWarningDialog?.dismiss()
+        val icon = if (isTrigger) R.drawable.baseline_thumb_down_24 else R.drawable.baseline_thumb_up_24
+        val title = getString(if (isTrigger) R.string.warning_trigger else R.string.warning_recover)
+        val message = getString(R.string.warning_name, qualityWarningEvent.name)
+
+        qualityWarningSnackbar = Snackbar.make(requireView(), "$title\n$message", DISMISS_DELAY_MS.toInt())
+            .apply {
+                anchorView = binding.callSettingsLayout
+                setBackgroundTint(ContextCompat.getColor(context,
+                    if (isTrigger) R.color.decline else R.color.accept))
+                setTextColor(ContextCompat.getColor(context, R.color.onCallSurface))
+                val textView = view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                textView.maxLines = 3
+                textView.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, 0, 0, 0)
+                textView.compoundDrawablePadding = context.resources.getDimensionPixelSize(R.dimen.space_s)
+                textView.compoundDrawableTintList = ContextCompat.getColorStateList(context, R.color.onCallSurface)
+                duration = DISMISS_DELAY_MS.toInt()
+                addCallback(object : Snackbar.Callback() {
+                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                        handleNextCallQualityWarning()
+                    }
+                })
             }
-        }
-        timer?.schedule(dismissDialogTask, DISMISS_DIALOG_DELAY_MS)
+        qualityWarningSnackbar?.show()
     }
 
     private fun adjustVideoOnlyUI(videoCallProperties: VideoCallProperties) {
@@ -245,7 +252,7 @@ class EstablishedCallFragment :
     }
 
     companion object {
-        private const val DISMISS_DIALOG_DELAY_MS = 2000L
+        private const val DISMISS_DELAY_MS = 2000L
     }
 
 }

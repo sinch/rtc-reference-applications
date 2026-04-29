@@ -1,18 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#5d1a89</color>
-    <color name="primaryLightColor">#8e49ba</color>
-    <color name="colorAccent">#ffc363</color>
+    <!-- Material 3 light palette - Sinch-inspired violet -->
+    <color name="md_primary">#5C2BD9</color>
+    <color name="md_on_primary">#FFFFFF</color>
+    <color name="md_primary_container">#E8DDFF</color>
+    <color name="md_on_primary_container">#1E0061</color>
 
-    <color name="colorPrimaryDark">#2c005b</color>
-    <color name="secondaryLightColor">#fff693</color>
-    <color name="secondaryDarkColor">#c99334</color>
-    <color name="primaryTextColor">#ffffff</color>
-    <color name="secondaryTextColor">#000000</color>
-    <color name="red">#FF0000</color>
+    <color name="md_secondary">#FFB300</color>
+    <color name="md_on_secondary">#1A1A1A</color>
+    <color name="md_secondary_container">#FFE082</color>
+    <color name="md_on_secondary_container">#3A2E00</color>
+
+    <color name="md_tertiary">#00838F</color>
+    <color name="md_on_tertiary">#FFFFFF</color>
+    <color name="md_tertiary_container">#B2EBF2</color>
+    <color name="md_on_tertiary_container">#002F33</color>
+
+    <color name="md_error">#BA1A1A</color>
+    <color name="md_on_error">#FFFFFF</color>
+    <color name="md_error_container">#FFDAD6</color>
+    <color name="md_on_error_container">#410002</color>
+
+    <color name="md_background">#FFFBFE</color>
+    <color name="md_on_background">#1C1B1F</color>
+    <color name="md_surface">#FFFBFE</color>
+    <color name="md_on_surface">#1C1B1F</color>
+    <color name="md_surface_variant">#E7E0EC</color>
+    <color name="md_on_surface_variant">#49454F</color>
+    <color name="md_surface_container_low">#F8F4FB</color>
+    <color name="md_surface_container">#F3EDF7</color>
+    <color name="md_surface_container_high">#ECE6F0</color>
+    <color name="md_outline">#79747E</color>
+    <color name="md_outline_variant">#CAC4D0</color>
+    <color name="md_inverse_surface">#313033</color>
+    <color name="md_inverse_on_surface">#F4EFF4</color>
+
+    <!-- Call screen overlays / call-specific accents -->
+    <color name="callOverlay">#B3000000</color>
+    <color name="callOverlayLight">#66000000</color>
+    <color name="accept">#1B873F</color>
+    <color name="decline">#D62B2B</color>
+    <color name="onCallSurface">#FFFFFF</color>
+    <color name="callScreenEnd">#0F0518</color>
+
+    <!-- Legacy aliases kept for any leftover references -->
+    <color name="colorPrimary">@color/md_primary</color>
+    <color name="primaryLightColor">@color/md_primary_container</color>
+    <color name="colorAccent">@color/md_secondary</color>
+    <color name="colorPrimaryDark">#3B0BA8</color>
+    <color name="secondaryLightColor">@color/md_secondary_container</color>
+    <color name="secondaryDarkColor">#806300</color>
+    <color name="primaryTextColor">@color/md_on_primary</color>
+    <color name="secondaryTextColor">@color/md_on_surface</color>
+    <color name="red">@color/decline</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
-    <color name="green">#008000</color>
-    <color name="blackSemiTransparent">#80000000</color>
+    <color name="green">@color/accept</color>
+    <color name="blackSemiTransparent">@color/callOverlay</color>
     <color name="transparent">#00000000</color>
 </resources>
