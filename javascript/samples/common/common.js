@@ -355,7 +355,8 @@ export const sleep = (ms) =>
 const muteState = { isMuted: false, currentCall: null };
 
 export function initMuteButton() {
-  document.getElementById("mute").addEventListener("click", () => {
+  document.getElementById("mute").addEventListener("click", (e) => {
+    e.preventDefault();
     if (!muteState.currentCall) return;
     if (muteState.isMuted) {
       muteState.currentCall.unmute();
