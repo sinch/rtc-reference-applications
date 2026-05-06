@@ -1,44 +1,52 @@
 package com.sinch.rtc.vvc.reference.app.features.login
 
 import android.app.Application
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Handler
+import android.os.IBinder
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.map
-import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
-import com.sinch.android.rtc.ClientRegistration
-import com.sinch.android.rtc.PushConfiguration
-import com.sinch.android.rtc.PushTokenRegistrationCallback
-import com.sinch.android.rtc.SinchError
-import com.sinch.android.rtc.UserController
-import com.sinch.android.rtc.UserRegistrationCallback
 import com.sinch.rtc.vvc.reference.app.R
+import com.sinch.rtc.vvc.reference.app.application.service.SinchClientService
+import com.sinch.rtc.vvc.reference.app.application.service.SinchRegistrationStatus
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallType
 import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
 import com.sinch.rtc.vvc.reference.app.storage.prefs.SharedPrefsManager
-import com.sinch.rtc.vvc.reference.app.utils.jwt.JWTFetcher
 import com.sinch.rtc.vvc.reference.app.utils.jwt.getString
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
 import java.util.Date
 
 class LoginViewModel(
-    application: Application,
+    private val application: Application,
     private val prefsManager: SharedPrefsManager,
-    private val jwtFetcher: JWTFetcher,
     private val userDao: UserDao,
     private val callDao: CallDao
 ) :
-    AndroidViewModel(application), UserRegistrationCallback, PushTokenRegistrationCallback {
+    AndroidViewModel(application), ServiceConnection {
+
+    companion object {
+        const val TAG = "LoginViewModel"
+        const val LOGGING_TIMEOUT_MS = 10000L
+    }
 
     private val viewModelState: MutableLiveData<LoginViewState> = MutableLiveData(Idle)
-    private val appConfig get() = prefsManager.usedConfig
     private var loggingTimeoutHandler: Handler? = null
+
+    private var serviceBinder: SinchClientService.SinchClientServiceBinder? = null
+    private val registrationObserver = Observer<SinchRegistrationStatus> { status ->
+        onRegistrationStatusChanged(status)
+    }
 
     val errorMessages: SingleLiveEvent<String> = SingleLiveEvent()
     val navigationEvents: SingleLiveEvent<LoginNavigationEvent> = SingleLiveEvent()
@@ -51,9 +59,12 @@ class LoginViewModel(
             }
         }
 
-    companion object {
-        const val TAG = "LoginViewModel"
-        const val LOGGING_TIMEOUT_MS = 10000L
+    init {
+        application.bindService(
+            Intent(application, SinchClientService::class.java),
+            this,
+            Context.BIND_AUTO_CREATE
+        )
     }
 
     fun onLoginClicked(username: String) {
@@ -71,97 +82,61 @@ class LoginViewModel(
             FirebaseMessaging.getInstance().token.addOnCompleteListener {
                 if (it.isSuccessful) {
                     prefsManager.fcmRegistrationToken = it.result.orEmpty()
-                    createUC(username)
+                    startRegistration(username)
                 } else {
                     resetToIdleWithErrorMessage(getString(R.string.fcm_not_available))
                 }
             }
         } else {
-            createUC(username)
+            startRegistration(username)
         }
     }
 
-    private fun createUC(username: String) {
-        UserController.builder()
-            .context(getApplication())
-            .applicationKey(appConfig.appKey)
-            .userId(username)
-            .environmentHost(appConfig.environment)
-            .pushConfiguration(
-                PushConfiguration.fcmPushConfigurationBuilder()
-                    .senderID(FirebaseApp.getInstance().options.gcmSenderId.orEmpty())
-                    .registrationToken(prefsManager.fcmRegistrationToken)
-                    .build()
-            )
-            .build().registerUser(
-                this,
-                this
-            )
+    private fun startRegistration(username: String) {
         initLoggingTimeoutTimer()
+        serviceBinder?.startRegistration(username)
     }
 
-    override fun onPushTokenRegistered() {
-        Log.d(TAG, "onUserRegistered")
-        ifLoggingIn {
-            val newState = Logging(it.username, it.isUserRegistered, true)
-            viewModelState.value = newState
-            checkIfRegistrationComplete(newState)
+    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+        if (service !is SinchClientService.SinchClientServiceBinder) return
+        serviceBinder = service
+        service.registrationStatus.observeForever(registrationObserver)
+    }
+
+    override fun onServiceDisconnected(name: ComponentName?) {
+        serviceBinder = null
+    }
+
+    private fun onRegistrationStatusChanged(status: SinchRegistrationStatus) {
+        val current = viewModelState.value as? Logging ?: return
+        val error = status.error
+        if (error != null) {
+            failLogin("${error.message}\nExtras: ${error.extras}")
+            return
         }
-    }
-
-    override fun onUserRegistered() {
-        Log.d(TAG, "onUserRegistered")
-        ifLoggingIn {
-            val newState = Logging(it.username, true, it.isPushTokenRegistered)
-            viewModelState.value = newState
-            checkIfRegistrationComplete(newState)
-        }
-    }
-
-    override fun onCredentialsRequired(clientRegistration: ClientRegistration) {
-        Log.d(TAG, "onCredentialsRequired $clientRegistration")
-        val currentState = viewModelState.value
-        if (currentState is Logging) {
-            jwtFetcher.acquireJWT(
-                appConfig.appKey,
-                currentState.username
-            ) { jwt ->
-                clientRegistration.register(jwt)
-            }
-        }
-    }
-
-    override fun onUserRegistrationFailed(error: SinchError) {
-        Log.d(TAG, "onUserRegistrationFailed $error")
-        resetToIdleWithErrorMessage("${error.message}\nExtras: ${error.extras}")
-    }
-
-    override fun onPushTokenRegistrationFailed(error: SinchError) {
-        Log.d(TAG, "onPushTokenRegistrationFailed $error")
-        resetToIdleWithErrorMessage("${error.message}\nExtras: ${error.extras}")
-    }
-
-    private fun ifLoggingIn(f: (loggingState: Logging) -> Unit) {
-        val currentState = viewModelState.value
-        if (currentState is Logging) {
-            f(currentState)
-        }
-    }
-
-    private fun checkIfRegistrationComplete(state: Logging) {
-        if (state.isLoggingComplete) {
+        val newState = Logging(current.username, status.isUserRegistered, status.isPushTokenRegistered)
+        viewModelState.value = newState
+        if (newState.isLoggingComplete) {
             cancelLoggingTimeoutTimer()
             viewModelState.value = Idle
-            userDao.insert(User(state.username, isLoggedIn = true))
-            insertFakeCallHistoryIfNeeded(state.username)
+            userDao.insert(User(newState.username, isLoggedIn = true))
+            insertFakeCallHistoryIfNeeded(newState.username)
             navigationEvents.postValue(Dashboard)
         }
     }
 
+    private fun failLogin(message: String) {
+        cancelLoggingTimeoutTimer()
+        viewModelState.value = Idle
+        serviceBinder?.cancelRegistration()
+        errorMessages.postValue(message)
+    }
+
     private fun initLoggingTimeoutTimer() {
+        cancelLoggingTimeoutTimer()
         loggingTimeoutHandler = Handler().apply {
             postDelayed({
-                resetToIdleWithErrorMessage(getString(R.string.logging_timeout_error_message))
+                failLogin(getString(R.string.logging_timeout_error_message))
             }, LOGGING_TIMEOUT_MS)
         }
     }
@@ -175,6 +150,14 @@ class LoginViewModel(
     private fun cancelLoggingTimeoutTimer() {
         loggingTimeoutHandler?.removeCallbacksAndMessages(null)
         loggingTimeoutHandler = null
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        cancelLoggingTimeoutTimer()
+        serviceBinder?.registrationStatus?.removeObserver(registrationObserver)
+        application.unbindService(this)
+        serviceBinder = null
     }
 
     private fun insertFakeCallHistoryIfNeeded(userId: String) {

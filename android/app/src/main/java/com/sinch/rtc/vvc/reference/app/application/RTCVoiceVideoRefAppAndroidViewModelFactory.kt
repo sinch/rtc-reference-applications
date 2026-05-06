@@ -19,7 +19,6 @@ import com.sinch.rtc.vvc.reference.app.features.settings.SettingsViewModel
 import com.sinch.rtc.vvc.reference.app.navigation.main.MainViewModel
 import com.sinch.rtc.vvc.reference.app.storage.RTCVoiceVideoAppDatabase
 import com.sinch.rtc.vvc.reference.app.storage.prefs.SharedPrefsManager
-import com.sinch.rtc.vvc.reference.app.utils.jwt.FakeJWTFetcher
 
 typealias NoArgsRTCVoiceVideoRefAppAndroidViewModelFactory = RTCVoiceVideoRefAppAndroidViewModelFactory<NavArgs>
 
@@ -39,7 +38,6 @@ class RTCVoiceVideoRefAppAndroidViewModelFactory<Args : NavArgs>(
                 LoginViewModel(
                     application,
                     prefsManager,
-                    FakeJWTFetcher(prefsManager),
                     roomDatabase.userDao(),
                     roomDatabase.callDao()
                 ) as T

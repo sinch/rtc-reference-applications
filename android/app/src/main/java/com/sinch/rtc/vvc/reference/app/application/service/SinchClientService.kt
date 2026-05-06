@@ -1,7 +1,5 @@
 package com.sinch.rtc.vvc.reference.app.application.service
 
-import android.app.ActivityManager
-import android.app.ActivityManager.RunningAppProcessInfo
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -16,6 +14,8 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.FirebaseApp
 import com.sinch.android.rtc.ClientRegistration
 import com.sinch.android.rtc.PushConfiguration
@@ -82,9 +82,11 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
 
     private var sinchClientInstance: SinchClient? = null
 
+    private val registrationStatusMutable = MutableLiveData(SinchRegistrationStatus())
+
     override fun onCreate() {
         super.onCreate()
-        registerSinchClientIfNecessary()
+        userDao.loadLoggedInUser()?.let { buildAndStartClient(it.id) }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -101,24 +103,20 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
 
     override fun onDestroy() {
         Log.d(TAG, "onDestroy gets called")
-        if (sinchClientInstance != null && sinchClientInstance?.isStarted == true) {
-            sinchClientInstance?.terminateGracefully()
-        }
+        sinchClientInstance?.terminateGracefully()
+        sinchClientInstance = null
         super.onDestroy()
     }
 
-    private fun registerSinchClientIfNecessary() {
-        val loggedInUser = userDao.loadLoggedInUser()
-        if (loggedInUser == null || (sinchClientInstance != null &&
-                sinchClientInstance?.isStarted == true)
-        ) {
-            return
-        }
-        Log.d(TAG, "Regsitering sinch client for user ${loggedInUser.id}")
+    private fun buildAndStartClient(userId: String) {
+        sinchClientInstance?.terminateGracefully()
+        sinchClientInstance = null
+        registrationStatusMutable.value = SinchRegistrationStatus()
+        Log.d(TAG, "Registering sinch client for user $userId")
         sinchClientInstance = SinchClient.builder()
             .context(this)
             .environmentHost(appConfig.environment)
-            .userId(loggedInUser.id)
+            .userId(userId)
             .applicationKey(appConfig.appKey)
             .pushConfiguration(
                 PushConfiguration.fcmPushConfigurationBuilder()
@@ -136,24 +134,28 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
 
     override fun onCredentialsRequired(clientRegistration: ClientRegistration) {
         Log.d(TAG, "onCredentialsRequired $clientRegistration")
-        val loggedInUser = userDao.loadLoggedInUser()
-        if (loggedInUser != null) {
-            jwtFetcher.acquireJWT(appConfig.appKey, loggedInUser.id) { jwt ->
-                clientRegistration.register(jwt)
-            }
+        val userId = sinchClientInstance?.localUserId ?: return
+        jwtFetcher.acquireJWT(appConfig.appKey, userId) { jwt ->
+            clientRegistration.register(jwt)
         }
     }
 
     override fun onUserRegistered() {
         Log.d(TAG, "onUserRegistered called")
+        registrationStatusMutable.value =
+            registrationStatusMutable.value?.copy(isUserRegistered = true)
     }
 
     override fun onUserRegistrationFailed(error: SinchError) {
         Log.d(TAG, "onUserRegistrationFailed $error")
+        registrationStatusMutable.value =
+            registrationStatusMutable.value?.copy(error = error)
     }
 
     override fun onPushTokenRegistered() {
         Log.d(TAG, "onPushTokenRegistered")
+        registrationStatusMutable.value =
+            registrationStatusMutable.value?.copy(isPushTokenRegistered = true)
     }
 
     override fun onPushTokenUnregistered() {
@@ -166,6 +168,8 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
 
     override fun onPushTokenRegistrationFailed(error: SinchError) {
         Log.d(TAG, "onPushTokenRegistrationFailed $error")
+        registrationStatusMutable.value =
+            registrationStatusMutable.value?.copy(error = error)
     }
 
     override fun onClientStarted(client: SinchClient) {
@@ -176,8 +180,8 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
         Log.d(TAG, "onClientFailed $error")
     }
 
-    override fun onLogMessage(level: Int, area: String, message: String) {
-        Log.d(TAG, "onLogMessage $area $message")
+    override fun onLogMessage(level: Int, area: String, message: String, throwable: Throwable?) {
+        Log.d(TAG, "onLogMessage $area $message", throwable)
     }
 
     override fun onIncomingCall(callController: CallController, call: Call) {
@@ -275,19 +279,25 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
         }
     }
 
-    private fun checkIfInForeground(): Boolean {
-        val activityManager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
-        val appProcesses: List<RunningAppProcessInfo> =
-            activityManager.runningAppProcesses ?: return false
-        return appProcesses.any { appProcess: RunningAppProcessInfo ->
-            appProcess.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName == packageName
-        }
-    }
-
     inner class SinchClientServiceBinder : Binder() {
         val sinchClient: SinchClient? get() = sinchClientInstance
         val callEndedEvents: ConsumableEventsLiveData<Call> get() = this@SinchClientService.callEndedEvents
         val newCallHook: NewCallHook get() = this@SinchClientService
+        val registrationStatus: LiveData<SinchRegistrationStatus> get() = registrationStatusMutable
+
+        fun startRegistration(userId: String) = buildAndStartClient(userId)
+
+        fun cancelRegistration() {
+            sinchClientInstance?.terminateGracefully()
+            sinchClientInstance = null
+            registrationStatusMutable.value = SinchRegistrationStatus()
+        }
     }
 
 }
+
+data class SinchRegistrationStatus(
+    val isUserRegistered: Boolean = false,
+    val isPushTokenRegistered: Boolean = false,
+    val error: SinchError? = null
+)

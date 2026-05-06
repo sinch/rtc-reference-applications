@@ -6,13 +6,9 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.FirebaseApp
-import com.sinch.android.rtc.PushConfiguration
-import com.sinch.android.rtc.PushTokenRegistrationCallback
 import com.sinch.android.rtc.PushTokenUnregistrationCallback
 import com.sinch.android.rtc.SinchClient
 import com.sinch.android.rtc.SinchError
-import com.sinch.android.rtc.UserController
 import com.sinch.android.rtc.video.VideoScalingType
 import com.sinch.rtc.vvc.reference.app.application.service.SinchClientService
 import com.sinch.rtc.vvc.reference.app.domain.AppConfig
@@ -29,7 +25,7 @@ class SettingsViewModel(
     private val sharedPrefsManager: SharedPrefsManager,
     private val sinchClient: SinchClient?
 ) :
-    AndroidViewModel(app), PushTokenRegistrationCallback, PushTokenUnregistrationCallback {
+    AndroidViewModel(app), PushTokenUnregistrationCallback {
 
     companion object {
         const val TAG = "SettingsViewModel"
@@ -110,18 +106,10 @@ class SettingsViewModel(
     private fun logoutUser() {
         userDao.loadLoggedInUser()?.let { user ->
             userDao.update(user.copy(isLoggedIn = false))
-            userController(user).unregisterPushToken(this)
+            sinchClient?.unregisterPushToken(this)
             performLogoutCleanup()
             navigationEvents.postValue(Login)
         }
-    }
-
-    override fun onPushTokenRegistered() {
-        Log.d(TAG, "Push token unregistered")
-    }
-
-    override fun onPushTokenRegistrationFailed(error: SinchError) {
-        Log.d(TAG, "Push token unregistration failed with error $error")
     }
 
     override fun onPushTokenUnregistered() {
@@ -136,19 +124,5 @@ class SettingsViewModel(
         sinchClient?.terminateGracefully()
         app.stopService(Intent(app, SinchClientService::class.java))
     }
-
-    private fun userController(user: User): UserController =
-        UserController.builder()
-            .context(app)
-            .applicationKey(sharedPrefsManager.usedConfig.appKey)
-            .userId(user.id)
-            .environmentHost(sharedPrefsManager.usedConfig.environment)
-            .pushConfiguration(
-                PushConfiguration.fcmPushConfigurationBuilder()
-                    .senderID(FirebaseApp.getInstance().options.gcmSenderId.orEmpty())
-                    .registrationToken(sharedPrefsManager.fcmRegistrationToken)
-                    .build()
-            )
-            .build()
 
 }

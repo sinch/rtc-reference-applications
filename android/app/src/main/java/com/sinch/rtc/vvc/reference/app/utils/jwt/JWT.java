@@ -16,7 +16,7 @@ public class JWT {
     // ********************************************** IMPORTANT **********************************************
     //
     // The  JWT class serves as an example of how to produce and sign the registration token that you need to
-    // initiate SinchClient, or UserController. Read more in the documentation online.
+    // initiate SinchClient. Read more in the documentation online.
     //
     // DO NOT use this class in your application, instead implement the same functionality on your backend.
     // It might be tempting to re-use this class and store the APPLICATION_SECRET in your app, but that would
