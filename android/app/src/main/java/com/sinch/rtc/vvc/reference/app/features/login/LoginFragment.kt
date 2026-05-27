@@ -7,7 +7,9 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -60,7 +62,22 @@ class LoginFragment : ViewBindingFragment<FragmentLoginBinding>(R.layout.fragmen
         viewModel.navigationEvents.observe(viewLifecycleOwner) {
             handleNavigationEvent(it)
         }
+        setupPushProviderSelector()
         requestBasePermissions()
+    }
+
+    private fun setupPushProviderSelector() {
+        val providers = viewModel.availablePushProviders
+        binding.pushProviderInputLayout.isVisible = providers.size > 1
+
+        if (providers.isNotEmpty()) {
+            binding.pushProviderDropdown.apply {
+                setAdapter(ArrayAdapter(requireContext(), R.layout.dropdown_menu_item, providers.map { it.displayName }))
+                setOnItemClickListener { _, _, position, _ -> viewModel.onPushProviderSelected(providers[position]) }
+                setText(providers[0].displayName, false)
+                dropDownHeight = resources.getDimensionPixelSize(R.dimen.touch_target) * providers.size
+            }
+        }
     }
 
     private fun requestBasePermissions() {

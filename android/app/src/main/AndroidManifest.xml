@@ -42,6 +42,17 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".application.hms.HmsListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
+            </intent-filter>
+            <meta-data
+                android:name="push_kit_auto_init_enabled"
+                android:value="true" />
+        </service>
+
         <activity
             android:name="com.sinch.rtc.vvc.reference.app.navigation.LoginActivity"
             android:launchMode="singleTask" />

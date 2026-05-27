@@ -17,6 +17,7 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.FirebaseApp
+import com.huawei.agconnect.AGConnectInstance
 import com.sinch.android.rtc.ClientRegistration
 import com.sinch.android.rtc.PushConfiguration
 import com.sinch.android.rtc.SinchClient
@@ -25,7 +26,9 @@ import com.sinch.android.rtc.SinchError
 import com.sinch.android.rtc.calling.Call
 import com.sinch.android.rtc.calling.CallController
 import com.sinch.android.rtc.calling.CallControllerListener
+import com.sinch.rtc.vvc.reference.app.BuildConfig
 import com.sinch.rtc.vvc.reference.app.R
+import com.sinch.rtc.vvc.reference.app.domain.push.PushProvider
 import com.sinch.rtc.vvc.reference.app.features.calls.incoming.IncomingCallInitialAction
 import com.sinch.rtc.vvc.reference.app.features.calls.incoming.IncomingCallInitialData
 import com.sinch.rtc.vvc.reference.app.navigation.main.MainActivity
@@ -118,18 +121,39 @@ class SinchClientService : Service(), SinchClientListener, CallControllerListene
             .environmentHost(appConfig.environment)
             .userId(userId)
             .applicationKey(appConfig.appKey)
-            .pushConfiguration(
-                PushConfiguration.fcmPushConfigurationBuilder()
-                    .senderID(FirebaseApp.getInstance().options.gcmSenderId.orEmpty())
-                    .registrationToken(prefsManager.fcmRegistrationToken)
-                    .build()
-            )
+            .pushConfiguration(buildPushConfiguration())
             .build()
             .apply {
                 addSinchClientListener(this@SinchClientService)
                 callController.addCallControllerListener(this@SinchClientService)
                 start()
             }
+    }
+
+    @Suppress("KotlinConstantConditions", "SimplifyBooleanWithConstants")
+    private fun buildPushConfiguration(): PushConfiguration {
+        val provider = PushProvider.fromName(prefsManager.selectedPushProvider)
+        return when {
+            provider == PushProvider.HMS && BuildConfig.HMS_AVAILABLE -> {
+                val appId = AGConnectInstance.getInstance().options
+                    .getString("client/app_id").orEmpty()
+                PushConfiguration.hmsPushConfigurationBuilder()
+                    .deviceToken(prefsManager.hmsRegistrationToken)
+                    .applicationId(appId)
+                    .build()
+            }
+            else -> {
+                val senderID = try {
+                    FirebaseApp.getInstance().options.gcmSenderId.orEmpty()
+                } catch (e: Exception) {
+                    ""
+                }
+                PushConfiguration.fcmPushConfigurationBuilder()
+                    .senderID(senderID)
+                    .registrationToken(prefsManager.fcmRegistrationToken)
+                    .build()
+            }
+        }
     }
 
     override fun onCredentialsRequired(clientRegistration: ClientRegistration) {

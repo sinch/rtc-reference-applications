@@ -7,24 +7,33 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.messaging.FirebaseMessaging
+import com.huawei.agconnect.AGConnectInstance
+import com.huawei.hms.aaid.HmsInstanceId
+import com.sinch.rtc.vvc.reference.app.BuildConfig
 import com.sinch.rtc.vvc.reference.app.R
 import com.sinch.rtc.vvc.reference.app.application.service.SinchClientService
 import com.sinch.rtc.vvc.reference.app.application.service.SinchRegistrationStatus
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallDao
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallItem
 import com.sinch.rtc.vvc.reference.app.domain.calls.CallType
+import com.sinch.rtc.vvc.reference.app.domain.push.PushProvider
 import com.sinch.rtc.vvc.reference.app.domain.user.User
 import com.sinch.rtc.vvc.reference.app.domain.user.UserDao
 import com.sinch.rtc.vvc.reference.app.storage.prefs.SharedPrefsManager
 import com.sinch.rtc.vvc.reference.app.utils.jwt.getString
 import com.sinch.rtc.vvc.reference.app.utils.mvvm.SingleLiveEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Date
 
 class LoginViewModel(
@@ -51,6 +60,13 @@ class LoginViewModel(
     val errorMessages: SingleLiveEvent<String> = SingleLiveEvent()
     val navigationEvents: SingleLiveEvent<LoginNavigationEvent> = SingleLiveEvent()
 
+    val availablePushProviders: List<PushProvider> = PushProvider.availableProviders()
+
+    private val _selectedPushProvider = MutableLiveData(
+        PushProvider.defaultProvider()
+    )
+    val selectedPushProvider: LiveData<PushProvider?> get() = _selectedPushProvider
+
     val isLoginButtonEnabled: LiveData<Boolean>
         get() = viewModelState.map {
             when (it) {
@@ -67,17 +83,32 @@ class LoginViewModel(
         )
     }
 
+    fun onPushProviderSelected(provider: PushProvider) {
+        _selectedPushProvider.value = provider
+    }
+
     fun onLoginClicked(username: String) {
         Log.d(TAG, "Login clicked with username $username")
         login(username)
     }
 
     private fun login(username: String) {
+        val provider = _selectedPushProvider.value ?: PushProvider.defaultProvider()!!
+
         viewModelState.value = Logging(
             username,
             isUserRegistered = false,
             isPushTokenRegistered = false
         )
+        prefsManager.selectedPushProvider = provider.name
+
+        when (provider) {
+            PushProvider.FCM -> loginWithFcm(username)
+            PushProvider.HMS -> loginWithHms(username)
+        }
+    }
+
+    private fun loginWithFcm(username: String) {
         if (prefsManager.fcmRegistrationToken.isEmpty()) {
             FirebaseMessaging.getInstance().token.addOnCompleteListener {
                 if (it.isSuccessful) {
@@ -85,6 +116,31 @@ class LoginViewModel(
                     startRegistration(username)
                 } else {
                     resetToIdleWithErrorMessage(getString(R.string.fcm_not_available))
+                }
+            }
+        } else {
+            startRegistration(username)
+        }
+    }
+
+    private fun loginWithHms(username: String) {
+        if (prefsManager.hmsRegistrationToken.isEmpty()) {
+            viewModelScope.launch {
+                try {
+                    val token = withContext(Dispatchers.IO) {
+                        val appId = AGConnectInstance.getInstance().options
+                            .getString("client/app_id")
+                        HmsInstanceId.getInstance(application).getToken(appId, "HCM")
+                    }
+                    if (!token.isNullOrEmpty()) {
+                        prefsManager.hmsRegistrationToken = token
+                        startRegistration(username)
+                    } else {
+                        resetToIdleWithErrorMessage(getString(R.string.hms_not_available))
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "HMS token retrieval failed", e)
+                    resetToIdleWithErrorMessage(getString(R.string.hms_not_available))
                 }
             }
         } else {
@@ -134,7 +190,7 @@ class LoginViewModel(
 
     private fun initLoggingTimeoutTimer() {
         cancelLoggingTimeoutTimer()
-        loggingTimeoutHandler = Handler().apply {
+        loggingTimeoutHandler = Handler(Looper.getMainLooper()).apply {
             postDelayed({
                 failLogin(getString(R.string.logging_timeout_error_message))
             }, LOGGING_TIMEOUT_MS)

@@ -4,6 +4,9 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
+def hasGoogleServices = file("./google-services.json").exists()
+def hasAgConnectServices = file("./agconnect-services.json").exists()
+
 def configFilePath = "./src/main/assets/config.json"
 def configFileEmptyMessage = "You are building Sinch Android Reference Sample Application project that requires presence of a configuration file with your auhthorization data.\n" +
         "Create and place your config.json file inside the " +
@@ -21,10 +24,11 @@ def requiredConfigFileParamsMissingMessage = "You are building Sinch Android Ref
         "Check config.json file located in app/src/main/assets folder and fill it with these values copied from Sinch portal website of your application.\n" +
         "Check the \"Create configuration file\" section of the Readme for more details regarding content and structure of the config.json file."
 
-def googleServicesJsonFilePath = "./google-services.json"
-def googleServicesJsonMissingMessage = "You are building Sinch Android Reference Sample Application project that uses Firebase Cloud Messaging for delivering push notifications.\n" +
-        "In order for push notification to work you must generate and include your application specific (with correspondent \"package_name\") google-services.json file.\n" +
+def pushConfigMissingMessage = "You are building Sinch Android Reference Sample Application project that requires at least one push notification configuration.\n" +
+        "For FCM: generate and include your application specific google-services.json file.\n" +
         "Follow the Firebase Cloud Messaging manual here https://firebase.google.com/docs/android/setup to get one.\n" +
+        "For HMS: generate and include your application specific agconnect-services.json file.\n" +
+        "Follow the HMS Push Kit manual here https://developer.huawei.com/consumer/en/doc/HMSCore-Guides/android-config-agc-0000001050170137 to get one.\n" +
         "For more information regarding Sinch Managed Push Notifications refer to https://developers.sinch.com/docs/voice-android-cloud-push-notifications#2-provision-the-application-with-the-support-code"
 
 
@@ -57,6 +61,9 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "boolean", "FCM_AVAILABLE", "${hasGoogleServices}"
+        buildConfigField "boolean", "HMS_AVAILABLE", "${hasAgConnectServices}"
     }
 
     buildTypes {
@@ -97,14 +104,13 @@ preBuild.doFirst {
     if (configFile.text.contains("<YOUR APP KEY>") || configFile.text.contains("<YOUR APP SECRET>")) {
         ant.fail(requiredConfigFileParamsMissingMessage)
     }
-    if (!file(googleServicesJsonFilePath).exists()) {
-        ant.fail(googleServicesJsonMissingMessage)
+    if (!hasGoogleServices && !hasAgConnectServices) {
+        ant.fail("At least one push configuration file (google-services.json or agconnect-services.json) must be present.\n" +
+                pushConfigMissingMessage)
     }
 }
 
 dependencies {
-    implementation platform("com.google.firebase:firebase-bom:$firebase_bom_version")
-
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation fileTree(dir: "libs", include: ["*.aar"])
 
@@ -112,6 +118,7 @@ dependencies {
     implementation "androidx.core:core-ktx:$core_ktx_version"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     implementation "androidx.activity:activity-ktx:$activity_version"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
@@ -123,8 +130,11 @@ dependencies {
     // Material Design
     implementation "com.google.android.material:material:$material_design_version"
 
-    // Messaging
-    implementation "com.google.firebase:firebase-messaging"
+    // FCM
+    implementation "com.google.firebase:firebase-messaging:24.1.1"
+
+    // HMS Push
+    implementation "com.huawei.hms:push:$hms_push_version"
 
     //Room
     implementation "androidx.room:room-runtime:$room_version"
@@ -139,4 +149,9 @@ dependencies {
 
 }
 
-apply plugin: 'com.google.gms.google-services'
+if (hasGoogleServices) {
+    apply plugin: 'com.google.gms.google-services'
+}
+if (hasAgConnectServices) {
+    apply plugin: 'com.huawei.agconnect'
+}

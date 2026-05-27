@@ -41,6 +41,9 @@
     <string name="logging_timeout_error_message">Timeout error while logging in</string>
     <string name="fcm_not_available">Error while getting FCM registration token. Make sure you\'re online and
         try again.</string>
+    <string name="hms_not_available">HMS push token could not be retrieved. Make sure HMS Core and Huawei Mobile
+        Services are installed and up to date on this device, then try again.</string>
+    <string name="push_provider_hint">Push provider</string>
 
     <!-- Settings screen -->
     <string name="logout">Logout</string>

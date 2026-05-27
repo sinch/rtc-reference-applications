@@ -56,6 +56,7 @@ build:android:demo:release:
 
   before_script:
     - cp -v "$CI_REF_APP_GOOGLE_SERVICES_DEFAULT" ./android/app/google-services.json
+    - cp -v "$CI_REF_APP_SALES_HMS_SERVICES_FILE" ./android/app/agconnect-services.json
     - base64 -d "$CI_REF_APP_CONFIG_SALES_BASE64" > ./android/app/src/main/assets/config.json
     - echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > /tmp/release.jks
     - export ORG_GRADLE_PROJECT_RELEASE_STORE_FILE=/tmp/release.jks
