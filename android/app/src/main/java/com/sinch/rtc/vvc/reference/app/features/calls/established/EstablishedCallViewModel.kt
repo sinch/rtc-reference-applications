@@ -21,6 +21,8 @@ import com.sinch.android.rtc.calling.Call
 import com.sinch.android.rtc.calling.CallListener
 import com.sinch.android.rtc.callquality.warnings.CallQualityWarningEvent
 import com.sinch.android.rtc.callquality.warnings.CallQualityWarningEventListener
+import com.sinch.android.rtc.video.LocalVideoFrameListener
+import com.sinch.android.rtc.video.ProcessedVideoFrameListener
 import com.sinch.android.rtc.video.RemoteVideoFrameListener
 import com.sinch.android.rtc.video.VideoFrame
 import com.sinch.rtc.vvc.reference.app.R
@@ -60,7 +62,7 @@ class EstablishedCallViewModel(
     private val callItem: CallItem,
     private val app: Application
 ) :
-    AndroidViewModel(app), CallListener, RemoteVideoFrameListener, CallQualityWarningEventListener {
+    AndroidViewModel(app), CallListener, LocalVideoFrameListener, RemoteVideoFrameListener, CallQualityWarningEventListener {
 
     companion object {
         const val TAG = "EstablishCallViewModel"
@@ -109,6 +111,15 @@ class EstablishedCallViewModel(
     val captureState: LiveData<FrameCaptureState> = frameCaptureStateMutable
 
     val communicationDevicePickerEvent = SingleLiveEvent<List<AudioDeviceInfo>>()
+    private val localEchoEffect = AudioEchoEffect()
+    private val remoteEchoEffect = AudioEchoEffect()
+    val isLocalEchoOn: Boolean get() = localEchoEffect.isEnabled
+    val isRemoteEchoOn: Boolean get() = remoteEchoEffect.isEnabled
+
+    @Volatile private var isLocalGrayscaleEnabled = false
+    @Volatile private var isRemoteGrayscaleEnabled = false
+    val isLocalGrayscaleOn: Boolean get() = isLocalGrayscaleEnabled
+    val isRemoteGrayscaleOn: Boolean get() = isRemoteGrayscaleEnabled
 
     init {
         sinchCall =
@@ -130,6 +141,8 @@ class EstablishedCallViewModel(
         }
         currentAudioState = AudioState.AAR
         sinchClient.audioController.setMuted(false)
+        sinchClient.audioController.setLocalAudioFrameListener(localEchoEffect)
+        sinchClient.audioController.setRemoteAudioFrameListener(remoteEchoEffect)
         updateAudioProperties()
         updateVideoProperties()
         updateCallProperties()
@@ -221,6 +234,18 @@ class EstablishedCallViewModel(
         )
     }
 
+    fun onLocalEchoToggled(enabled: Boolean) { localEchoEffect.isEnabled = enabled }
+    fun onRemoteEchoToggled(enabled: Boolean) { remoteEchoEffect.isEnabled = enabled }
+
+    fun onLocalGrayscaleToggled(enabled: Boolean) {
+        isLocalGrayscaleEnabled = enabled
+        sinchClient.videoController.setLocalVideoFrameListener(if (enabled) this else null)
+    }
+
+    fun onRemoteGrayscaleToggled(enabled: Boolean) {
+        isRemoteGrayscaleEnabled = enabled
+    }
+
     override fun onCallProgressing(call: Call) {
         Log.d(TAG, "onCallProgressing $call")
     }
@@ -245,10 +270,13 @@ class EstablishedCallViewModel(
         if (supportsCommunicationDeviceSelection && !sinchClient.audioController.isAutomaticAudioRoutingEnabled) {
             audioManager.clearCommunicationDevice()
         }
+        sinchClient.audioController.setLocalAudioFrameListener(null)
+        sinchClient.audioController.setRemoteAudioFrameListener(null)
         sinchCall?.qualityController?.removeCallQualityWarningEventListener(this)
         sinchCall?.hangup()
         sinchCall?.removeCallListener(this)
         sinchCall?.takeIf { it.details.isVideoOffered }?.let {
+            sinchClient.videoController.setLocalVideoFrameListener(null)
             sinchClient.videoController.setRemoteVideoFrameListener(null)
         }
         mainThreadHandler.removeCallbacksAndMessages(null)
@@ -342,7 +370,13 @@ class EstablishedCallViewModel(
         }
     }
 
+    override fun onFrame(frame: VideoFrame, processedFrameListener: ProcessedVideoFrameListener) {
+        VideoGrayscaleEffect.applyGrayscale(frame)
+        processedFrameListener.onFrameProcessed()
+    }
+
     override fun onFrame(callId: String, frame: VideoFrame) {
+        if (isRemoteGrayscaleEnabled) VideoGrayscaleEffect.applyGrayscale(frame)
         lastVideoFrameTimestamp = Date().time
         GlobalScope.launch(Dispatchers.Main) {
             if (captureState.value == Triggered) {

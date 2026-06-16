@@ -149,6 +149,15 @@
         <item name="iconSize">32dp</item>
     </style>
 
+    <style name="Widget.SinchRefApp.Chip.CallScreen" parent="Widget.Material3.Chip.Filter">
+        <item name="chipBackgroundColor">@color/chip_call_screen_bg</item>
+        <item name="android:textColor">@color/chip_call_screen_content</item>
+        <item name="chipIconTint">@color/chip_call_screen_content</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipStrokeColor">@color/onCallSurface</item>
+        <item name="chipStrokeWidth">1dp</item>
+    </style>
+
     <style name="TextAppearance.SinchRefApp.CallState" parent="TextAppearance.Material3.TitleMedium">
         <item name="android:textColor">@color/onCallSurface</item>
         <item name="android:textSize">@dimen/text_call_state</item>

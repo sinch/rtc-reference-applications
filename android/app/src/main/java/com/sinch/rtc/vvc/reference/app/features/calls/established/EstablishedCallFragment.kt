@@ -111,6 +111,26 @@ class EstablishedCallFragment :
         binding.communicationDeviceButton.setOnClickListener {
             viewModel.onCommunicationDeviceButtonClicked()
         }
+        binding.localRobotVoiceButton.isChecked = viewModel.isLocalEchoOn
+        binding.localRobotVoiceButton.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onLocalEchoToggled(isChecked)
+            showSnackbar(if (isChecked) getString(R.string.local_robot_voice_on) else getString(R.string.local_robot_voice_off))
+        }
+        binding.remoteRobotVoiceButton.isChecked = viewModel.isRemoteEchoOn
+        binding.remoteRobotVoiceButton.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onRemoteEchoToggled(isChecked)
+            showSnackbar(if (isChecked) getString(R.string.remote_robot_voice_on) else getString(R.string.remote_robot_voice_off))
+        }
+        binding.localVideoFilterButton.isChecked = viewModel.isLocalGrayscaleOn
+        binding.localVideoFilterButton.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onLocalGrayscaleToggled(isChecked)
+            showSnackbar(if (isChecked) getString(R.string.local_video_filter_on) else getString(R.string.local_video_filter_off))
+        }
+        binding.remoteVideoFilterButton.isChecked = viewModel.isRemoteGrayscaleOn
+        binding.remoteVideoFilterButton.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onRemoteGrayscaleToggled(isChecked)
+            showSnackbar(if (isChecked) getString(R.string.remote_video_filter_on) else getString(R.string.remote_video_filter_off))
+        }
     }
 
     private fun observeViewModel() {
@@ -144,7 +164,8 @@ class EstablishedCallFragment :
                 binding.videoControl,
                 binding.torchControl,
                 binding.screenshotControl,
-                binding.calleeChip
+                binding.calleeChip,
+                binding.videoEffectsLayout
             ).forEach {
                 it.isVisible = (videoCallProperties != null)
             }

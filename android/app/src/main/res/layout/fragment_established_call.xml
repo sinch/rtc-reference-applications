@@ -159,6 +159,89 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
+        android:id="@+id/videoEffectsLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_m"
+        android:layout_marginTop="@dimen/space_m"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/audioEffectsLayout"
+        app:layout_constraintTop_toBottomOf="@id/calleeChip">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_xs"
+            android:text="@string/video_filter_effect_label"
+            android:textAppearance="?attr/textAppearanceLabelSmall"
+            android:textColor="@color/onCallSurface" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/localVideoFilterButton"
+            style="@style/Widget.SinchRefApp.Chip.CallScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_xs"
+            android:checkable="true"
+            android:text="@string/control_local_video"
+            app:chipIcon="@drawable/ic_local_video_effect"
+            app:chipIconVisible="true" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/remoteVideoFilterButton"
+            style="@style/Widget.SinchRefApp.Chip.CallScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:text="@string/control_remote_video"
+            app:chipIcon="@drawable/ic_remote_video_effect"
+            app:chipIconVisible="true" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/audioEffectsLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_m"
+        android:layout_marginTop="@dimen/space_m"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/calleeChip">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_xs"
+            android:text="@string/robotic_voice_effect_label"
+            android:textAppearance="?attr/textAppearanceLabelSmall"
+            android:textColor="@color/onCallSurface" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/localRobotVoiceButton"
+            style="@style/Widget.SinchRefApp.Chip.CallScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_xs"
+            android:checkable="true"
+            android:text="@string/control_local_voice"
+            app:chipIcon="@drawable/ic_local_audio_effect"
+            app:chipIconVisible="true" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/remoteRobotVoiceButton"
+            style="@style/Widget.SinchRefApp.Chip.CallScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:text="@string/control_remote_voice"
+            app:chipIcon="@drawable/ic_remote_audio_effect"
+            app:chipIconVisible="true" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/callSettingsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
