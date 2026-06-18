@@ -92,7 +92,7 @@ class OutgoingCallViewModel(
     override fun onCallRinging(call: Call) {
         super.onCallRinging(call)
         issueCallStateUpdate(call)
-        Log.d(TAG, "onCallAnswered for $call")
+        Log.d(TAG, "onCallRinging for $call")
     }
 
     override fun onCallAnswered(call: Call) {
