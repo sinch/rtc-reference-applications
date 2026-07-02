@@ -3,7 +3,7 @@ import UIKit
 
 enum AppEnvironment: String, CaseIterable, Codable {
 
-  case empty
+  case iosApp = "My app"
 
   var host: String { return "" }
 

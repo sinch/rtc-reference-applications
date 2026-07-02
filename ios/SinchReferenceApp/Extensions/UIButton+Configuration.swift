@@ -29,14 +29,9 @@ extension UIButton {
   }
 
   func setup(with configuration: SinchButtonConfiguration) {
-    if #available(iOS 15.0, *) {
-      self.setupConfigurableButton(with: configuration)
-    } else {
-      self.setupInsetsButton(with: configuration)
-    }
+    self.setupConfigurableButton(with: configuration)
   }
 
-  @available(iOS 15.0, *)
   func setupConfigurableButton(with sinchConfiguration: SinchButtonConfiguration) {
     var configuration = UIButton.Configuration.filled()
     configuration.image = sinchConfiguration.image
@@ -46,29 +41,6 @@ extension UIButton {
     configuration.baseBackgroundColor = sinchConfiguration.backgroundColor
 
     self.configuration = configuration
-  }
-
-  func setupInsetsButton(with configuration: SinchButtonConfiguration) {
-    self.layer.cornerRadius = Constant.cornerRadius
-    self.layer.backgroundColor = self.isEnabled
-      ? configuration.backgroundColor.cgColor
-      : Constant.disabledBackgroundColor.cgColor
-
-    self.titleLabel?.font = .systemFont(ofSize: Constant.textSize)
-    self.setTitleColor(configuration.textColor, for: .normal)
-    self.setTitleColor(Constant.disabledAssetColor, for: .disabled)
-
-    guard let image = configuration.image else { return }
-
-    self.setImage(image, for: .normal)
-    self.imageView?.tintColor = self.isEnabled
-      ? Constant.defaultAssetColor
-      : Constant.disabledAssetColor
-
-    self.semanticContentAttribute = .forceRightToLeft
-
-    self.titleEdgeInsets.left -= Constant.textImagePadding
-    self.imageEdgeInsets.left += (Constant.textImagePadding * 2)
   }
 }
 

@@ -13,13 +13,7 @@ final class SinchCallKitService: NSObject, CommunicationService {
 
     self.callController = CXCallController()
 
-    let configuration: CXProviderConfiguration
-
-    if #available(iOS 14.0, *) {
-      configuration = CXProviderConfiguration()
-    } else {
-      configuration = CXProviderConfiguration(localizedName: "sinch_ref_app")
-    }
+    let configuration = CXProviderConfiguration()
 
     configuration.supportedHandleTypes = [.generic]
     configuration.supportsVideo = true

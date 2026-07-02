@@ -17,8 +17,19 @@ buildscript {
     ext.hms_push_version = '6.12.0.300'
 
     repositories {
+        def nexusUser = project.findProperty('nexus.username') ?: System.getenv('NEXUS_USERNAME')
+        def nexusPass = project.findProperty('nexus.password') ?: System.getenv('NEXUS_PASSWORD')
+        if (nexusUser && nexusPass) {
+            maven {
+                url = 'https://nexus.int.clxnetworks.net/repository/maven-all'
+                credentials {
+                    username = nexusUser
+                    password = nexusPass
+                }
+            }
+        }
         google()
-        jcenter()
+        mavenCentral()
         maven { url 'https://developer.huawei.com/repo/' }
     }
     dependencies {
@@ -35,8 +46,19 @@ buildscript {
 
 allprojects {
     repositories {
+        def nexusUser = project.findProperty('nexus.username') ?: System.getenv('NEXUS_USERNAME')
+        def nexusPass = project.findProperty('nexus.password') ?: System.getenv('NEXUS_PASSWORD')
+        if (nexusUser && nexusPass) {
+            maven {
+                url = 'https://nexus.int.clxnetworks.net/repository/maven-all'
+                credentials {
+                    username = nexusUser
+                    password = nexusPass
+                }
+            }
+        }
         google()
-        jcenter()
+        mavenCentral()
         maven { url 'https://developer.huawei.com/repo/' }
     }
 }

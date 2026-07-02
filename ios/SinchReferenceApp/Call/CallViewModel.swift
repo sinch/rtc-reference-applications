@@ -32,6 +32,17 @@ struct CallState {
 
   var availableDevices: [SinchAudioDevice] = []
 
+  var localEchoEnabled: Bool = false
+  var remoteEchoEnabled: Bool = false
+
+  var localEchoMessage: String {
+    localEchoEnabled ? EchoConstants.localOnMessage : EchoConstants.localOffMessage
+  }
+
+  var remoteEchoMessage: String {
+    remoteEchoEnabled ? EchoConstants.remoteOnMessage : EchoConstants.remoteOffMessage
+  }
+
   var status: Status = .none
 }
 
@@ -46,6 +57,9 @@ final class CallViewModel {
 
   private let type: CallType
 
+  private let localEchoEffect = AudioEchoEffect()
+  private let remoteEchoEffect = AudioEchoEffect()
+
   init(call: SinchCall?, type: CallType, clientMediator: SinchClientMediator) {
     let availableAudioDevices = clientMediator.sinchClient?.audioController.availableAudioDevices() ?? []
     self.state = CallState(couldHangUp: call?.direction == .outgoing,
@@ -56,6 +70,15 @@ final class CallViewModel {
 
     self.clientMediator = clientMediator
     self.clientMediator.addObserver(self)
+  }
+
+  deinit {
+    // Detach the frame delegates from the shared audio controller. Done here, rather than in
+    // callDidEnd, so the effects stay registered for any audioRecording/PlayoutDidStop callbacks
+    // that may arrive after the call ends.
+    let audioController = clientMediator.sinchClient?.audioController
+    audioController?.localAudioFrameDelegate = nil
+    audioController?.remoteAudioFrameDelegate = nil
   }
 
   func toggleMute() {
@@ -108,6 +131,18 @@ final class CallViewModel {
 
   func resetAudioDevice() {
     clientMediator.sinchClient?.audioController.setPreferredAudioDevice(nil)
+  }
+
+  func toggleLocalEcho() {
+    let enabled = !state.localEchoEnabled
+    localEchoEffect.isEnabled = enabled
+    update { $0.localEchoEnabled = enabled }
+  }
+
+  func toggleRemoteEcho() {
+    let enabled = !state.remoteEchoEnabled
+    remoteEchoEffect.isEnabled = enabled
+    update { $0.remoteEchoEnabled = enabled }
   }
 
   func terminate() {
@@ -189,6 +224,11 @@ extension CallViewModel: SinchClientMediatorObserver {
 
     os_log("Call did establish for call: %{public}@", call.callId)
 
+    if call.callId == self.call?.callId {
+      clientMediator.sinchClient?.audioController.localAudioFrameDelegate = localEchoEffect
+      clientMediator.sinchClient?.audioController.remoteAudioFrameDelegate = remoteEchoEffect
+    }
+
     guard type == .video, !state.speakerEnabled else { return }
 
     toggleSpeaker()
@@ -204,6 +244,15 @@ extension CallViewModel: SinchClientMediatorObserver {
   func callDidEnd(_ call: SinchCall) {
     timer?.invalidate()
     timer = nil
+
+    if call.callId == self.call?.callId {
+      localEchoEffect.isEnabled = false
+      remoteEchoEffect.isEnabled = false
+      update {
+        $0.localEchoEnabled = false
+        $0.remoteEchoEnabled = false
+      }
+    }
 
     clientMediator.sinchClient?.audioController.stopPlayingSoundFile()
     clientMediator.removeObserver(self)

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -510,6 +509,48 @@
                                     <constraint firstAttribute="width" constant="200" id="YgO-gp-KXd"/>
                                 </constraints>
                             </imageView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="aCo-Ec-HOC">
+                                <rect key="frame" x="24" y="142" width="104" height="67.666666666666686"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Audio effects" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aLb-Au-dio">
+                                        <rect key="frame" x="0.0" y="0.0" width="80.666666666666671" height="15.666666666666666"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="aRo-wS-tck">
+                                        <rect key="frame" x="0.0" y="23.666666666666657" width="104" height="44"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aLo-ca-lEC">
+                                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                                <color key="backgroundColor" systemColor="systemGray3Color"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="44" id="aLo-H-44a"/>
+                                                    <constraint firstAttribute="width" constant="44" id="aLo-W-44a"/>
+                                                </constraints>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" image="waveform.badge.mic" catalog="system"/>
+                                                <connections>
+                                                    <action selector="toggleLocalEcho" destination="AUR-Us-XQP" eventType="touchUpInside" id="aLo-ac-tLE"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aRe-mo-tEC">
+                                                <rect key="frame" x="60" y="0.0" width="44" height="44"/>
+                                                <color key="backgroundColor" systemColor="systemGray3Color"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="44" id="aRe-H-44a"/>
+                                                    <constraint firstAttribute="width" constant="44" id="aRe-W-44a"/>
+                                                </constraints>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" image="ear" catalog="system"/>
+                                                <connections>
+                                                    <action selector="toggleRemoteEcho" destination="AUR-Us-XQP" eventType="touchUpInside" id="aRe-ac-tRE"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="A2A-uz-Wkg"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -519,6 +560,8 @@
                             <constraint firstItem="A2A-uz-Wkg" firstAttribute="bottom" secondItem="Gl6-ea-6n6" secondAttribute="bottom" constant="16" id="QnO-7C-PU5"/>
                             <constraint firstItem="Gl6-ea-6n6" firstAttribute="leading" secondItem="A2A-uz-Wkg" secondAttribute="leading" constant="24" id="Sn8-Wr-Zdk"/>
                             <constraint firstItem="LQh-0c-RqF" firstAttribute="centerY" secondItem="RBH-YD-hCj" secondAttribute="centerY" id="UBK-h5-smk"/>
+                            <constraint firstItem="aCo-Ec-HOC" firstAttribute="leading" secondItem="A2A-uz-Wkg" secondAttribute="leading" constant="24" id="aCo-Ld-ing"/>
+                            <constraint firstItem="aCo-Ec-HOC" firstAttribute="top" secondItem="A2A-uz-Wkg" secondAttribute="top" constant="24" id="aCo-Tp-ing"/>
                             <constraint firstItem="A2A-uz-Wkg" firstAttribute="trailing" secondItem="XS3-7c-6oU" secondAttribute="trailing" constant="24" id="axW-Ea-jc6"/>
                             <constraint firstItem="A2A-uz-Wkg" firstAttribute="trailing" secondItem="Gl6-ea-6n6" secondAttribute="trailing" constant="24" id="bWc-mV-2tc"/>
                             <constraint firstItem="LQh-0c-RqF" firstAttribute="top" secondItem="2A7-ne-IjQ" secondAttribute="bottom" priority="750" constant="105" id="boH-5n-Ggi"/>
@@ -535,8 +578,10 @@
                     <connections>
                         <outlet property="hangupButton" destination="Gl6-ea-6n6" id="Ukn-8X-cQW"/>
                         <outlet property="infoLabel" destination="XS3-7c-6oU" id="GaN-wx-AmC"/>
+                        <outlet property="localEchoButton" destination="aLo-ca-lEC" id="aLo-OL-btn"/>
                         <outlet property="muteButton" destination="5TP-Qe-iJj" id="R9F-V4-aUd"/>
                         <outlet property="preferredAudioDevice" destination="dfC-dT-rX8" id="b7v-1R-zsG"/>
+                        <outlet property="remoteEchoButton" destination="aRe-mo-tEC" id="aRe-OL-btn"/>
                         <outlet property="speakerButton" destination="NM2-mc-wWV" id="o2X-U4-hu6"/>
                     </connections>
                 </viewController>
@@ -677,6 +722,48 @@
                                     <constraint firstAttribute="height" constant="44" id="WzR-HE-ixg"/>
                                 </constraints>
                             </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="eCo-Ec-HOC">
+                                <rect key="frame" x="24" y="142" width="104" height="67.666666666666686"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Audio effects" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eLb-Au-dio">
+                                        <rect key="frame" x="0.0" y="0.0" width="80.666666666666671" height="15.666666666666666"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="eRo-wS-tck">
+                                        <rect key="frame" x="0.0" y="23.666666666666657" width="104" height="44"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eLo-ca-lEC">
+                                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                                <color key="backgroundColor" systemColor="systemGray3Color"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="44" id="eLo-H-44a"/>
+                                                    <constraint firstAttribute="width" constant="44" id="eLo-W-44a"/>
+                                                </constraints>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" image="waveform.badge.mic" catalog="system"/>
+                                                <connections>
+                                                    <action selector="toggleLocalEcho" destination="gvz-6g-qP9" eventType="touchUpInside" id="eLo-ac-tLE"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eRe-mo-tEC">
+                                                <rect key="frame" x="60" y="0.0" width="44" height="44"/>
+                                                <color key="backgroundColor" systemColor="systemGray3Color"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="44" id="eRe-H-44a"/>
+                                                    <constraint firstAttribute="width" constant="44" id="eRe-W-44a"/>
+                                                </constraints>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" image="ear" catalog="system"/>
+                                                <connections>
+                                                    <action selector="toggleRemoteEcho" destination="gvz-6g-qP9" eventType="touchUpInside" id="eRe-ac-tRE"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="34s-wd-1BL"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -695,6 +782,8 @@
                             <constraint firstItem="34s-wd-1BL" firstAttribute="trailing" secondItem="bSY-l5-5um" secondAttribute="trailing" constant="24" id="SbG-xe-otS"/>
                             <constraint firstItem="74I-Zd-KLW" firstAttribute="width" secondItem="yQy-AK-0zb" secondAttribute="width" id="YJX-Pz-rFJ"/>
                             <constraint firstItem="74I-Zd-KLW" firstAttribute="top" secondItem="34s-wd-1BL" secondAttribute="top" constant="24" id="bGm-wi-bgR"/>
+                            <constraint firstItem="eCo-Ec-HOC" firstAttribute="leading" secondItem="34s-wd-1BL" secondAttribute="leading" constant="24" id="eCo-Ld-ing"/>
+                            <constraint firstItem="eCo-Ec-HOC" firstAttribute="top" secondItem="34s-wd-1BL" secondAttribute="top" constant="24" id="eCo-Tp-ing"/>
                             <constraint firstItem="34s-wd-1BL" firstAttribute="trailing" secondItem="yQy-AK-0zb" secondAttribute="trailing" constant="24" id="jAV-kI-0GU"/>
                             <constraint firstItem="tXV-Wf-Eta" firstAttribute="leading" secondItem="34s-wd-1BL" secondAttribute="leading" id="o5A-xJ-Czs"/>
                             <constraint firstItem="tXV-Wf-Eta" firstAttribute="bottom" secondItem="34s-wd-1BL" secondAttribute="bottom" id="pPY-Aj-7rj"/>
@@ -706,10 +795,12 @@
                         <outlet property="cameraButton" destination="IEf-jA-hPX" id="yW5-Ve-dKl"/>
                         <outlet property="hangupButton" destination="tOS-Rk-mNr" id="Dw4-fI-jJd"/>
                         <outlet property="infoLabel" destination="au6-kV-DlM" id="TDN-oP-UTe"/>
+                        <outlet property="localEchoButton" destination="eLo-ca-lEC" id="eLo-OL-btn"/>
                         <outlet property="localVideoView" destination="74I-Zd-KLW" id="er1-6E-L2w"/>
                         <outlet property="muteButton" destination="4vr-GW-3cl" id="cjJ-zf-yIa"/>
                         <outlet property="pauseButton" destination="ZRp-dI-gnK" id="ynU-O2-0HY"/>
                         <outlet property="prefferedAudioDevice" destination="B88-H0-9or" id="kRz-df-bse"/>
+                        <outlet property="remoteEchoButton" destination="eRe-mo-tEC" id="eRe-OL-btn"/>
                         <outlet property="remoteVideoView" destination="tXV-Wf-Eta" id="ewU-cC-dHk"/>
                         <outlet property="speakerButton" destination="yGk-fy-AyG" id="pFX-9a-Rjj"/>
                     </connections>
@@ -721,6 +812,7 @@
     </scenes>
     <resources>
         <image name="arrow.triangle.2.circlepath.camera" catalog="system" width="128" height="93"/>
+        <image name="ear" catalog="system" width="104" height="128"/>
         <image name="gearshape" catalog="system" width="128" height="123"/>
         <image name="logo" width="787.66668701171875" height="160.33332824707031"/>
         <image name="mic" catalog="system" width="110" height="128"/>
@@ -730,11 +822,15 @@
         <image name="speaker.slash" catalog="system" width="115" height="128"/>
         <image name="speaker.wave.2" catalog="system" width="128" height="88"/>
         <image name="waveform" catalog="system" width="125" height="128"/>
+        <image name="waveform.badge.mic" catalog="system" width="128" height="126"/>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray3Color">
+            <color red="0.78039215689999997" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

@@ -15,7 +15,7 @@ enum EnvironmentInfo {
     let rawValue = UserDefaults.standard.string(forKey: Keys.environment)
 
     guard let value = rawValue, let environment = AppEnvironment(rawValue: value) else {
-      return .empty
+      return .iosApp
     }
 
     return environment

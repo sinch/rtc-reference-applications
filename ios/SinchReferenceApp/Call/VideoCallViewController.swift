@@ -5,7 +5,6 @@ import UIKit
 final class VideoCallViewController: UIViewController {
 
   private enum Constant {
-
     static let cornerRadius: CGFloat = 6
   }
 
@@ -65,6 +64,18 @@ final class VideoCallViewController: UIViewController {
 
   private var cancellableBag = Set<AnyCancellable>()
 
+  @IBOutlet private var localEchoButton: UIButton! {
+    didSet {
+      localEchoButton.layer.cornerRadius = Constant.cornerRadius
+    }
+  }
+
+  @IBOutlet private var remoteEchoButton: UIButton! {
+    didSet {
+      remoteEchoButton.layer.cornerRadius = Constant.cornerRadius
+    }
+  }
+
   weak var callCompletionDelegate: CallCompletionDelegate?
 
   override func viewDidLoad() {
@@ -121,6 +132,16 @@ final class VideoCallViewController: UIViewController {
       .receive(on: DispatchQueue.main)
       .assign(to: \.isHidden, on: buttonsStack)
       .store(in: &cancellableBag)
+
+    viewModel.$state.map(\.couldMute)
+      .removeDuplicates()
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] enabled in
+        guard let self = self else { return }
+        self.localEchoButton.isEnabled = enabled
+        self.remoteEchoButton.isEnabled = enabled
+      }
+      .store(in: &cancellableBag)
   }
 
   private func assignPresentation() {
@@ -163,6 +184,28 @@ final class VideoCallViewController: UIViewController {
           : UIImage(systemName: "pause.rectangle")
 
         pauseButton.setImage(pauseImage, for: .normal)
+      }
+      .store(in: &cancellableBag)
+
+    assignEchoPresentation()
+  }
+
+  private func assignEchoPresentation() {
+    viewModel.$state.map(\.localEchoEnabled)
+      .removeDuplicates()
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] enabled in
+        guard let self = self else { return }
+        self.localEchoButton.backgroundColor = enabled ? EchoConstants.localActiveColor : .systemGray3
+      }
+      .store(in: &cancellableBag)
+
+    viewModel.$state.map(\.remoteEchoEnabled)
+      .removeDuplicates()
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] enabled in
+        guard let self = self else { return }
+        self.remoteEchoButton.backgroundColor = enabled ? EchoConstants.remoteActiveColor : .systemGray3
       }
       .store(in: &cancellableBag)
   }
@@ -223,5 +266,21 @@ final class VideoCallViewController: UIViewController {
     super.viewDidDisappear(animated)
 
     viewModel.terminate()
+  }
+
+  @IBAction private func toggleLocalEcho() {
+    viewModel.toggleLocalEcho()
+    showEchoMessage(viewModel.state.localEchoMessage)
+  }
+
+  @IBAction private func toggleRemoteEcho() {
+    viewModel.toggleRemoteEcho()
+    showEchoMessage(viewModel.state.remoteEchoMessage)
+  }
+
+  private func showEchoMessage(_ message: String) {
+    let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "OK", style: .default))
+    present(alert, animated: true)
   }
 }

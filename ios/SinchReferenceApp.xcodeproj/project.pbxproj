@@ -20,6 +20,8 @@
 		AECBB3722E72BD7D00992521 /* AudioCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECBB36E2E72BD7D00992521 /* AudioCallViewController.swift */; };
 		AECBB3732E72BD7D00992521 /* VideoCallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECBB3702E72BD7D00992521 /* VideoCallViewController.swift */; };
 		AECBB3742E72BD7D00992521 /* CallViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECBB36F2E72BD7D00992521 /* CallViewModel.swift */; };
+		AECBB3772E72BD7D00992521 /* AudioEchoEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECBB3752E72BD7D00992521 /* AudioEchoEffect.swift */; };
+		AECBB3782E72BD7D00992521 /* EchoConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECBB3762E72BD7D00992521 /* EchoConstants.swift */; };
 		AECBB3802E72BDBF00992521 /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECBB3792E72BDBF00992521 /* Identifiable.swift */; };
 		AECBB3812E72BDBF00992521 /* Int+TimePresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECBB37A2E72BDBF00992521 /* Int+TimePresentation.swift */; };
 		AECBB3822E72BDBF00992521 /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = AECBB37D2E72BDBF00992521 /* UIViewController+Alert.swift */; };
@@ -96,6 +98,8 @@
 		AECBB36E2E72BD7D00992521 /* AudioCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCallViewController.swift; sourceTree = "<group>"; };
 		AECBB36F2E72BD7D00992521 /* CallViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallViewModel.swift; sourceTree = "<group>"; };
 		AECBB3702E72BD7D00992521 /* VideoCallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCallViewController.swift; sourceTree = "<group>"; };
+		AECBB3752E72BD7D00992521 /* AudioEchoEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEchoEffect.swift; sourceTree = "<group>"; };
+		AECBB3762E72BD7D00992521 /* EchoConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EchoConstants.swift; sourceTree = "<group>"; };
 		AECBB3782E72BDBF00992521 /* Date+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+String.swift"; sourceTree = "<group>"; };
 		AECBB3792E72BDBF00992521 /* Identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiable.swift; sourceTree = "<group>"; };
 		AECBB37A2E72BDBF00992521 /* Int+TimePresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+TimePresentation.swift"; sourceTree = "<group>"; };
@@ -203,6 +207,8 @@
 				AECBB36E2E72BD7D00992521 /* AudioCallViewController.swift */,
 				AECBB36F2E72BD7D00992521 /* CallViewModel.swift */,
 				AECBB3702E72BD7D00992521 /* VideoCallViewController.swift */,
+				AECBB3752E72BD7D00992521 /* AudioEchoEffect.swift */,
+				AECBB3762E72BD7D00992521 /* EchoConstants.swift */,
 			);
 			path = Call;
 			sourceTree = "<group>";
@@ -495,6 +501,8 @@
 				AECBB3722E72BD7D00992521 /* AudioCallViewController.swift in Sources */,
 				AECBB3732E72BD7D00992521 /* VideoCallViewController.swift in Sources */,
 				AECBB3742E72BD7D00992521 /* CallViewModel.swift in Sources */,
+				AECBB3772E72BD7D00992521 /* AudioEchoEffect.swift in Sources */,
+				AECBB3782E72BD7D00992521 /* EchoConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -659,7 +667,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -700,7 +708,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

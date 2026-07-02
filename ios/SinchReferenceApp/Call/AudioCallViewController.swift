@@ -5,7 +5,6 @@ import UIKit
 final class AudioCallViewController: UIViewController {
 
   private enum Constant {
-
     static let cornerRadius: CGFloat = 6
   }
 
@@ -38,6 +37,18 @@ final class AudioCallViewController: UIViewController {
   var viewModel: CallViewModel!
 
   private var cancellableBag = Set<AnyCancellable>()
+
+  @IBOutlet private var localEchoButton: UIButton! {
+    didSet {
+      localEchoButton.layer.cornerRadius = Constant.cornerRadius
+    }
+  }
+
+  @IBOutlet private var remoteEchoButton: UIButton! {
+    didSet {
+      remoteEchoButton.layer.cornerRadius = Constant.cornerRadius
+    }
+  }
 
   weak var callCompletionDelegate: CallCompletionDelegate?
 
@@ -96,6 +107,16 @@ final class AudioCallViewController: UIViewController {
       .receive(on: DispatchQueue.main)
       .assign(to: \.isEnabled, on: speakerButton)
       .store(in: &cancellableBag)
+
+    viewModel.$state.map(\.couldMute)
+      .removeDuplicates()
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] enabled in
+        guard let self = self else { return }
+        self.localEchoButton.isEnabled = enabled
+        self.remoteEchoButton.isEnabled = enabled
+      }
+      .store(in: &cancellableBag)
   }
 
   private func assignPresentation() {
@@ -126,6 +147,40 @@ final class AudioCallViewController: UIViewController {
         self.speakerButton.setImage(speakerImage, for: .normal)
       }
       .store(in: &cancellableBag)
+
+    viewModel.$state.map(\.localEchoEnabled)
+      .removeDuplicates()
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] enabled in
+        guard let self = self else { return }
+        self.localEchoButton.backgroundColor = enabled ? EchoConstants.localActiveColor : .systemGray3
+      }
+      .store(in: &cancellableBag)
+
+    viewModel.$state.map(\.remoteEchoEnabled)
+      .removeDuplicates()
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] enabled in
+        guard let self = self else { return }
+        self.remoteEchoButton.backgroundColor = enabled ? EchoConstants.remoteActiveColor : .systemGray3
+      }
+      .store(in: &cancellableBag)
+  }
+
+  @IBAction private func toggleLocalEcho() {
+    viewModel.toggleLocalEcho()
+    showEchoMessage(viewModel.state.localEchoMessage)
+  }
+
+  @IBAction private func toggleRemoteEcho() {
+    viewModel.toggleRemoteEcho()
+    showEchoMessage(viewModel.state.remoteEchoMessage)
+  }
+
+  private func showEchoMessage(_ message: String) {
+    let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "OK", style: .default))
+    present(alert, animated: true)
   }
 
   @IBAction private func toggleMute(_ sender: Any) {
