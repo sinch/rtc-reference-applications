@@ -60,7 +60,7 @@ export default class NumberCallUI {
   onCallProgressing(call) {
     this.setStatus(`Call progressing ${call.remoteUserId}`);
     this.ringToneAudio = ringtone(OUTGOING_RINGTONE);
-    this.ringToneAudio.play();
+    this.ringToneAudio.play().catch(() => undefined);
   }
 
   onCallRinging(call) {

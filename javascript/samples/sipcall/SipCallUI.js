@@ -27,7 +27,7 @@ export default class SipCallUI {
   onCallProgressing(call) {
     this.setStatus(`Call progressing ${call.remoteUserId}`);
     this.ringToneAudio = ringtone(OUTGOING_RINGTONE);
-    this.ringToneAudio.play();
+    this.ringToneAudio.play().catch(() => undefined);
   }
 
   onCallRinging(call) {

@@ -247,7 +247,7 @@ export default class VideoCallUI {
 
   playRingtone(directionRingtone) {
     this.ringToneAudio = ringtone(directionRingtone);
-    this.ringToneAudio.play();
+    this.ringToneAudio.play().catch(() => undefined);
   }
 
   pauseRingtone() {
