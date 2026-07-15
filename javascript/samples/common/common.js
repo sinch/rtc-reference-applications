@@ -381,3 +381,203 @@ export function resetMute() {
   setState("mute", DISABLE);
   setText("mute", "Mute");
 }
+
+const ECHO_PARAMS = { delaySeconds: 0.3, feedback: 0.4 };
+
+// ---- Local echo -----------------------------------------------------------
+// Applies an echo effect to the OUTGOING microphone audio via the SDK's local audio frame
+// listener. The processing runs in the echo-processor AudioWorklet; when disabled the SDK
+// restores the raw microphone. This is what the remote peer hears.
+
+const localEchoState = { enabled: false, currentCall: null };
+// Serializes local echo toggles so a rapid second click can't read a stale `enabled` while a
+// previous setLocalAudioFrameListener call is still in flight.
+let localEchoToggle = Promise.resolve();
+
+const ECHO_LISTENER = {
+  moduleUrl: "../common/audio/echo-processor.js",
+  processorName: "echo-processor",
+  processorOptions: ECHO_PARAMS,
+};
+
+async function applyLocalEchoToggle(button, call) {
+  if (!call || localEchoState.currentCall !== call) return;
+  const enable = !localEchoState.enabled;
+  try {
+    await call.setLocalAudioFrameListener(enable ? ECHO_LISTENER : null);
+    if (localEchoState.currentCall !== call) return;
+    localEchoState.enabled = enable;
+    button.classList.toggle("btn-active", enable);
+    showNotification({
+      message: enable
+        ? "Local echo enabled – the remote peer now hears your microphone with an echo effect."
+        : "Local echo disabled.",
+      isSuccess: true,
+    });
+  } catch (error) {
+    console.error("Error toggling local echo:", error);
+    if (localEchoState.currentCall !== call) return;
+    showNotification({
+      message: "Failed to toggle local echo.",
+      isSuccess: false,
+    });
+  }
+}
+
+export function initEchoButton() {
+  const echoButton = document.getElementById("local-echo");
+  if (!echoButton) return;
+  echoButton.addEventListener("click", () => {
+    const call = localEchoState.currentCall;
+    localEchoToggle = localEchoToggle
+      .then(() => applyLocalEchoToggle(echoButton, call))
+      .catch(() => undefined);
+  });
+}
+
+export function enableEcho(call) {
+  localEchoState.currentCall = call;
+  localEchoState.enabled = false;
+  document.getElementById("local-echo")?.classList.remove("btn-active");
+  setState("local-echo", ENABLE);
+}
+
+export function resetEcho() {
+  if (localEchoState.currentCall && localEchoState.enabled) {
+    localEchoState.currentCall
+      .setLocalAudioFrameListener(null)
+      .catch(() => undefined);
+  }
+  localEchoState.enabled = false;
+  localEchoState.currentCall = null;
+  document.getElementById("local-echo")?.classList.remove("btn-active");
+  setState("local-echo", DISABLE);
+}
+
+// ---- Remote echo (reference-app level) --------------------
+// Applies an echo effect to the INCOMING (remote) audio purely on the SDK host app side by routing the
+// call's incomingStream through a Web Audio graph. This only affects what the LOCAL user hears;
+// the SDK is not involved.
+//
+// The processed audio is played back through the sample's own
+// media element, so the selected output device (element.setSinkId) is honored and stays in sync
+// with the audioOutput selector. The raw remote stream is kept on a separate muted sink element so
+// the Web Audio source keeps pulling frames (Chrome remote-track quirk).
+
+const remoteEchoState = {
+  enabled: false,
+  currentCall: null,
+  mediaElement: null,
+  audioContext: null,
+  rawSink: null,
+};
+
+function stopRemoteEcho() {
+  const { audioContext, mediaElement, currentCall, rawSink } = remoteEchoState;
+  if (audioContext) {
+    audioContext.close();
+    remoteEchoState.audioContext = null;
+  }
+  if (rawSink) {
+    rawSink.srcObject = null;
+    remoteEchoState.rawSink = null;
+  }
+  if (mediaElement && currentCall?.incomingStream) {
+    mediaElement.srcObject = currentCall.incomingStream;
+  }
+}
+
+// Returns true if the echo graph was successfully started and is now playing.
+function startRemoteEcho() {
+  const { currentCall, mediaElement } = remoteEchoState;
+  const stream = currentCall?.incomingStream;
+  if (!stream || !mediaElement) return false;
+  // Close any previously opened context/sink before creating a new one, so we never leak a
+  // context or run two graphs on the same incoming stream.
+  stopRemoteEcho();
+  try {
+    const ctx = new AudioContext();
+    remoteEchoState.audioContext = ctx;
+
+    const source = ctx.createMediaStreamSource(stream);
+    const dest = ctx.createMediaStreamDestination();
+    const delay = ctx.createDelay(1.0);
+    delay.delayTime.value = ECHO_PARAMS.delaySeconds;
+    const feedback = ctx.createGain();
+    feedback.gain.value = ECHO_PARAMS.feedback;
+
+    source.connect(dest);
+    source.connect(delay);
+    delay.connect(feedback);
+    feedback.connect(delay);
+    delay.connect(dest);
+
+    mediaElement.srcObject = new MediaStream([
+      ...dest.stream.getAudioTracks(),
+      ...stream.getVideoTracks(),
+    ]);
+
+    const rawSink = new Audio();
+    rawSink.muted = true;
+    rawSink.srcObject = stream;
+    rawSink.play().catch(() => undefined);
+    remoteEchoState.rawSink = rawSink;
+
+    ctx.resume();
+    return true;
+  } catch (error) {
+    console.error("Error starting remote echo:", error);
+    stopRemoteEcho();
+    return false;
+  }
+}
+
+export function initRemoteEchoButton() {
+  const button = document.getElementById("remote-echo");
+  if (!button) return;
+  button.addEventListener("click", () => {
+    if (!remoteEchoState.currentCall) return;
+    const enable = !remoteEchoState.enabled;
+    if (enable && !startRemoteEcho()) {
+      showNotification({
+        message: "Could not enable remote echo.",
+        isSuccess: false,
+      });
+      return;
+    }
+    if (!enable) stopRemoteEcho();
+    remoteEchoState.enabled = enable;
+    button.classList.toggle("btn-active", enable);
+    showNotification({
+      message: enable
+        ? "Remote echo enabled – you now hear the remote audio with an echo effect."
+        : "Remote echo disabled.",
+      isSuccess: true,
+    });
+  });
+}
+
+export function enableRemoteEcho(call, mediaElement) {
+  stopRemoteEcho();
+  remoteEchoState.currentCall = call;
+  remoteEchoState.mediaElement = mediaElement;
+  remoteEchoState.enabled = false;
+  document.getElementById("remote-echo")?.classList.remove("btn-active");
+  setState("remote-echo", ENABLE);
+}
+
+// The muted raw sink above (Chrome remote-track quirk workaround) makes WebRTC report a
+// zero inbound audio level, which triggers a false ZeroInboundAudioLevel warning while
+// remote echo is active. Check this in onCallQualityWarningEvent to filter it out.
+export function isRemoteEchoActive() {
+  return remoteEchoState.enabled;
+}
+
+export function resetRemoteEcho() {
+  stopRemoteEcho();
+  remoteEchoState.currentCall = null;
+  remoteEchoState.mediaElement = null;
+  remoteEchoState.enabled = false;
+  document.getElementById("remote-echo")?.classList.remove("btn-active");
+  setState("remote-echo", DISABLE);
+}

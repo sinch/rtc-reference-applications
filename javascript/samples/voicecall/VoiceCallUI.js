@@ -19,6 +19,13 @@ import {
   initMuteButton,
   enableMute,
   resetMute,
+  initEchoButton,
+  enableEcho,
+  resetEcho,
+  initRemoteEchoButton,
+  enableRemoteEcho,
+  resetRemoteEcho,
+  isRemoteEchoActive,
 } from "../common/common.js";
 
 export default class VoiceCallUI {
@@ -29,6 +36,8 @@ export default class VoiceCallUI {
     this.handleManualStartClick();
     this.handleDeviceSelectors();
     initMuteButton();
+    initEchoButton();
+    initRemoteEchoButton();
     setText("version", `Sinch - Version:  ${Sinch.version}`);
   }
 
@@ -87,6 +96,8 @@ export default class VoiceCallUI {
   onCallEstablished(call) {
     this.setStatus(`Call established with ${call.remoteUserId}`);
     enableMute(call);
+    enableEcho(call);
+    enableRemoteEcho(call, this.audio);
   }
 
   onCallEnded(call) {
@@ -96,10 +107,18 @@ export default class VoiceCallUI {
     setState("call", ENABLE);
     setState("answer", DISABLE);
     resetMute();
+    resetEcho();
+    resetRemoteEcho();
     setAnswerPulse(IDLE);
   }
 
   onCallQualityWarningEvent(_call, callQualityWarningEvent) {
+    if (
+      isRemoteEchoActive() &&
+      callQualityWarningEvent.name === "zeroInboundAudioLevel"
+    ) {
+      return; // expected while app-side remote audio processing is active
+    }
     showCallQualityWarningEventNotification(callQualityWarningEvent);
   }
 

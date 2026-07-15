@@ -275,6 +275,12 @@ select.form-control {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   transform: translateY(-2px);
+  /* Own the sizing so Materialize's fixed-height .btn / .btn-small (nowrap + overflow:hidden)
+     doesn't clip multi-word labels like "Local echo" outside the button. */
+  height: auto;
+  line-height: normal;
+  white-space: normal;
+  overflow: visible;
 }
 
 .demo-button:hover,
@@ -288,6 +294,12 @@ select.form-control {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
+}
+
+.demo-button.btn-active,
+.btn-small.btn-active {
+  background: #024f47;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6);
 }
 
 .button-icon {
@@ -494,10 +506,13 @@ select.form-control {
 }
 
 .select-wrapper input.select-dropdown {
-  background: #f5f5f5;
+  background-color: #f5f5f5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23059688' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
   border: none;
   border-radius: 12px;
-  padding: 12px 16px;
+  padding: 12px 36px 12px 16px;
   font-size: 14px;
   color: #37474f;
   margin-bottom: 12px;
@@ -510,8 +525,9 @@ select.form-control {
   outline: 2px solid #059688;
 }
 
+/* The dropdown arrow is drawn on the input above; hide Materialize's own caret to avoid two arrows. */
 .select-wrapper .caret {
-  fill: #059688;
+  display: none;
 }
 
 .dropdown-content li > a,

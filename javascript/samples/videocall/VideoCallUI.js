@@ -20,6 +20,13 @@ import {
   initMuteButton,
   enableMute,
   resetMute,
+  initEchoButton,
+  enableEcho,
+  resetEcho,
+  initRemoteEchoButton,
+  enableRemoteEcho,
+  resetRemoteEcho,
+  isRemoteEchoActive,
 } from "../common/common.js";
 
 export default class VideoCallUI {
@@ -31,6 +38,8 @@ export default class VideoCallUI {
     this.handleDeviceSelectors();
     this.handlePauseVideoClick();
     initMuteButton();
+    initEchoButton();
+    initRemoteEchoButton();
     setState("call", DISABLE);
     setState("answer", DISABLE);
     setState("hangup", DISABLE);
@@ -102,6 +111,8 @@ export default class VideoCallUI {
     setVisibility("videos-container", SHOW);
     setVisibility("calldestination", HIDE);
     enableMute(call);
+    enableEcho(call);
+    enableRemoteEcho(call, document.getElementById("incoming-video"));
   }
 
   onCallEnded(call) {
@@ -114,12 +125,20 @@ export default class VideoCallUI {
     setState("hangup", DISABLE);
     setState("answer", DISABLE);
     resetMute();
+    resetEcho();
+    resetRemoteEcho();
     setAnswerPulse(IDLE);
     this.removeVideoStream("outgoing-video");
     this.removeVideoStream("incoming-video");
   }
 
   onCallQualityWarningEvent(_call, callQualityWarningEvent) {
+    if (
+      isRemoteEchoActive() &&
+      callQualityWarningEvent.name === "zeroInboundAudioLevel"
+    ) {
+      return; // expected while app-side remote audio processing is active
+    }
     showCallQualityWarningEventNotification(callQualityWarningEvent);
   }
 

@@ -9,6 +9,13 @@ import {
   initMuteButton,
   enableMute,
   resetMute,
+  initEchoButton,
+  enableEcho,
+  resetEcho,
+  initRemoteEchoButton,
+  enableRemoteEcho,
+  resetRemoteEcho,
+  isRemoteEchoActive,
 } from "../common/common.js";
 
 export default class SipCallUI {
@@ -17,6 +24,8 @@ export default class SipCallUI {
     this.audio = new Audio();
     this.handleDeviceSelectors();
     initMuteButton();
+    initEchoButton();
+    initRemoteEchoButton();
     setText("version", `Sinch - Version:  ${Sinch.version}`);
   }
 
@@ -45,6 +54,8 @@ export default class SipCallUI {
     this.playAudio(call);
     this.setStatus(`Call established with ${call.remoteUserId}`);
     enableMute(call);
+    enableEcho(call);
+    enableRemoteEcho(call, this.audio);
   }
 
   onCallEnded(call) {
@@ -52,10 +63,18 @@ export default class SipCallUI {
     setText("call", "Call");
     this.ringToneAudio?.pause();
     resetMute();
+    resetEcho();
+    resetRemoteEcho();
     this.resetCurrentCall();
   }
 
   onCallQualityWarningEvent(_call, callQualityWarningEvent) {
+    if (
+      isRemoteEchoActive() &&
+      callQualityWarningEvent.name === "zeroInboundAudioLevel"
+    ) {
+      return; // expected while app-side remote audio processing is active
+    }
     showCallQualityWarningEventNotification(callQualityWarningEvent);
   }
 
