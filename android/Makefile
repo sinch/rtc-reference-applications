@@ -1,8 +1,10 @@
 .PHONY: sync clean build
 .DEFAULT_GOAL := build
-SDK_VERSION=6.28.2
+SDK_VERSION=6.29.2
 
-SDK_REVISION=bdbbcf06
+
+SDK_REVISION=3ad48960
+
 
 
 SINCH_SDK_DIR = ./app/libs
