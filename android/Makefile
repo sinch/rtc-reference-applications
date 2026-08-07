@@ -1,9 +1,11 @@
 .PHONY: sync clean build
 .DEFAULT_GOAL := build
-SDK_VERSION=6.29.2
+SDK_VERSION=6.30.3
 
 
-SDK_REVISION=3ad48960
+
+SDK_REVISION=b924efd4
+
 
 
 
