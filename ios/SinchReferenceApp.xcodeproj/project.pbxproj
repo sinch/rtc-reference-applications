@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8815CD0430209BEE005A0E63 /* BlackAndWhiteVideoEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8815CD0230209BEE005A0E63 /* BlackAndWhiteVideoEffect.swift */; };
+		8815CD0530209BEE005A0E63 /* VideoEffectConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8815CD0330209BEE005A0E63 /* VideoEffectConstants.swift */; };
 		AE0BDD082CDA082C002FCBB3 /* CallCompletionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0BDD062CDA082C002FCBB3 /* CallCompletionDelegate.swift */; };
 		AE0BDD0D2CDA085D002FCBB3 /* CallQualityEventBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0BDD0B2CDA085D002FCBB3 /* CallQualityEventBanner.swift */; };
 		AE2F2D5E2F9A2DD9008FE37B /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2F2D5D2F9A2DD9008FE37B /* UserInfo.swift */; };
@@ -85,6 +87,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8815CD0230209BEE005A0E63 /* BlackAndWhiteVideoEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlackAndWhiteVideoEffect.swift; sourceTree = "<group>"; };
+		8815CD0330209BEE005A0E63 /* VideoEffectConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEffectConstants.swift; sourceTree = "<group>"; };
 		AE0BDD062CDA082C002FCBB3 /* CallCompletionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallCompletionDelegate.swift; sourceTree = "<group>"; };
 		AE0BDD0B2CDA085D002FCBB3 /* CallQualityEventBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallQualityEventBanner.swift; sourceTree = "<group>"; };
 		AE2F2D5C2F9A2DD9008FE37B /* EnvironmentInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentInfo.swift; sourceTree = "<group>"; };
@@ -176,6 +180,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8815CCB130209BCB005A0E63 /* Effects */ = {
+			isa = PBXGroup;
+			children = (
+				AECBB3752E72BD7D00992521 /* AudioEchoEffect.swift */,
+				8815CD0230209BEE005A0E63 /* BlackAndWhiteVideoEffect.swift */,
+				AECBB3762E72BD7D00992521 /* EchoConstants.swift */,
+				8815CD0330209BEE005A0E63 /* VideoEffectConstants.swift */,
+			);
+			path = Effects;
+			sourceTree = "<group>";
+		};
 		AE0BDD072CDA082C002FCBB3 /* Delegates */ = {
 			isa = PBXGroup;
 			children = (
@@ -204,11 +219,10 @@
 		AECBB3712E72BD7D00992521 /* Call */ = {
 			isa = PBXGroup;
 			children = (
+				8815CCB130209BCB005A0E63 /* Effects */,
 				AECBB36E2E72BD7D00992521 /* AudioCallViewController.swift */,
 				AECBB36F2E72BD7D00992521 /* CallViewModel.swift */,
 				AECBB3702E72BD7D00992521 /* VideoCallViewController.swift */,
-				AECBB3752E72BD7D00992521 /* AudioEchoEffect.swift */,
-				AECBB3762E72BD7D00992521 /* EchoConstants.swift */,
 			);
 			path = Call;
 			sourceTree = "<group>";
@@ -498,6 +512,8 @@
 				AE0BDD082CDA082C002FCBB3 /* CallCompletionDelegate.swift in Sources */,
 				AE0BDD0D2CDA085D002FCBB3 /* CallQualityEventBanner.swift in Sources */,
 				AEE9CD6E299CD36E00F860C3 /* AppDelegate.swift in Sources */,
+				8815CD0430209BEE005A0E63 /* BlackAndWhiteVideoEffect.swift in Sources */,
+				8815CD0530209BEE005A0E63 /* VideoEffectConstants.swift in Sources */,
 				AECBB3722E72BD7D00992521 /* AudioCallViewController.swift in Sources */,
 				AECBB3732E72BD7D00992521 /* VideoCallViewController.swift in Sources */,
 				AECBB3742E72BD7D00992521 /* CallViewModel.swift in Sources */,

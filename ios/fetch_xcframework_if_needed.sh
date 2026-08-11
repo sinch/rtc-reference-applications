@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-readonly SDK_VERSION="5.42.4%2babe55afc"
+readonly SDK_VERSION="5.43.3%2bd2cac45c"
 
 
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

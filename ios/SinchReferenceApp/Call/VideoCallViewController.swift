@@ -64,6 +64,18 @@ final class VideoCallViewController: UIViewController {
 
   private var cancellableBag = Set<AnyCancellable>()
 
+  @IBOutlet private var localVideoEffectButton: UIButton! {
+    didSet {
+      localVideoEffectButton.layer.cornerRadius = Constant.cornerRadius
+    }
+  }
+
+  @IBOutlet private var remoteVideoEffectButton: UIButton! {
+    didSet {
+      remoteVideoEffectButton.layer.cornerRadius = Constant.cornerRadius
+    }
+  }
+
   @IBOutlet private var localEchoButton: UIButton! {
     didSet {
       localEchoButton.layer.cornerRadius = Constant.cornerRadius
@@ -140,6 +152,8 @@ final class VideoCallViewController: UIViewController {
         guard let self = self else { return }
         self.localEchoButton.isEnabled = enabled
         self.remoteEchoButton.isEnabled = enabled
+        self.localVideoEffectButton.isEnabled = enabled
+        self.remoteVideoEffectButton.isEnabled = enabled
       }
       .store(in: &cancellableBag)
   }
@@ -188,6 +202,7 @@ final class VideoCallViewController: UIViewController {
       .store(in: &cancellableBag)
 
     assignEchoPresentation()
+    assignVideoEffectPresentation()
   }
 
   private func assignEchoPresentation() {
@@ -206,6 +221,26 @@ final class VideoCallViewController: UIViewController {
       .sink { [weak self] enabled in
         guard let self = self else { return }
         self.remoteEchoButton.backgroundColor = enabled ? EchoConstants.remoteActiveColor : .systemGray3
+      }
+      .store(in: &cancellableBag)
+  }
+
+  private func assignVideoEffectPresentation() {
+    viewModel.$state.map(\.localVideoEffectEnabled)
+      .removeDuplicates()
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] enabled in
+        guard let self = self else { return }
+        self.localVideoEffectButton.backgroundColor = enabled ? VideoEffectConstants.localActiveColor : .systemGray3
+      }
+      .store(in: &cancellableBag)
+
+    viewModel.$state.map(\.remoteVideoEffectEnabled)
+      .removeDuplicates()
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] enabled in
+        guard let self = self else { return }
+        self.remoteVideoEffectButton.backgroundColor = enabled ? VideoEffectConstants.remoteActiveColor : .systemGray3
       }
       .store(in: &cancellableBag)
   }
@@ -270,15 +305,25 @@ final class VideoCallViewController: UIViewController {
 
   @IBAction private func toggleLocalEcho() {
     viewModel.toggleLocalEcho()
-    showEchoMessage(viewModel.state.localEchoMessage)
+    showEffectMessage(viewModel.state.localEchoMessage)
   }
 
   @IBAction private func toggleRemoteEcho() {
     viewModel.toggleRemoteEcho()
-    showEchoMessage(viewModel.state.remoteEchoMessage)
+    showEffectMessage(viewModel.state.remoteEchoMessage)
   }
 
-  private func showEchoMessage(_ message: String) {
+  @IBAction private func toggleLocalVideoEffect() {
+    viewModel.toggleLocalVideoEffect()
+    showEffectMessage(viewModel.state.localVideoEffectMessage)
+  }
+
+  @IBAction private func toggleRemoteVideoEffect() {
+    viewModel.toggleRemoteVideoEffect()
+    showEffectMessage(viewModel.state.remoteVideoEffectMessage)
+  }
+
+  private func showEffectMessage(_ message: String) {
     let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: "OK", style: .default))
     present(alert, animated: true)

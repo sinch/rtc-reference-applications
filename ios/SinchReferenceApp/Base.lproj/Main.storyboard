@@ -762,6 +762,43 @@
                                             </button>
                                         </subviews>
                                     </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Video effects" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vLb-Vi-deo">
+                                        <rect key="frame" x="0.0" y="0.0" width="80.666666666666671" height="15.666666666666666"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="vRo-wS-tck">
+                                        <rect key="frame" x="0.0" y="0.0" width="104" height="44"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vLo-ca-lVE">
+                                                <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                                <color key="backgroundColor" systemColor="systemGray3Color"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="44" id="vLo-H-44a"/>
+                                                    <constraint firstAttribute="width" constant="44" id="vLo-W-44a"/>
+                                                </constraints>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" image="circle.lefthalf.filled" catalog="system"/>
+                                                <connections>
+                                                    <action selector="toggleLocalVideoEffect" destination="gvz-6g-qP9" eventType="touchUpInside" id="vLo-ac-tLV"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vRe-mo-tVE">
+                                                <rect key="frame" x="60" y="0.0" width="44" height="44"/>
+                                                <color key="backgroundColor" systemColor="systemGray3Color"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="44" id="vRe-H-44a"/>
+                                                    <constraint firstAttribute="width" constant="44" id="vRe-W-44a"/>
+                                                </constraints>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" image="circle.righthalf.filled" catalog="system"/>
+                                                <connections>
+                                                    <action selector="toggleRemoteVideoEffect" destination="gvz-6g-qP9" eventType="touchUpInside" id="vRe-ac-tRV"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -796,11 +833,13 @@
                         <outlet property="hangupButton" destination="tOS-Rk-mNr" id="Dw4-fI-jJd"/>
                         <outlet property="infoLabel" destination="au6-kV-DlM" id="TDN-oP-UTe"/>
                         <outlet property="localEchoButton" destination="eLo-ca-lEC" id="eLo-OL-btn"/>
+                        <outlet property="localVideoEffectButton" destination="vLo-ca-lVE" id="vLo-OL-btn"/>
                         <outlet property="localVideoView" destination="74I-Zd-KLW" id="er1-6E-L2w"/>
                         <outlet property="muteButton" destination="4vr-GW-3cl" id="cjJ-zf-yIa"/>
                         <outlet property="pauseButton" destination="ZRp-dI-gnK" id="ynU-O2-0HY"/>
                         <outlet property="prefferedAudioDevice" destination="B88-H0-9or" id="kRz-df-bse"/>
                         <outlet property="remoteEchoButton" destination="eRe-mo-tEC" id="eRe-OL-btn"/>
+                        <outlet property="remoteVideoEffectButton" destination="vRe-mo-tVE" id="vRe-OL-btn"/>
                         <outlet property="remoteVideoView" destination="tXV-Wf-Eta" id="ewU-cC-dHk"/>
                         <outlet property="speakerButton" destination="yGk-fy-AyG" id="pFX-9a-Rjj"/>
                     </connections>
@@ -812,6 +851,8 @@
     </scenes>
     <resources>
         <image name="arrow.triangle.2.circlepath.camera" catalog="system" width="128" height="93"/>
+        <image name="circle.lefthalf.filled" catalog="system" width="128" height="123"/>
+        <image name="circle.righthalf.filled" catalog="system" width="128" height="123"/>
         <image name="ear" catalog="system" width="104" height="128"/>
         <image name="gearshape" catalog="system" width="128" height="123"/>
         <image name="logo" width="787.66668701171875" height="160.33332824707031"/>

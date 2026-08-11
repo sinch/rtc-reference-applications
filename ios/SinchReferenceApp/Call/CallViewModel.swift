@@ -35,12 +35,23 @@ struct CallState {
   var localEchoEnabled: Bool = false
   var remoteEchoEnabled: Bool = false
 
+  var localVideoEffectEnabled: Bool = false
+  var remoteVideoEffectEnabled: Bool = false
+
   var localEchoMessage: String {
     localEchoEnabled ? EchoConstants.localOnMessage : EchoConstants.localOffMessage
   }
 
   var remoteEchoMessage: String {
     remoteEchoEnabled ? EchoConstants.remoteOnMessage : EchoConstants.remoteOffMessage
+  }
+
+  var localVideoEffectMessage: String {
+    localVideoEffectEnabled ? VideoEffectConstants.localOnMessage : VideoEffectConstants.localOffMessage
+  }
+
+  var remoteVideoEffectMessage: String {
+    remoteVideoEffectEnabled ? VideoEffectConstants.remoteOnMessage : VideoEffectConstants.remoteOffMessage
   }
 
   var status: Status = .none
@@ -60,6 +71,9 @@ final class CallViewModel {
   private let localEchoEffect = AudioEchoEffect()
   private let remoteEchoEffect = AudioEchoEffect()
 
+  private let localVideoEffect = BlackAndWhiteVideoEffect()
+  private let remoteVideoEffect = BlackAndWhiteVideoEffect()
+
   init(call: SinchCall?, type: CallType, clientMediator: SinchClientMediator) {
     let availableAudioDevices = clientMediator.sinchClient?.audioController.availableAudioDevices() ?? []
     self.state = CallState(couldHangUp: call?.direction == .outgoing,
@@ -73,12 +87,16 @@ final class CallViewModel {
   }
 
   deinit {
-    // Detach the frame delegates from the shared audio controller. Done here, rather than in
+    // Detach the frame delegates from the shared audio and video controllers. Done here, rather than in
     // callDidEnd, so the effects stay registered for any audioRecording/PlayoutDidStop callbacks
     // that may arrive after the call ends.
     let audioController = clientMediator.sinchClient?.audioController
     audioController?.localAudioFrameDelegate = nil
     audioController?.remoteAudioFrameDelegate = nil
+
+    let videoController = clientMediator.sinchClient?.videoController
+    videoController?.localVideoFrameDelegate = nil
+    videoController?.remoteVideoFrameDelegate = nil
   }
 
   func toggleMute() {
@@ -143,6 +161,18 @@ final class CallViewModel {
     let enabled = !state.remoteEchoEnabled
     remoteEchoEffect.isEnabled = enabled
     update { $0.remoteEchoEnabled = enabled }
+  }
+
+  func toggleLocalVideoEffect() {
+    let enabled = !state.localVideoEffectEnabled
+    clientMediator.sinchClient?.videoController.localVideoFrameDelegate = enabled ? localVideoEffect : nil
+    update { $0.localVideoEffectEnabled = enabled }
+  }
+
+  func toggleRemoteVideoEffect() {
+    let enabled = !state.remoteVideoEffectEnabled
+    clientMediator.sinchClient?.videoController.remoteVideoFrameDelegate = enabled ? remoteVideoEffect : nil
+    update { $0.remoteVideoEffectEnabled = enabled }
   }
 
   func terminate() {
@@ -245,19 +275,31 @@ extension CallViewModel: SinchClientMediatorObserver {
     timer?.invalidate()
     timer = nil
 
-    if call.callId == self.call?.callId {
-      localEchoEffect.isEnabled = false
-      remoteEchoEffect.isEnabled = false
-      update {
-        $0.localEchoEnabled = false
-        $0.remoteEchoEnabled = false
-      }
+    guard call.callId == self.call?.callId else {
+      os_log("Call did end for call: %{public}@, but this view model is not associated with that call",
+             type: .error,
+             call.callId)
+      return
     }
+
+    localEchoEffect.isEnabled = false
+    remoteEchoEffect.isEnabled = false
+
+    let videoController = clientMediator.sinchClient?.videoController
+    videoController?.localVideoFrameDelegate = nil
+    videoController?.remoteVideoFrameDelegate = nil
+    
 
     clientMediator.sinchClient?.audioController.stopPlayingSoundFile()
     clientMediator.removeObserver(self)
 
-    update { $0.status = .end(call: call, duration: $0.duration) }
+    update {
+      $0.localEchoEnabled = false
+      $0.remoteEchoEnabled = false
+      $0.localVideoEffectEnabled = false
+      $0.remoteVideoEffectEnabled = false
+      $0.status = .end(call: call, duration: $0.duration)
+    }
 
     os_log("Call did end for call: %{public}@", call.callId)
 
