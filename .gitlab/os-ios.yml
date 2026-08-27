@@ -1,6 +1,6 @@
 .conf:ios:runner:tags:
   tags:
-    - rtc-mac
+    - rtc-ci-macbook
 
 .lint:ios:do:
   script:
