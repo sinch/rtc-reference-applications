@@ -27,6 +27,7 @@ final class LoginViewModel {
   @Published private(set) var state: LoginState
 
   private var hasValidSinchAppConfiguration: Bool {
+    state.appEnvironment != .empty &&
       !state.appEnvironment.appKey.isEmpty &&
       !state.appEnvironment.host.isEmpty
   }

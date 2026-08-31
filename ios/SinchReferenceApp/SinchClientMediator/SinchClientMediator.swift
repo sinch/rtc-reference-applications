@@ -140,6 +140,12 @@ final class SinchClientMediator: NSObject {
 
     let environmentInfo = EnvironmentInfo.load()
 
+    guard environmentInfo != .empty else {
+      os_log("Failed to restore environment from UserDefaults to create new SinchClient",
+             log: .sinchOSLog(for: SinchClientMediator.identifier))
+      return
+    }
+
     self.setupCommunication(with: CommunicationKit.load())
 
     createAndStartClient(with: userInfo.userId,

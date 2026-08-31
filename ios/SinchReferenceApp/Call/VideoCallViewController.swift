@@ -64,6 +64,7 @@ final class VideoCallViewController: UIViewController {
 
   private var cancellableBag = Set<AnyCancellable>()
 
+  // Video effects are only relevant to video calls, hence these live in this controller only.
   @IBOutlet private var localVideoEffectButton: UIButton! {
     didSet {
       localVideoEffectButton.layer.cornerRadius = Constant.cornerRadius

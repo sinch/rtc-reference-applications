@@ -275,31 +275,15 @@ extension CallViewModel: SinchClientMediatorObserver {
     timer?.invalidate()
     timer = nil
 
-    guard call.callId == self.call?.callId else {
-      os_log("Call did end for call: %{public}@, but this view model is not associated with that call",
-             type: .error,
-             call.callId)
-      return
+    if call.callId == self.call?.callId {
+      localEchoEffect.isEnabled = false
+      remoteEchoEffect.isEnabled = false
     }
-
-    localEchoEffect.isEnabled = false
-    remoteEchoEffect.isEnabled = false
-
-    let videoController = clientMediator.sinchClient?.videoController
-    videoController?.localVideoFrameDelegate = nil
-    videoController?.remoteVideoFrameDelegate = nil
-    
 
     clientMediator.sinchClient?.audioController.stopPlayingSoundFile()
     clientMediator.removeObserver(self)
 
-    update {
-      $0.localEchoEnabled = false
-      $0.remoteEchoEnabled = false
-      $0.localVideoEffectEnabled = false
-      $0.remoteVideoEffectEnabled = false
-      $0.status = .end(call: call, duration: $0.duration)
-    }
+    update { $0.status = .end(call: call, duration: $0.duration) }
 
     os_log("Call did end for call: %{public}@", call.callId)
 
