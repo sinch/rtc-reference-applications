@@ -2,7 +2,8 @@
 
 set -euo pipefail
 
-readonly SDK_VERSION="5.44.3%2b849c5cc5"
+readonly SDK_VERSION="5.45.12%2bea20ea85"
+
 
 
 
