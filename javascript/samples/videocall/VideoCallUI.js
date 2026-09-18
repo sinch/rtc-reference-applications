@@ -27,6 +27,12 @@ import {
   enableRemoteEcho,
   resetRemoteEcho,
   isRemoteEchoActive,
+  initLocalBwButton,
+  enableLocalBw,
+  resetLocalBw,
+  initRemoteBwButton,
+  enableRemoteBw,
+  resetRemoteBw,
 } from "../common/common.js";
 
 export default class VideoCallUI {
@@ -40,6 +46,8 @@ export default class VideoCallUI {
     initMuteButton();
     initEchoButton();
     initRemoteEchoButton();
+    initLocalBwButton();
+    initRemoteBwButton();
     setState("call", DISABLE);
     setState("answer", DISABLE);
     setState("hangup", DISABLE);
@@ -113,6 +121,8 @@ export default class VideoCallUI {
     enableMute(call);
     enableEcho(call);
     enableRemoteEcho(call, document.getElementById("incoming-video"));
+    enableLocalBw(call);
+    enableRemoteBw(call, document.getElementById("incoming-video"));
   }
 
   onCallEnded(call) {
@@ -127,6 +137,8 @@ export default class VideoCallUI {
     resetMute();
     resetEcho();
     resetRemoteEcho();
+    resetLocalBw();
+    resetRemoteBw();
     setAnswerPulse(IDLE);
     this.removeVideoStream("outgoing-video");
     this.removeVideoStream("incoming-video");

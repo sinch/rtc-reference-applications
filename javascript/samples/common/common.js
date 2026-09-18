@@ -581,3 +581,195 @@ export function resetRemoteEcho() {
   document.getElementById("remote-echo")?.classList.remove("btn-active");
   setState("remote-echo", DISABLE);
 }
+
+const BW_WORKER_URL = "../common/video/bw-worker.js";
+
+// ---- Local B&W ------------------------------------------------------------
+// Turns the OUTGOING camera video black and white via the SDK's local video frame listener. The
+// conversion runs in bw-worker; when disabled the SDK restores the raw camera. This is what the
+// remote peer sees. Requires a browser with the Insertable Streams API.
+
+const localBwState = { enabled: false, currentCall: null };
+// Serializes local B&W toggles so a rapid second click can't read a stale `enabled` while a
+// previous setLocalVideoFrameListener call is still in flight.
+let localBwToggle = Promise.resolve();
+
+const BW_LISTENER = { workerUrl: BW_WORKER_URL };
+
+async function applyLocalBwToggle(button, call) {
+  if (!call || localBwState.currentCall !== call) return;
+  const enable = !localBwState.enabled;
+  try {
+    await call.setLocalVideoFrameListener(enable ? BW_LISTENER : null);
+    if (localBwState.currentCall !== call) return;
+    localBwState.enabled = enable;
+    button.classList.toggle("btn-active", enable);
+    showNotification({
+      message: enable
+        ? "Local B&W enabled – the remote peer now sees your camera in black and white."
+        : "Local B&W disabled.",
+      isSuccess: true,
+    });
+  } catch (error) {
+    console.error("Error toggling local B&W:", error);
+    if (localBwState.currentCall !== call) return;
+    showNotification({
+      message: `Failed to toggle local B&W. ${error?.message ?? ""}`,
+      isSuccess: false,
+    });
+  }
+}
+
+export function initLocalBwButton() {
+  const button = document.getElementById("local-bw");
+  if (!button) return;
+  button.addEventListener("click", () => {
+    const call = localBwState.currentCall;
+    localBwToggle = localBwToggle
+      .then(() => applyLocalBwToggle(button, call))
+      .catch(() => undefined);
+  });
+}
+
+export function enableLocalBw(call) {
+  localBwState.currentCall = call;
+  localBwState.enabled = false;
+  document.getElementById("local-bw")?.classList.remove("btn-active");
+  setState("local-bw", ENABLE);
+}
+
+export function resetLocalBw() {
+  if (localBwState.currentCall && localBwState.enabled) {
+    localBwState.currentCall
+      .setLocalVideoFrameListener(null)
+      .catch(() => undefined);
+  }
+  localBwState.enabled = false;
+  localBwState.currentCall = null;
+  document.getElementById("local-bw")?.classList.remove("btn-active");
+  setState("local-bw", DISABLE);
+}
+
+// ---- Remote B&W (reference-app level) -------------------------------------
+// Turns the INCOMING video black and white purely on the SDK host app side, by running the
+// received track through the same bw-worker with Insertable Streams. This only affects what the
+// LOCAL user sees; the SDK is not involved. Requires the Insertable Streams API.
+//
+// Remote B&W and remote echo both drive the incoming media element, so whichever is enabled last
+// replaces the other's stream.
+
+const remoteBwState = {
+  enabled: false,
+  currentCall: null,
+  mediaElement: null,
+  worker: null,
+  displayStream: null,
+};
+
+// The element plays a stream this sample owns, so toggling only swaps its video track. Assigning
+// `srcObject` per toggle instead makes the element reload, which shows up as a flash.
+function remoteDisplayStream() {
+  const { mediaElement, currentCall, displayStream } = remoteBwState;
+  if (displayStream && mediaElement.srcObject === displayStream) {
+    return displayStream;
+  }
+  const source = mediaElement.srcObject ?? currentCall.incomingStream;
+  remoteBwState.displayStream = new MediaStream(source.getTracks());
+  mediaElement.srcObject = remoteBwState.displayStream;
+  return remoteBwState.displayStream;
+}
+
+function setRemoteVideoTrack(track) {
+  const stream = remoteDisplayStream();
+  const previous = stream
+    .getVideoTracks()
+    .filter((existing) => existing !== track);
+  stream.addTrack(track);
+  previous.forEach((existing) => stream.removeTrack(existing));
+}
+
+function stopRemoteBw() {
+  const { worker, mediaElement, currentCall } = remoteBwState;
+  if (worker) {
+    worker.terminate();
+    remoteBwState.worker = null;
+  }
+  const rawVideoTrack = currentCall?.incomingStream?.getVideoTracks()[0];
+  if (mediaElement && rawVideoTrack) setRemoteVideoTrack(rawVideoTrack);
+}
+
+/* global MediaStreamTrackProcessor, MediaStreamTrackGenerator */
+// Returns true if the conversion was successfully started and is now playing.
+function startRemoteBw() {
+  const { currentCall, mediaElement } = remoteBwState;
+  const videoTrack = currentCall?.incomingStream?.getVideoTracks()[0];
+  if (!videoTrack || !mediaElement) return false;
+  try {
+    const worker = new Worker(BW_WORKER_URL);
+    const processor = new MediaStreamTrackProcessor({ track: videoTrack });
+    const generator = new MediaStreamTrackGenerator({ kind: "video" });
+    worker.postMessage(
+      {
+        type: "transform",
+        readable: processor.readable,
+        writable: generator.writable,
+      },
+      [processor.readable, generator.writable],
+    );
+    // Release any previous worker so we never run two conversions on one track.
+    remoteBwState.worker?.terminate();
+    remoteBwState.worker = worker;
+    setRemoteVideoTrack(generator);
+    return true;
+  } catch (error) {
+    console.error("Error starting remote B&W:", error);
+    stopRemoteBw();
+    return false;
+  }
+}
+
+export function initRemoteBwButton() {
+  const button = document.getElementById("remote-bw");
+  if (!button) return;
+  button.addEventListener("click", () => {
+    if (!remoteBwState.currentCall) return;
+    const enable = !remoteBwState.enabled;
+    if (enable && !startRemoteBw()) {
+      showNotification({
+        message: "Could not enable remote B&W.",
+        isSuccess: false,
+      });
+      return;
+    }
+    if (!enable) stopRemoteBw();
+    remoteBwState.enabled = enable;
+    button.classList.toggle("btn-active", enable);
+    showNotification({
+      message: enable
+        ? "Remote B&W enabled – you now see the remote video in black and white."
+        : "Remote B&W disabled.",
+      isSuccess: true,
+    });
+  });
+}
+
+export function enableRemoteBw(call, mediaElement) {
+  stopRemoteBw();
+  remoteBwState.currentCall = call;
+  remoteBwState.mediaElement = mediaElement;
+  remoteBwState.displayStream = null;
+  remoteBwState.enabled = false;
+  remoteDisplayStream();
+  document.getElementById("remote-bw")?.classList.remove("btn-active");
+  setState("remote-bw", ENABLE);
+}
+
+export function resetRemoteBw() {
+  stopRemoteBw();
+  remoteBwState.currentCall = null;
+  remoteBwState.mediaElement = null;
+  remoteBwState.displayStream = null;
+  remoteBwState.enabled = false;
+  document.getElementById("remote-bw")?.classList.remove("btn-active");
+  setState("remote-bw", DISABLE);
+}
