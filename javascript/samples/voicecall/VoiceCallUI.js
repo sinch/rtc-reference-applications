@@ -103,6 +103,7 @@ export default class VoiceCallUI {
   onCallEnded(call) {
     this.setStatus(`Call ended ${call.remoteUserId}`);
     this.pauseRingtone();
+    this.removeCallClickHandlers();
     setState("hangup", DISABLE);
     setState("call", ENABLE);
     setState("answer", DISABLE);
@@ -162,6 +163,17 @@ export default class VoiceCallUI {
     hangupElement.removeEventListener("click", this.handleHangup);
     this.handleHangup = () => call.hangup();
     hangupElement.addEventListener("click", this.handleHangup);
+  }
+
+  removeCallClickHandlers() {
+    document
+      .getElementById("hangup")
+      .removeEventListener("click", this.handleHangup);
+    document
+      .getElementById("answer")
+      .removeEventListener("click", this.handleAnswer);
+    this.handleHangup = undefined;
+    this.handleAnswer = undefined;
   }
 
   handleAnswerClick(call) {

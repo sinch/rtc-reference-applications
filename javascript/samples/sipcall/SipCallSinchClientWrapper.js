@@ -26,11 +26,10 @@ export default class SipCallSinchClientWrapper {
 
   #sinchClientListener() {
     return {
-      onClientStarted: (sinchClient) => {
-        const { callClient } = sinchClient;
+      onClientStarted: () => {
         this.ui.getInput("to", "call", async (destination) => {
           setText("call", "Hangup");
-          const call = await callClient.callSip(destination);
+          const call = await this.sinchClient.callClient.callSip(destination);
           this.#outboundCall(call);
         });
       },

@@ -129,6 +129,7 @@ export default class VideoCallUI {
     this.setStatus(`Call ended ${call.remoteUserId}`);
     this.pauseRingtone();
     this.resetPauseVideo();
+    this.removeCallClickHandlers();
     setVisibility("videos-container", HIDE);
     setVisibility("calldestination", SHOW);
     setState("call", ENABLE);
@@ -209,6 +210,17 @@ export default class VideoCallUI {
     hangupElement.removeEventListener("click", this.handleHangup);
     this.handleHangup = () => call.hangup();
     hangupElement.addEventListener("click", this.handleHangup);
+  }
+
+  removeCallClickHandlers() {
+    document
+      .getElementById("hangup")
+      .removeEventListener("click", this.handleHangup);
+    document
+      .getElementById("answer")
+      .removeEventListener("click", this.handleAnswer);
+    this.handleHangup = undefined;
+    this.handleAnswer = undefined;
   }
 
   handleAnswerClick(call) {

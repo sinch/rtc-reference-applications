@@ -26,11 +26,11 @@ export default class NumberCallSinchClientWrapper {
 
   #sinchClientListener() {
     return {
-      onClientStarted: (sinchClient) => {
-        const { callClient } = sinchClient;
+      onClientStarted: () => {
         this.ui.getInput("to", "call", async (destination) => {
           setText("call", "Hangup");
-          const call = await callClient.callPhoneNumber(destination);
+          const call =
+            await this.sinchClient.callClient.callPhoneNumber(destination);
           this.#outboundCall(call);
         });
       },
