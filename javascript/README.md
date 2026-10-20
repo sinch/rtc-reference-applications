@@ -63,6 +63,10 @@ For more information regarding Push API on iOS see [link](https://developer.appl
 
 See [link](/javascript/samples/voicecall/sw.js#L63) for more information regarding the current limitation of the reference app in terms of receiving push notifications when terminated.
 
+### Chrome incognito mode
+
+Chrome does not support the Push API in incognito mode ([crbug.com/41124656](https://crbug.com/41124656)), and deliberately provides no way to detect this up front. The failure only surfaces when the SinchClient subscribes to push during startup, which makes the start fail. Depending on the Chrome version, it is reported either as an incognito error or as `Registration failed - permission denied`, because incognito auto-denies the notification permission. To keep the samples usable, the reference app catches these push errors in `onClientFailed`, including a regular permission denial, disables managed push and starts the client again. In this mode outgoing calls work, but the client cannot receive incoming calls. The landing page shows a non-blocking warning when push permission is denied. See `restartWithoutPushIfUnsupported()` in the reference app.
+
 ### Permission prompt from user gesture
 
 In browsers other than Chrome, it is typically required that the first interaction with the Push API, which triggers a permission request, must be initiated by a user action (e.g., a user click). This interaction usually happens automatically when the SinchClient starts. As a result, in some cases, we cannot start the SinchClient automatically when the page loads. Instead, we must delay the process until the user performs some interaction. For a more detailed explanation and a working example of how to handle this issue, see how the `canAutoStart()` method is used in the reference app.

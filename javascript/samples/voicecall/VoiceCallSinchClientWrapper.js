@@ -4,6 +4,7 @@ import {
   getUserId,
   getApplicationKey,
   getEnvironmentHost,
+  restartWithoutPushIfUnsupported,
 } from "../common/common.js";
 import VoiceCallUI from "./VoiceCallUI.js";
 
@@ -66,7 +67,10 @@ export default class VoiceCallSinchClientWrapper {
           });
       },
 
-      onClientFailed: (sinchClient, error) => {
+      onClientFailed: async (sinchClient, error) => {
+        if (await restartWithoutPushIfUnsupported(sinchClient, error)) {
+          return;
+        }
         console.log("Sinch - Start client failed");
         console.error(error);
       },

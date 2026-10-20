@@ -241,6 +241,44 @@ export async function canAutoStart() {
   return isChrome;
 }
 
+const PUSH_UNAVAILABLE_ERRORS = [
+  // Chrome incognito mode (https://crbug.com/41124656).
+  "Push API in incognito mode",
+  // Browser rejected the subscription, e.g. Chrome incognito auto-denying the permission prompt.
+  "Registration failed - permission denied",
+  // Thrown by the SDK when push permission is already denied.
+  "Push notifications permissions denied",
+];
+
+const isPushUnavailableError = (error) => {
+  const message = String(error?.message);
+  return PUSH_UNAVAILABLE_ERRORS.some((text) => message.includes(text));
+};
+
+/**
+ * Restarts the Sinch client without managed push when push notifications are unavailable,
+ * e.g. in Chrome incognito mode or when the user denied the notification permission.
+ *
+ * Browsers deliberately offer no way to detect incognito mode up front: `pushManager` is present and
+ * the failure only surfaces when subscribing, which fails the whole client start. Restarting without
+ * managed push keeps outgoing calls working, but the client cannot receive incoming calls.
+ *
+ * @returns True if the client was restarted; false if the failure should be handled as usual.
+ */
+export async function restartWithoutPushIfUnsupported(sinchClient, error) {
+  if (!isPushUnavailableError(error)) {
+    return false;
+  }
+  showNotification({
+    message:
+      "Push notifications are unavailable (incognito mode or permission denied). Incoming calls are disabled.",
+    isSuccess: false,
+  });
+  await sinchClient.disableManagedPushSupport();
+  sinchClient.start();
+  return true;
+}
+
 export function populateDeviceSelectors(devices) {
   const audioInputSelect = document.querySelector("select#audioSource");
   const audioOutputSelect = document.querySelector("select#audioOutput");

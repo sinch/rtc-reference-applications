@@ -77,9 +77,11 @@ export const demo = function (event) {
   );
 };
 
-const showError = (message) => {
+const showError = (message, { blocking = true } = {}) => {
   erroContainer.style.display = "block";
-  loginForm.style.display = "none";
+  if (blocking) {
+    loginForm.style.display = "none";
+  }
   errorMessage.innerHTML = message;
 };
 
@@ -125,7 +127,8 @@ if (isIOSBrowserNotInStandaloneMode()) {
 
 if (await isPushPermissionStatusDenied()) {
   showError(
-    "Push notifications are denied. Please enable push notifications in the browser settings.",
+    "Push notifications are denied (or unavailable in incognito mode), so incoming calls won't work. Enable push notifications in the browser settings to receive calls.",
+    { blocking: false },
   );
 }
 

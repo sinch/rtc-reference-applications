@@ -4,6 +4,7 @@ import {
   getApplicationKey,
   getUserId,
   getEnvironmentHost,
+  restartWithoutPushIfUnsupported,
 } from "../common/common.js";
 import VideoCallUI from "./VideoCallUI.js";
 
@@ -70,7 +71,10 @@ export default class VideoCallSinchClientWrapper {
           });
       },
 
-      onClientFailed: (sinchClient, error) => {
+      onClientFailed: async (sinchClient, error) => {
+        if (await restartWithoutPushIfUnsupported(sinchClient, error)) {
+          return;
+        }
         console.log("Sinch - Start client failed");
         console.error(error);
       },
